@@ -1,0 +1,61 @@
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+from django_better_admin_arrayfield.models.fields import ArrayField
+
+from controller.sentry.choices import MetricType
+from controller.sentry.metrics import celery_merger, wsgi_merger
+
+
+def get_default_wsgi_ignore_path():
+    return settings.DEFAULT_WSGI_IGNORE_PATHS
+
+
+def get_default_celery_ignore_task():
+    return settings.DEFAULT_CELERY_IGNORE_TASKS
+
+
+MERGER = {MetricType.WSGI: wsgi_merger, MetricType.CELERY: celery_merger}
+
+
+class App(models.Model):
+    """App"""
+
+    reference = models.CharField(primary_key=True, max_length=256)
+
+    last_seen = models.DateTimeField(null=True, blank=True)
+    default_sample_rate = models.FloatField(default=settings.DEFAULT_SAMPLE_RATE)
+    active_sample_rate = models.FloatField(default=settings.DEFAULT_SAMPLE_RATE)
+    active_window_end = models.DateTimeField(null=True, blank=True)
+
+    # WSGI
+    wsgi_ignore_path = ArrayField(
+        models.CharField(max_length=50, blank=True),
+        blank=True,
+        default=get_default_wsgi_ignore_path,
+    )
+
+    # celery
+    celery_ignore_task = ArrayField(
+        models.CharField(max_length=50, blank=True),
+        blank=True,
+        default=get_default_celery_ignore_task,
+    )
+
+    def __str__(self) -> str:
+        return f"App<{self.reference}>"
+
+
+class Metric(models.Model):
+    type = models.CharField(
+        max_length=10,
+        choices=MetricType.choices,
+    )
+    last_updated = models.DateTimeField(default=timezone.now, blank=True)
+    data = models.JSONField(null=True)
+    app = models.ForeignKey(App, on_delete=models.CASCADE, related_name="metrics")
+
+    def merge(self, data):
+        merger = MERGER[self.type]
+        self.last_updated = timezone.now()
+        self.data = merger(self.data, data)

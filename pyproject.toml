@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "sentry-dynamic-sampling-controller"
+version = "0.1.0"
+description = ""
+authors = ["jeanloup.monnier <jean-loup.monnier@spikeelabs.fr>"]
+readme = "README.md"
+packages = [{ include = "controller" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^4.1.3"
+django-admin-action-tools = "^1.1"
+djangorestframework = "^3.14.0"
+gunicorn = "^20.1.0"
+psycopg2-binary = "^2.9.5"
+redis = "^4.3.5"
+gevent = "^22.10.2"
+django-object-actions = "^4.1.0"
+django-better-admin-arrayfield = "^1.4.2"
+django-json-widget = "^1.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+bandit = "^1.7.4"
+black = "^22.10.0"
+coverage = "^6.5.0"
+parameterized = "^0.8.1"
+pre-commit = "^2.20.0"
+pylama = "^8.4.1"
+pylint = "^2.15.6"
+pylint-django = "^2.5.3"
+tblib = "^1.7.0"
+toml = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

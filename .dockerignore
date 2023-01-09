@@ -1,0 +1,26 @@
+# Specific files/folder
+.cache
+.coverage
+.coveragerc
+.dockerignore
+.git
+.gitignore
+.gitlab-ci.yml
+.noserc
+.venv/
+.idea
+.vscode
+htmlcov
+sonar-project.properties
+**/tests/**
+*.egg-info
+
+# Ignore all markdown file except README.md, which is required by poetry
+*.md
+!README.md
+
+# Ignore all *.pyc files in all folders, including build root
+**/*.pyc
+
+# Ignore current.py file to allow symbolic link creation during docker build
+orange/settings/current.py
