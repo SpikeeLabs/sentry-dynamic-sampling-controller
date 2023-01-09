@@ -33,11 +33,11 @@ class AppViewSet(viewsets.ModelViewSet):
     def metrics(
         self, request, pk=None, metric_name=None
     ):  # pylint: disable=W0613,C0103
-        serializer = MetricSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
         app, _ = App.objects.get_or_create(reference=pk)
         metric, _ = Metric.objects.get_or_create(app=app, type=metric_name, defaults={})
+
+        serializer = MetricSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         metric.merge(serializer.validated_data["data"])
         metric.save()
