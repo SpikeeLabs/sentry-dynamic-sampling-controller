@@ -21,7 +21,6 @@ from controller.sentry import views
 
 router = DefaultRouter()
 router.register(r"apps", views.AppViewSet, basename="apps")
-router.register(r"metrics", views.MetricViewSet, basename="metrics")
 
 urlpatterns = [
     path("admin/", admin.site.urls),

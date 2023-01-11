@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_page
 from rest_framework import decorators, viewsets
 from rest_framework.response import Response
 
-from controller.sentry.models import App, Metric
+from controller.sentry.models import App
 from controller.sentry.serializers import AppSerializer, MetricSerializer
 
 
@@ -34,19 +34,10 @@ class AppViewSet(viewsets.ModelViewSet):
         self, request, pk=None, metric_name=None
     ):  # pylint: disable=W0613,C0103
         app, _ = App.objects.get_or_create(reference=pk)
-        metric, _ = Metric.objects.get_or_create(app=app, type=metric_name, defaults={})
 
         serializer = MetricSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        metric.merge(serializer.validated_data["data"])
-        metric.save()
-        return Response(MetricSerializer(instance=metric).data)
-
-
-class MetricViewSet(viewsets.ModelViewSet):
-    """Metric"""
-
-    model = Metric
-    serializer_class = MetricSerializer
-    queryset = Metric.objects.all()
+        app.merge(serializer.validated_data)
+        app.save()
+        return Response({})

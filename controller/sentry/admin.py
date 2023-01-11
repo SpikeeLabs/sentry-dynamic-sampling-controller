@@ -12,8 +12,7 @@ from django_json_widget.widgets import JSONEditorWidget
 from django_object_actions import DjangoObjectActions, takes_instance_or_queryset
 
 from controller.sentry.forms import BumpForm
-from controller.sentry.inlines import MetricsInline
-from controller.sentry.models import App, Metric
+from controller.sentry.models import App
 
 
 @admin.register(App)
@@ -39,6 +38,10 @@ class AppAdmin(
     ]
     ordering = search_fields
 
+    formfield_overrides = {
+        models.JSONField: {"widget": JSONEditorWidget},
+    }
+
     fieldsets = [
         [
             None,
@@ -52,18 +55,26 @@ class AppAdmin(
         ],
         [
             "WSGI",
-            {"fields": ("wsgi_ignore_path",)},
+            {
+                "classes": ("collapse", "open"),
+                "fields": ("wsgi_ignore_path", "wsgi_collect_metrics", "wsgi_metrics"),
+            },
         ],
         [
             "Celery",
-            {"fields": ("celery_ignore_task",)},
+            {
+                "classes": ("collapse", "open"),
+                "fields": (
+                    "celery_ignore_task",
+                    "celery_collect_metrics",
+                    "celery_metrics",
+                ),
+            },
         ],
     ]
 
     changelist_actions = ["bump"]
     change_actions = ["bump"]
-
-    inlines = [MetricsInline]
 
     @takes_instance_or_queryset
     @add_form_to_action(BumpForm)
@@ -75,31 +86,3 @@ class AppAdmin(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
             active_window_end=new_date,
         )
-
-
-@admin.register(Metric)
-class MetricAdmin(admin.ModelAdmin):
-    formfield_overrides = {
-        models.JSONField: {"widget": JSONEditorWidget},
-    }
-
-    list_display = [
-        "type",
-        "last_updated",
-        "app",
-    ]
-
-    search_fields = ["type", "last_updated", "app__reference"]
-    ordering = search_fields
-
-    fieldsets = [
-        [
-            None,
-            {
-                "fields": (
-                    ("type", "last_updated", "app"),
-                    "data",
-                )
-            },
-        ]
-    ]

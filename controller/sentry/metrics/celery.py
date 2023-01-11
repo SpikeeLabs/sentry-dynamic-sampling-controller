@@ -1,5 +1,5 @@
 from collections import Counter
 
 
-def celery_merger(old, new):
-    return dict(Counter(old) + Counter(new))
+def celery_merger(app, new):
+    app.celery_metrics = dict(Counter(app.celery_metrics) + Counter(new))
