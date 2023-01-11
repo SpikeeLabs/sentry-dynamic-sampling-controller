@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from controller.sentry.models import App, Metric
+from controller.sentry.choices import MetricType
+from controller.sentry.models import App
 
 
 class AppSerializer(serializers.ModelSerializer):
@@ -13,13 +14,13 @@ class AppSerializer(serializers.ModelSerializer):
             "active_sample_rate",
             "active_window_end",
             "wsgi_ignore_path",
+            "wsgi_collect_metrics",
             "celery_ignore_task",
+            "celery_collect_metrics",
         ]
 
 
-class MetricSerializer(serializers.ModelSerializer):
-    """Metric"""
+class MetricSerializer(serializers.Serializer):
 
-    class Meta:
-        model = Metric
-        fields = ["type", "app", "data", "last_updated"]
+    type = serializers.ChoiceField(choices=MetricType.choices)
+    data = serializers.JSONField()
