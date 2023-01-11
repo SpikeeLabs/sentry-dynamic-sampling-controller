@@ -13,6 +13,7 @@ from django_object_actions import DjangoObjectActions, takes_instance_or_queryse
 
 from controller.sentry.forms import BumpForm
 from controller.sentry.models import App
+from controller.sentry.utils import invalidate_cache
 
 
 @admin.register(App)
@@ -86,3 +87,7 @@ class AppAdmin(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
             active_window_end=new_date,
         )
+
+    def save_model(self, request, obj, form, change) -> None:
+        invalidate_cache(f"/sentry/apps/{obj.reference}/")
+        return super().save_model(request, obj, form, change)

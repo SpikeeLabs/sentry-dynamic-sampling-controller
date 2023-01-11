@@ -50,9 +50,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -135,14 +133,16 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+CONN_MAX_AGE = None
+APP_CACHE_TIMEOUT = 0
 
 if not DEBUG:
+    APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
             "LOCATION": os.getenv("CACHE_REDIS_URL", "redis://127.0.0.1:6379"),
             "OPTIONS": {
-                "db": "10",
                 "parser_class": "redis.connection.PythonParser",
                 "pool_class": "redis.BlockingConnectionPool",
             },
@@ -150,9 +150,7 @@ if not DEBUG:
         }
     }
 
-CONN_MAX_AGE = None
 
-APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
 DEFAULT_SAMPLE_RATE = float(os.getenv("DEFAULT_SAMPLE_RATE", "0.1"))
 DEFAULT_WSGI_IGNORE_PATHS = os.getenv(
     "DEFAULT_WSGI_IGNORE_PATHS", "/health,/healthz,/health/,/healthz/"
@@ -160,3 +158,10 @@ DEFAULT_WSGI_IGNORE_PATHS = os.getenv(
 
 
 DEFAULT_CELERY_IGNORE_TASKS = []
+
+
+CACHE_META_INVALIDATION = {
+    "SERVER_NAME": os.getenv("CACHE_META_SERVER_NAME", "localhost"),
+    "SERVER_PORT": int(os.getenv("CACHE_META_SERVER_PORT", "8000")),
+    "HTTP_ACCEPT": os.getenv("CACHE_META_HTTP_ACCEPT", "*/*"),
+}
