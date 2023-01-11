@@ -34,6 +34,8 @@ class App(models.Model):
         blank=True,
         default=get_default_wsgi_ignore_path,
     )
+    wsgi_collect_metrics = models.BooleanField(default=False)
+    wsgi_metrics = models.JSONField(null=True)
 
     # celery
     celery_ignore_task = ArrayField(
@@ -41,21 +43,13 @@ class App(models.Model):
         blank=True,
         default=get_default_celery_ignore_task,
     )
+    celery_collect_metrics = models.BooleanField(default=False)
+    celery_metrics = models.JSONField(null=True)
 
     def __str__(self) -> str:
         return f"App<{self.reference}>"
 
-
-class Metric(models.Model):
-    type = models.CharField(
-        max_length=10,
-        choices=MetricType.choices,
-    )
-    last_updated = models.DateTimeField(default=timezone.now, blank=True)
-    data = models.JSONField(null=True)
-    app = models.ForeignKey(App, on_delete=models.CASCADE, related_name="metrics")
-
-    def merge(self, data):
-        merger = MERGER[self.type]
-        self.last_updated = timezone.now()
-        self.data = merger(self.data, data)
+    def merge(self, validated_data):
+        merger = MERGER[validated_data["type"]]
+        merger(self, validated_data["data"])
+        self.last_seen = timezone.now()
