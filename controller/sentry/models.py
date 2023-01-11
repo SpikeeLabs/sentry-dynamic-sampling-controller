@@ -35,7 +35,7 @@ class App(models.Model):
         default=get_default_wsgi_ignore_path,
     )
     wsgi_collect_metrics = models.BooleanField(default=False)
-    wsgi_metrics = models.JSONField(null=True)
+    wsgi_metrics = models.JSONField(null=True, blank=True)
 
     # celery
     celery_ignore_task = ArrayField(
@@ -44,7 +44,7 @@ class App(models.Model):
         default=get_default_celery_ignore_task,
     )
     celery_collect_metrics = models.BooleanField(default=False)
-    celery_metrics = models.JSONField(null=True)
+    celery_metrics = models.JSONField(null=True, blank=True)
 
     def __str__(self) -> str:
         return f"App<{self.reference}>"
