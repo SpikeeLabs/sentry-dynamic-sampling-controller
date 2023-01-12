@@ -15,11 +15,12 @@ def invalidate_cache(path=""):
     """
 
     # Bootstrap request:
-    #   request.path should point to the view endpoint you want to invalidate
-    #   request.META must include the correct SERVER_NAME and SERVER_PORT as django uses these in order
-    #   to build a MD5 hashed value for the cache_key. Similarly, we need to artificially set the
-    #   language code on the request to 'en-us' to match the initial creation of the cache_key.
-    #   YMMV regarding the language code.
+    # request.path should point to the view endpoint you want to invalidate
+    # request.META must include the correct
+    # SERVER_NAME and SERVER_PORT as django uses these in order
+    # to build a MD5 hashed value for the cache_key. Similarly, we need to artificially set the
+    # language code on the request to 'en-us' to match the initial creation of the cache_key.
+    # YMMV regarding the language code.
     request = HttpRequest()
     request.META = settings.CACHE_META_INVALIDATION
     request.LANGUAGE_CODE = "en-us"

@@ -5,6 +5,7 @@ from admin_action_tools import (
     confirm_action,
 )
 from django.contrib import admin
+from django.contrib.auth import get_permission_codename
 from django.db import models
 from django.utils import timezone
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
@@ -73,8 +74,8 @@ class AppAdmin(
             },
         ],
     ]
-
-    changelist_actions = ["bump"]
+    actions = ["bump"]
+    changelist_actions = []
     change_actions = ["bump"]
 
     @takes_instance_or_queryset
@@ -87,6 +88,14 @@ class AppAdmin(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
             active_window_end=new_date,
         )
+
+    bump.allowed_permissions = ("bump_sample_rate",)
+
+    def has_bump_sample_rate_permission(self, request):
+        """Does the user have the bump permission?"""
+        opts = self.opts
+        codename = get_permission_codename("bump_sample_rate", opts)
+        return request.user.has_perm("%s.%s" % (opts.app_label, codename))
 
     def save_model(self, request, obj, form, change) -> None:
         invalidate_cache(f"/sentry/apps/{obj.reference}/")
