@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "admin_action_tools",
     "django.contrib.admin",
     "django.contrib.auth",
+    "mozilla_django_oidc",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -43,8 +44,34 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "django_better_admin_arrayfield",
     "django_json_widget",
+    "durationwidget",
     "controller.sentry",
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # "django.contrib.auth.backends.ModelBackend",
+    "controller.sentry.auth.ControllerOIDCAuthenticationBackend",
+)
+
+OIDC_RP_CLIENT_ID = os.getenv("OIDC_RP_CLIENT_ID")
+OIDC_RP_CLIENT_SECRET = os.getenv("OIDC_RP_CLIENT_SECRET")
+# "<URL of the OIDC OP authorization endpoint>"
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv("OIDC_OP_AUTHORIZATION_ENDPOINT")
+# "<URL of the OIDC OP token endpoint>"
+OIDC_OP_TOKEN_ENDPOINT = os.getenv("OIDC_OP_TOKEN_ENDPOINT")
+# "<URL of the OIDC OP userinfo endpoint>"
+OIDC_OP_USER_ENDPOINT = os.getenv("OIDC_OP_USER_ENDPOINT")
+# "<URL path to redirect to after login>"
+LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL")
+# "<URL path to redirect to after logout>"
+LOGOUT_REDIRECT_URL = os.getenv("LOGOUT_REDIRECT_URL")
+
+OIDC_RP_SIGN_ALGO = os.getenv("OIDC_RP_SIGN_ALGO", "RS256")
+
+OIDC_OP_JWKS_ENDPOINT = os.getenv("OIDC_OP_JWKS_ENDPOINT")
+
+
+DEVELOPER_GROUP = os.getenv("DEVELOPER_GROUP", "Developer")
 
 
 MIDDLEWARE = [
@@ -165,3 +192,8 @@ CACHE_META_INVALIDATION = {
     "SERVER_PORT": int(os.getenv("CACHE_META_SERVER_PORT", "8000")),
     "HTTP_ACCEPT": os.getenv("CACHE_META_HTTP_ACCEPT", "*/*"),
 }
+
+
+MAX_BUMP_TIME_SEC = int(os.getenv("MAX_BUMP_TIME_SEC", "0"))
+if MAX_BUMP_TIME_SEC == 0:
+    MAX_BUMP_TIME_SEC = 30 * 60  # 30 minutes
