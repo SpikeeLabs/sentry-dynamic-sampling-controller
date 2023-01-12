@@ -13,8 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.http import HttpResponseRedirect
+from django.urls import include, path, re_path, reverse
+from django.views import View
+from django.views.static import serve
 from rest_framework.routers import DefaultRouter
 
 from controller.sentry import views
@@ -22,7 +26,20 @@ from controller.sentry import views
 router = DefaultRouter()
 router.register(r"apps", views.AppViewSet, basename="apps")
 
+
+class CustomLogin(View):
+    def get(self, request, **kwargs):
+        return HttpResponseRedirect(
+            reverse("oidc_authentication_init")
+            + ("?next={}".format(request.GET["next"]) if "next" in request.GET else "")
+        )
+
+
 urlpatterns = [
+    path("oidc/", include("mozilla_django_oidc.urls")),
+    path("admin/login/", CustomLogin.as_view()),
     path("admin/", admin.site.urls),
     path("sentry/", include((router.urls, "sentry"), namespace="sentry")),
+    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+    re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 ]

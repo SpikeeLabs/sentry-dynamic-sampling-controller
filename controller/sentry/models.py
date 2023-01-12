@@ -53,3 +53,6 @@ class App(models.Model):
         merger = MERGER[validated_data["type"]]
         merger(self, validated_data["data"])
         self.last_seen = timezone.now()
+
+    class Meta:
+        permissions = [("bump_sample_rate_app", "Can bump sample rate")]
