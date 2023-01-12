@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+
+{% block branding %}
+{{ block.super }}
+
+{% if PANIC %}
+
+<style>
+  :root {
+    --header-bg: orangered;
+  }
+</style>
+<b>Panic Mode Activated</b>
+{% endif %}
+{% endblock %}

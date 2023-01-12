@@ -55,4 +55,7 @@ class App(models.Model):
         self.last_seen = timezone.now()
 
     class Meta:
-        permissions = [("bump_sample_rate_app", "Can bump sample rate")]
+        permissions = [
+            ("bump_sample_rate_app", "Can bump sample rate"),
+            ("panic_app", "Panic! Set all sample rate to 0"),
+        ]

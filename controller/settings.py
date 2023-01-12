@@ -89,7 +89,7 @@ ROOT_URLCONF = "controller.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -97,6 +97,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "controller.sentry.utils.is_panic_activated",
             ],
         },
     },
@@ -163,19 +164,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CONN_MAX_AGE = None
 APP_CACHE_TIMEOUT = 0
 
-if not DEBUG:
-    APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": os.getenv("CACHE_REDIS_URL", "redis://127.0.0.1:6379"),
-            "OPTIONS": {
-                "parser_class": "redis.connection.PythonParser",
-                "pool_class": "redis.BlockingConnectionPool",
-            },
-            "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", "120")),
-        }
+
+APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("CACHE_REDIS_URL", "redis://127.0.0.1:6379"),
+        "OPTIONS": {
+            "parser_class": "redis.connection.PythonParser",
+            "pool_class": "redis.BlockingConnectionPool",
+        },
+        "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", "120")),
     }
+}
 
 
 DEFAULT_SAMPLE_RATE = float(os.getenv("DEFAULT_SAMPLE_RATE", "0.1"))
@@ -197,3 +198,5 @@ CACHE_META_INVALIDATION = {
 MAX_BUMP_TIME_SEC = int(os.getenv("MAX_BUMP_TIME_SEC", "0"))
 if MAX_BUMP_TIME_SEC == 0:
     MAX_BUMP_TIME_SEC = 30 * 60  # 30 minutes
+
+PANIC_KEY = "PANIC"
