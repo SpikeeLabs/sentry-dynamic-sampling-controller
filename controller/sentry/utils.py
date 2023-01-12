@@ -38,3 +38,7 @@ def invalidate_cache(path=""):
             raise ValueError("failed to create cache_key")
     except (ValueError, Exception) as e:
         return (False, e)
+
+
+def is_panic_activated(request):
+    return {"PANIC": cache.get(settings.PANIC_KEY)}

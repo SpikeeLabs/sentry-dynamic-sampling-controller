@@ -5,7 +5,8 @@ const scope = [
   "route",
   "task",
   "validator",
-  "metrics"
+  "metrics",
+  "panic"
 ];
 
 module.exports = {
