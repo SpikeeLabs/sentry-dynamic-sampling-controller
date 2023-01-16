@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  pylama:
     runs-on: ubuntu-latest
     strategy:
       matrix:

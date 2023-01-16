@@ -3,14 +3,14 @@ from django.core.cache import cache
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import decorators, viewsets
+from rest_framework import decorators, mixins, viewsets
 from rest_framework.response import Response
 
 from controller.sentry.models import App
 from controller.sentry.serializers import AppSerializer, MetricSerializer
 
 
-class AppViewSet(viewsets.ModelViewSet):
+class AppViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """App"""
 
     model = App
@@ -25,18 +25,15 @@ class AppViewSet(viewsets.ModelViewSet):
         app.last_seen = now
         if app.active_window_end and app.active_window_end < now:
             app.active_sample_rate = app.default_sample_rate
+            app.active_window_end = None
         app.save()
         if panic:
             app.active_sample_rate = 0.0
         serializer = self.get_serializer(app)
         return Response(serializer.data)
 
-    @decorators.action(
-        detail=True, methods=["post"], url_path=r"metrics/(?P<metric_name>[^/.]+)"
-    )
-    def metrics(
-        self, request, pk=None, metric_name=None
-    ):  # pylint: disable=W0613,C0103
+    @decorators.action(detail=True, methods=["post"], url_path=r"metrics/(?P<metric_name>[^/.]+)")
+    def metrics(self, request, pk=None, metric_name=None):  # pylint: disable=W0613,C0103
         app, _ = App.objects.get_or_create(reference=pk)
 
         serializer = MetricSerializer(data=request.data)

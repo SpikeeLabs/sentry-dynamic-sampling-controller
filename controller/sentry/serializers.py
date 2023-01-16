@@ -20,6 +20,7 @@ class AppSerializer(serializers.ModelSerializer):
         ]
 
 
+# pylint: disable=abstract-method
 class MetricSerializer(serializers.Serializer):
 
     type = serializers.ChoiceField(choices=MetricType.choices)

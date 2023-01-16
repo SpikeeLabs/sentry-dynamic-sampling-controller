@@ -28,7 +28,7 @@ router.register(r"apps", views.AppViewSet, basename="apps")
 
 
 class CustomLogin(View):
-    def get(self, request, **kwargs):
+    def get(self, request, **kwargs):  # pylint: disable=unused-argument
         return HttpResponseRedirect(
             reverse("oidc_authentication_init")
             + ("?next={}".format(request.GET["next"]) if "next" in request.GET else "")
