@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +25,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ENV", "production") != "production"
-
+TESTING = sys.argv[1:2] == ["test"] or os.getenv("TESTING")
 ALLOWED_HOSTS = ["*"]
 
 
@@ -164,25 +165,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CONN_MAX_AGE = None
 APP_CACHE_TIMEOUT = 0
 
-
-APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.getenv("CACHE_REDIS_URL", "redis://127.0.0.1:6379"),
-        "OPTIONS": {
-            "parser_class": "redis.connection.PythonParser",
-            "pool_class": "redis.BlockingConnectionPool",
-        },
-        "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", "120")),
+if not TESTING:
+    APP_CACHE_TIMEOUT = int(os.getenv("APP_CACHE_TIMEOUT", "600"))
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("CACHE_REDIS_URL", "redis://127.0.0.1:6379"),
+            "OPTIONS": {
+                "parser_class": "redis.connection.PythonParser",
+                "pool_class": "redis.BlockingConnectionPool",
+            },
+            "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", "120")),
+        }
     }
-}
 
 
 DEFAULT_SAMPLE_RATE = float(os.getenv("DEFAULT_SAMPLE_RATE", "0.1"))
-DEFAULT_WSGI_IGNORE_PATHS = os.getenv(
-    "DEFAULT_WSGI_IGNORE_PATHS", "/health,/healthz,/health/,/healthz/"
-).split(",")
+DEFAULT_WSGI_IGNORE_PATHS = os.getenv("DEFAULT_WSGI_IGNORE_PATHS", "/health,/healthz,/health/,/healthz/").split(",")
 
 
 DEFAULT_CELERY_IGNORE_TASKS = []

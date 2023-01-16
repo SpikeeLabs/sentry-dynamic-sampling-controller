@@ -18,8 +18,6 @@ from controller.sentry.forms import BumpForm
 from controller.sentry.models import App
 from controller.sentry.utils import invalidate_cache
 
-admin.site
-
 
 @admin.register(App)
 class AppAdmin(
@@ -102,7 +100,7 @@ class AppAdmin(
     @add_form_to_action(BumpForm)
     @confirm_action()
     @admin.action(description="Bump Sample Rate")
-    def bump_sample_rate(self, request, queryset, form: BumpForm = None):
+    def bump_sample_rate(self, request, queryset, form: BumpForm = None):  # pylint: disable=unused-argument
         new_date = timezone.now() + form.cleaned_data["duration"]
         queryset.update(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
@@ -122,7 +120,7 @@ class AppAdmin(
     @takes_instance_or_queryset
     @confirm_action(display_queryset=False)
     @admin.action(description="Panic")
-    def panic(self, request, queryset):
+    def panic(self, request, queryset):  # pylint: disable=unused-argument
         cache.set(settings.PANIC_KEY, True, timeout=None)
 
     panic.allowed_permissions = ("panic",)
@@ -138,7 +136,7 @@ class AppAdmin(
     @takes_instance_or_queryset
     @confirm_action(display_queryset=False)
     @admin.action(description="UnPanic")
-    def unpanic(self, request, queryset):
+    def unpanic(self, request, queryset):  # pylint: disable=unused-argument
         cache.delete(settings.PANIC_KEY)
 
     unpanic.allowed_permissions = ("unpanic",)
