@@ -1,8 +1,13 @@
+from functools import lru_cache
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
-DEVELOPER_GROUP = Group.objects.get(name=settings.DEVELOPER_GROUP)
+
+@lru_cache
+def get_group(group):
+    return Group.objects.get(name=group)
 
 
 class ControllerOIDCAuthenticationBackend(OIDCAuthenticationBackend):
@@ -30,4 +35,4 @@ class ControllerOIDCAuthenticationBackend(OIDCAuthenticationBackend):
 
     def _set_perms(self, user):
         user.is_staff = True
-        user.groups.add(DEVELOPER_GROUP)
+        user.groups.add(get_group(settings.DEVELOPER_GROUP))

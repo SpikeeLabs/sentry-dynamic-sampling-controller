@@ -54,6 +54,10 @@ class App(models.Model):
         merger(self, validated_data["data"])
         self.last_seen = timezone.now()
 
+    def get_metric(self, metric_type: MetricType):
+        prefix = metric_type.value.lower()
+        return getattr(self, f"{prefix}_collect_metrics"), getattr(self, f"{prefix}_metrics")
+
     class Meta:
         permissions = [
             ("bump_sample_rate_app", "Can bump sample rate"),

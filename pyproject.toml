@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sentry-dynamic-sampling-controller"
 version = "0.1.0"
-description = ""
+description = "This project aims to provide dynamic sampling without relying on Sentry Dynamic Sampling."
 authors = ["jeanloup.monnier <jean-loup.monnier@spikeelabs.fr>"]
 readme = "README.md"
 packages = [{ include = "controller" }]
@@ -20,6 +20,10 @@ django-better-admin-arrayfield = "^1.4.2"
 django-json-widget = "^1.1.1"
 mozilla-django-oidc = "^3.0.0"
 django-durationwidget2 = "^1.0.6"
+pytest = "^7.2.1"
+pytest-django = "^4.5.2"
+pytest-xdist = "^3.1.0"
+undecorated = "^0.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -37,3 +41,78 @@ toml = "^0.10.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+exclude = '''
+(
+    /(
+        \.git
+        |\.tox
+        |migrations
+    )/
+)
+'''
+include = '\.pyi?$'
+line-length = 119
+
+[tool.pylama]
+format = "pycodestyle"
+linters = "pycodestyle,pyflakes,pylint"
+max_line_length = 119
+skip = ".pytest_cache,.venv/*,*/migrations/*,tests/*,*/tests/*,docs/*,manage.py,config.py"
+
+[tool.pylama.linter.pycodestyle]
+max_line_length = 119
+
+[tool.pylama.linter.pylint]
+disable = "W0108,W0511,W0602,W0603,W0703,C0206,C0209,C0114,C0115,C0116,R0903,R0913,R0914,R0901,E1101,E1130,E1136,W0212"
+load-plugins = "pylint_django"
+django-settings-module = "controller.settings"
+# Ignored rules:
+#   - W0108: Lambda may not be necessary
+#   - W0511: fixme, todo
+#   - W0602: global-variable-not-assigned
+#   - W0603: global-statement
+#   - W0703: Catching too general exception
+#   - C0114: missing-module-docstring
+#   - C0115: missing-class-docstring
+#   - C0116: missing-function-docstring
+#   - C0206: consider-using-dict-items
+#   - C0209: consider-using-f-string
+#   - R0903: too-few-public-methods
+#   - R0913: too-many-arguments
+#   - R0914: too-many-locals
+#   - R0901: max-parents: Maximum number of parents for a class
+#   - E1101: generated-members
+#            List of members which are set dynamically and missed by pylint inference system,
+#            and so shouldn't trigger E1101 when accessed.
+#   - E1130: invalid-unary-operand-type
+#            Emitted when a unary operand is used on an object which does not support this type of operation.
+#   - E1136: unsubscriptable-object
+#            Value '%s' is unsubscriptable Emitted when a subscripted value doesn't support subscription
+#   - W0212: protected-access: Access to a protected member of a client class
+
+
+[tool.coverage.run]
+command_line = "-m pytest"
+relative_files = true
+omit = [
+    '*/apps.py',
+    '*/tests*',
+    '*/settings.py',
+    '*/migrations/*',
+    "controller/urls.py",
+    "controller/wsgi.py",
+    "controller/celery.py",
+]
+source = ["controller"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "controller.settings"
+addopts = "--doctest-modules -ra -l --tb=short --show-capture=all --color=yes --create-db"
+markers = ["admin_site"]

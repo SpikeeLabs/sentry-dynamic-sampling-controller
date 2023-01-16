@@ -19,9 +19,6 @@ class BumpForm(Form):
 
     def clean_duration(self):
         data = self.cleaned_data["duration"]
-        if (
-            data.total_seconds() < 0
-            or data.total_seconds() > settings.MAX_BUMP_TIME_SEC
-        ):
-            raise ValidationError("duration must be between 0 and 600")
+        if data.total_seconds() < 0 or data.total_seconds() > settings.MAX_BUMP_TIME_SEC:
+            raise ValidationError(f"duration must be between 0 and {settings.MAX_BUMP_TIME_SEC}")
         return data

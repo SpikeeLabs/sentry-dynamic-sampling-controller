@@ -32,13 +32,12 @@ def invalidate_cache(path=""):
             if cache_key in cache:
                 cache.delete(cache_key)
                 return (True, "successfully invalidated")
-            else:
-                return (False, "cache_key does not exist in cache")
-        else:
-            raise ValueError("failed to create cache_key")
-    except (ValueError, Exception) as e:
-        return (False, e)
+            return (False, "cache_key does not exist in cache")
+        raise ValueError("failed to create cache_key")
+    except (ValueError, Exception) as err:
+        return (False, err)
 
 
+# pylint: disable=unused-argument
 def is_panic_activated(request):
     return {"PANIC": cache.get(settings.PANIC_KEY)}
