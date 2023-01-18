@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=sentry
+      - POSTGRES_USER=sentry
+      - POSTGRES_PASSWORD=sentry
+    ports:
+      - 5432:5432
+    volumes:
+      - "controllerdata:/var/lib/postgresql/data"
+
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+
+  static:
+    image: spklabs/sentry-dynamic-sampling-controller-static:latest
+    ports:
+      - 8081:80
+  app:
+    image: spklabs/sentry-dynamic-sampling-controller:latest
+    depends_on:
+      - postgres
+      - redis
+      - static
+    ports:
+      - 8080:8000
+    environment:
+      - ENV=debug
+      - SECRET_KEY="very_secret"
+      - POSTGRES_DB=sentry
+      - POSTGRES_USER=sentry
+      - POSTGRES_PASSWORD=sentry
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - APP_CACHE_TIMEOUT=600
+      - CACHE_REDIS_URL=redis://redis:6379
+      - CACHE_TIMEOUT=120
+      - DEFAULT_SAMPLE_RATE=0.1
+      - DEFAULT_WSGI_IGNORE_PATHS="/health,/healthz,/health/,/healthz/"
+      - MAX_BUMP_TIME_SEC=6000
+      # oidc
+      - OIDC_RP_CLIENT_ID=$OIDC_RP_CLIENT_ID
+      - OIDC_RP_CLIENT_SECRET=$OIDC_RP_CLIENT_SECRET
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=$OIDC_OP_AUTHORIZATION_ENDPOINT
+      - OIDC_OP_TOKEN_ENDPOINT=$OIDC_OP_TOKEN_ENDPOINT
+      - OIDC_OP_USER_ENDPOINT=$OIDC_OP_USER_ENDPOINT
+      - LOGIN_REDIRECT_URL=$LOGIN_REDIRECT_URL
+      - LOGOUT_REDIRECT_URL=$LOGOUT_REDIRECT_URL
+      - OIDC_OP_JWKS_ENDPOINT=$OIDC_OP_JWKS_ENDPOINT
+      - OIDC_RP_SIGN_ALGO=RS256
+      - STATIC_URL=http://localhost:8081/static
+
+volumes:
+  controllerdata:

@@ -28,6 +28,10 @@ DEBUG = os.getenv("ENV", "production") != "production"
 TESTING = sys.argv[1:2] == ["test"] or os.getenv("TESTING")
 ALLOWED_HOSTS = ["*"]
 
+STATIC_URL = os.getenv("STATIC_URL", "/assets/static/")
+MEDIA_URL = os.getenv("MEDIA_URL", "/assets/media/")
+STATIC_ROOT = os.path.join(BASE_DIR, "assets/static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "assets/media")
 
 # Application definition
 
@@ -150,12 +154,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

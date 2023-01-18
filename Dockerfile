@@ -1,43 +1,54 @@
 # base image
-FROM python:3.10.8-slim as python-base
+FROM python:3.10.8-alpine as python-base
 
-ENV PYTHONUNBUFFERED=1 \
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONHASHSEED=random \
+    PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    APP_PATH="/app" \
-    VENV_PATH="/app/.venv"
-
-# prepend poetry and venv to path
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
-
+    VENV_PATH="/app/venv" \
+    APP_PATH="/app"
+# prepend venv to path
+ENV PATH="$VENV_PATH/bin:$PATH"
 WORKDIR $APP_PATH
 
 
 # Build
 FROM python-base as builder-base
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+ENV PIP_DEFAULT_TIMEOUT=100 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
 
 # get poetry
-# hadolint ignore=DL3008
-RUN apt-get update \
-    && apt-get --no-install-recommends install -y curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apk update \
+    && apk add --update --no-cache curl==7.87.0-r1 \
     && curl -sSL https://install.python-poetry.org | python -
 
-ENV PATH="${PATH}:/root/.poetry/bin"
+RUN python -m venv "$VENV_PATH"
+
+ENV PATH="${PATH}:/root/.local/bin"
 
 
 COPY pyproject.toml poetry.lock ./
 
-# install deps
-RUN poetry install --only main --no-root
+RUN poetry export -f requirements.txt | "$VENV_PATH/bin/pip" install -r /dev/stdin
+
+COPY . .
+
+RUN poetry build && "$VENV_PATH/bin/pip" install dist/*.whl \
+    && rm -rf dist/
+
+
+# Static base
+FROM builder-base as static-base
+
+RUN python manage.py collectstatic
+
+# Static
+FROM nginx:mainline-alpine as static
+COPY --from=static-base /app/assets /usr/share/nginx/html
 
 # Prod
 FROM python-base as production

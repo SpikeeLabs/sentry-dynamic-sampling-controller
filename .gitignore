@@ -57,3 +57,5 @@ celerybeat-schedule*
 # idea
 tmp/*
 .idea/*
+
+assets/*
