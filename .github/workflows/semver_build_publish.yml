@@ -49,20 +49,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build
+      - name: Build app
         run: docker build . -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ needs.semver.outputs.version }}
+      - name: Build Static
+        run: docker build . --target static -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}-static:${{ needs.semver.outputs.version }}
       - name: Tag using channel
         run: |
           CHANNEL=${{ needs.semver.outputs.new_release_channel }}
           docker build . -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${CHANNEL:-'latest'}
+          docker build . --target static -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}-static:${CHANNEL:-'latest'}
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Push image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ needs.semver.outputs.version }}
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ needs.semver.outputs.version }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}-static:${{ needs.semver.outputs.version }}
       - name: Push image on channel tag
         run: |
           CHANNEL=${{ needs.semver.outputs.new_release_channel }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${CHANNEL:-'latest'}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}-static:${CHANNEL:-'latest'}
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3

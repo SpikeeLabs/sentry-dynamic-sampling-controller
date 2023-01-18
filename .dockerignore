@@ -24,3 +24,16 @@ sonar-project.properties
 
 # Ignore current.py file to allow symbolic link creation during docker build
 orange/settings/current.py
+
+assets/
+.venv/
+.env
+.github/
+.pre-commit-config.yaml
+.pytest_cache/
+Dockerfile
+LICENSE
+__pycache__/
+dict/
+docker/
+commitlint.config.js
