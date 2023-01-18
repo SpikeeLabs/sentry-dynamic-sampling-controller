@@ -1,8 +1,7 @@
 # Sentry Dynamic Sampling Controller
 
-![Tests Status](https://github.com/SpikeeLabs/sentry-dynamic-sampling-controller/actions/workflows/.github/workflows/test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/SpikeeLabs/sentry-dynamic-sampling-controller/branch/main/graph/badge.svg?token=NK5V6YMWW0)](https://codecov.io/gh/SpikeeLabs/sentry-dynamic-sampling-controller)
-
+![Tests Status](https://github.com/SpikeeLabs/sentry-dynamic-sampling-controller/actions/workflows/.github/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/SpikeeLabs/sentry-dynamic-sampling-controller/branch/main/graph/badge.svg?token=JS0XEL56JT)](https://codecov.io/gh/SpikeeLabs/sentry-dynamic-sampling-controller)
 ---
 
 This project aims to provide dynamic sampling without relying on Sentry Dynamic Sampling.
