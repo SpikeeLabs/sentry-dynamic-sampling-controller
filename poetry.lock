@@ -244,6 +244,21 @@ python-versions = "*"
 Django = ">=1.11"
 
 [[package]]
+name = "django-health-check"
+version = "3.17.0"
+description = "Run checks on services like databases, queue servers, celery processes, etc."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+django = ">=2.2"
+
+[package.extras]
+docs = ["sphinx"]
+test = ["celery", "pytest", "pytest-cov", "pytest-django", "redis"]
+
+[[package]]
 name = "django-json-widget"
 version = "1.1.1"
 description = "Django json widget is an alternative widget that makes it easy to edit the jsonfield field of django."
@@ -994,7 +1009,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "10a87976b8e7571a0f00837d343dda2eb176fd5e83935f4af36a4f3b3f3de2d9"
+content-hash = "3e919deceb90778aff6cab2083f0780071a824b01fb3b67fb0a538f50e4003aa"
 
 [metadata.files]
 asgiref = [
@@ -1217,6 +1232,10 @@ django-better-admin-arrayfield = [
 django-durationwidget2 = [
     {file = "django-durationwidget2-1.0.6.tar.gz", hash = "sha256:269efc3cd6eec7c1da20df14938a379a0c11605a9eecf671ec8afa5956b41760"},
     {file = "django_durationwidget2-1.0.6-py3-none-any.whl", hash = "sha256:f0b1d1f2357a5ec3e5716a7f38c7ffd8638244fd3c89b0082cca2a95bad30014"},
+]
+django-health-check = [
+    {file = "django-health-check-3.17.0.tar.gz", hash = "sha256:d1b8671e79d1de6e3dd1a9c69566222b0bfcfacca8b90511a4407b2d0d3d2778"},
+    {file = "django_health_check-3.17.0-py2.py3-none-any.whl", hash = "sha256:20dc5ccb516a4e7163593fd4026f0a7531e3027b47d23ebe3bd9dbc99ac4354c"},
 ]
 django-json-widget = [
     {file = "django-json-widget-1.1.1.tar.gz", hash = "sha256:ec948a4c379687f9c854748ba540fdbeb1b1730846ca953f186818521de7e696"},

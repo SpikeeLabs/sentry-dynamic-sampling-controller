@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     "django_better_admin_arrayfield",
     "django_json_widget",
     "durationwidget",
+    "health_check",
+    "health_check.db",  # stock Django health checkers
+    "health_check.cache",
+    "health_check.storage",
     "controller.sentry",
 ]
 

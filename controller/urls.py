@@ -39,6 +39,7 @@ urlpatterns = [
     path("oidc/", include("mozilla_django_oidc.urls")),
     path("admin/login/", CustomLogin.as_view()),
     path("admin/", admin.site.urls),
+    path("health/", include("health_check.urls")),
     path("sentry/", include((router.urls, "sentry"), namespace="sentry")),
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
