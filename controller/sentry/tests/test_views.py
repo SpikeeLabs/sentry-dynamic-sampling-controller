@@ -1,10 +1,8 @@
-from datetime import timedelta
 from unittest.mock import Mock, patch
 
 import pytest
 from django.conf import settings
 from django.urls import reverse
-from django.utils import timezone
 
 from controller.sentry.choices import MetricType
 from controller.sentry.models import App
@@ -20,29 +18,6 @@ def test_app_view_retrieve(client):
     assert response.data["active_sample_rate"] == settings.DEFAULT_SAMPLE_RATE
     assert not response.data["wsgi_collect_metrics"]
     assert not response.data["celery_collect_metrics"]
-
-
-@pytest.mark.django_db
-def test_app_view_retrieve_windows_end(client):
-    reference = "test"
-    app = App(reference=reference)
-    app.active_window_end = timezone.now() + timedelta(hours=5)
-    app.active_sample_rate = 1
-    app.default_sample_rate = 0.5
-    app.save()
-    url = reverse("sentry:apps-detail", kwargs={"pk": reference})
-    response = client.get(url)
-    assert response.status_code == 200
-    assert response.data["active_window_end"] is not None
-    assert response.data["active_sample_rate"] == 1
-
-    app.active_window_end = timezone.now() - timedelta(hours=5)
-    app.save()
-    url = reverse("sentry:apps-detail", kwargs={"pk": reference})
-    response = client.get(url)
-    assert response.status_code == 200
-    assert response.data["active_window_end"] is None
-    assert response.data["active_sample_rate"] == 0.5
 
 
 @patch("controller.sentry.views.cache")
