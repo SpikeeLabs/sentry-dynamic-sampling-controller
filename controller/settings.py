@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 import sys
 from pathlib import Path
+from urllib.parse import quote
+
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("ENV", "production") != "production"
 TESTING = sys.argv[1:2] == ["test"] or os.getenv("TESTING")
 
+# Static and Media
 STATIC_URL = os.getenv("STATIC_URL", "/assets/static/")
 MEDIA_URL = os.getenv("MEDIA_URL", "/assets/media/")
 STATIC_ROOT = os.path.join(BASE_DIR, "assets/static")
@@ -42,7 +46,13 @@ if DEBUG:
     ALLOWED_HOSTS = ["*"]
 
 # Application definition
+# URLs
+ROOT_URLCONF = "controller.urls"
 
+# WSGI
+WSGI_APPLICATION = "controller.wsgi.application"
+
+# Application definition
 INSTALLED_APPS = [
     "admin_action_tools",
     "django.contrib.admin",
@@ -62,9 +72,40 @@ INSTALLED_APPS = [
     "health_check.db",  # stock Django health checkers
     "health_check.cache",
     "health_check.storage",
+    "django_celery_results",
     "controller.sentry",
 ]
 
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+
+# template
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "controller.sentry.utils.is_panic_activated",
+            ],
+        },
+    },
+]
+
+# Authentication
 AUTHENTICATION_BACKENDS = (
     # "django.contrib.auth.backends.ModelBackend",
     "controller.sentry.auth.ControllerOIDCAuthenticationBackend",
@@ -86,41 +127,6 @@ LOGOUT_REDIRECT_URL = os.getenv("LOGOUT_REDIRECT_URL")
 OIDC_RP_SIGN_ALGO = os.getenv("OIDC_RP_SIGN_ALGO", "RS256")
 
 OIDC_OP_JWKS_ENDPOINT = os.getenv("OIDC_OP_JWKS_ENDPOINT")
-
-
-DEVELOPER_GROUP = os.getenv("DEVELOPER_GROUP", "Developer")
-
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
-
-ROOT_URLCONF = "controller.urls"
-
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "controller.sentry.utils.is_panic_activated",
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = "controller.wsgi.application"
 
 
 # Database
@@ -172,7 +178,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Reuse db connection
 CONN_MAX_AGE = None
+
+# CACHE
 APP_CACHE_TIMEOUT = 0
 
 if not TESTING:
@@ -190,12 +200,13 @@ if not TESTING:
     }
 
 
+# App config
 DEFAULT_SAMPLE_RATE = float(os.getenv("DEFAULT_SAMPLE_RATE", "0.1"))
+
 DEFAULT_WSGI_IGNORE_PATHS = os.getenv("DEFAULT_WSGI_IGNORE_PATHS", "/health,/healthz,/health/,/healthz/").split(",")
 
 
 DEFAULT_CELERY_IGNORE_TASKS = []
-
 
 CACHE_META_INVALIDATION = {
     "SERVER_NAME": os.getenv("CACHE_META_SERVER_NAME", "localhost"),
@@ -203,9 +214,42 @@ CACHE_META_INVALIDATION = {
     "HTTP_ACCEPT": os.getenv("CACHE_META_HTTP_ACCEPT", "*/*"),
 }
 
-
 MAX_BUMP_TIME_SEC = int(os.getenv("MAX_BUMP_TIME_SEC", "0"))
 if MAX_BUMP_TIME_SEC == 0:
     MAX_BUMP_TIME_SEC = 30 * 60  # 30 minutes
 
+# CACHE KEY for panic
 PANIC_KEY = "PANIC"
+
+DEVELOPER_GROUP = os.getenv("DEVELOPER_GROUP", "Developer")
+
+APP_AUTO_PRUNE = os.getenv("APP_AUTO_PRUNE", "true").lower() == "true"
+APP_AUTO_PRUNE_MAX_AGE_DAY = int(os.getenv("APP_AUTO_PRUNE_MAX_AGE_DAY", "5"))
+
+
+# Celery
+BROKER_USER = quote(os.environ.get("CELERY_BROKER_USER", "rabbitmq"))
+BROKER_PASSWORD = quote(os.environ.get("CELERY_BROKER_PASSWORD", "rabbitmq"))
+BROKER_HOST = os.environ.get("CELERY_BROKER_HOST", "localhost")
+BROKER_PORT = os.environ.get("CELERY_BROKER_PORT", "5672")
+BROKER_VHOST = quote(os.environ.get("CELERY_BROKER_VHOST", "/"))
+
+
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_ACKS_LATE = True
+CELERY_PREFETCH_MULTIPLIER = 1
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = f"amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}/{BROKER_VHOST}"
+
+CELERY_BEAT_SCHEDULE = {
+    "close-window": {
+        "task": "controller.sentry.tasks.close_window",
+        "schedule": crontab(),
+    }
+}
+
+if APP_AUTO_PRUNE:
+    CELERY_BEAT_SCHEDULE["prune-inactive"] = {
+        "task": "controller.sentry.tasks.prune_inactive_app",
+        "schedule": crontab(minute="0", hour="*"),
+    }
