@@ -23,9 +23,6 @@ class AppViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         panic = cache.get(settings.PANIC_KEY)
         now = timezone.now()
         app.last_seen = now
-        if app.active_window_end and app.active_window_end < now:
-            app.active_sample_rate = app.default_sample_rate
-            app.active_window_end = None
         app.save()
         if panic:
             app.active_sample_rate = 0.0
