@@ -26,12 +26,17 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ENV", "production") != "production"
 TESTING = sys.argv[1:2] == ["test"] or os.getenv("TESTING")
-ALLOWED_HOSTS = ["*"]
 
 STATIC_URL = os.getenv("STATIC_URL", "/assets/static/")
 MEDIA_URL = os.getenv("MEDIA_URL", "/assets/media/")
 STATIC_ROOT = os.path.join(BASE_DIR, "assets/static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "assets/media")
+
+if not DEBUG:
+    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+    CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+else:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
