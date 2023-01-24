@@ -14,3 +14,10 @@ def test_app_model_merge():
     collect, metrics = app.get_metric(MetricType.CELERY)
     assert not collect
     assert metrics == {"test1": 5, "test": 6}
+
+
+def test_app_model_get_sentry_id():
+    app = App(reference="abc")
+    assert app.get_sentry_id() is None
+    app = App(reference="123_prod_uwsgi")
+    assert app.get_sentry_id() == "123"

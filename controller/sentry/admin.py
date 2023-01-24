@@ -31,6 +31,7 @@ class AppAdmin(
 
     list_display = [
         "reference",
+        "sentry_project_slug",
         "last_seen",
         "default_sample_rate",
         "active_sample_rate",
@@ -57,6 +58,13 @@ class AppAdmin(
                     "default_sample_rate",
                     ("active_sample_rate", "active_window_end"),
                 )
+            },
+        ],
+        [
+            "Sentry",
+            {
+                "classes": ("collapse", "open"),
+                "fields": ("sentry_project_slug",),
             },
         ],
         [

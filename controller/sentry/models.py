@@ -28,6 +28,9 @@ class App(models.Model):
     active_sample_rate = models.FloatField(default=settings.DEFAULT_SAMPLE_RATE)
     active_window_end = models.DateTimeField(null=True, blank=True)
 
+    # Sentry Api
+    sentry_project_slug = models.CharField(max_length=50, null=True, blank=True)
+
     # WSGI
     wsgi_ignore_path = ArrayField(
         models.CharField(max_length=50, blank=True),
@@ -57,6 +60,12 @@ class App(models.Model):
     def get_metric(self, metric_type: MetricType):
         prefix = metric_type.value.lower()
         return getattr(self, f"{prefix}_collect_metrics"), getattr(self, f"{prefix}_metrics")
+
+    def get_sentry_id(self):
+        res = self.reference.split("_")
+        if len(res) != 3:
+            return None
+        return res[0]
 
     class Meta:
         permissions = [
