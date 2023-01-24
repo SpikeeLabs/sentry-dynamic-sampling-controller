@@ -49,6 +49,10 @@ if DEBUG:
 # URLs
 ROOT_URLCONF = "controller.urls"
 
+# Application definition
+# URLs
+ROOT_URLCONF = "controller.urls"
+
 # WSGI
 WSGI_APPLICATION = "controller.wsgi.application"
 
@@ -224,7 +228,7 @@ PANIC_KEY = "PANIC"
 DEVELOPER_GROUP = os.getenv("DEVELOPER_GROUP", "Developer")
 
 APP_AUTO_PRUNE = os.getenv("APP_AUTO_PRUNE", "true").lower() == "true"
-APP_AUTO_PRUNE_MAX_AGE_DAY = int(os.getenv("APP_AUTO_PRUNE_MAX_AGE_DAY", "5"))
+APP_AUTO_PRUNE_MAX_AGE_DAY = int(os.getenv("APP_AUTO_PRUNE_MAX_AGE_DAY", "30"))
 
 
 # Celery
@@ -245,7 +249,11 @@ CELERY_BEAT_SCHEDULE = {
     "close-window": {
         "task": "controller.sentry.tasks.close_window",
         "schedule": crontab(),
-    }
+    },
+    "sentry-project-slug": {
+        "task": "controller.sentry.tasks.pull_sentry_project_slug",
+        "schedule": crontab(),
+    },
 }
 
 if APP_AUTO_PRUNE:
@@ -253,3 +261,6 @@ if APP_AUTO_PRUNE:
         "task": "controller.sentry.tasks.prune_inactive_app",
         "schedule": crontab(minute="0", hour="*"),
     }
+
+
+SENTRY_TOKEN = os.getenv("SENTRY_TOKEN")
