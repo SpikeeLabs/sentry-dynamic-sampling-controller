@@ -32,10 +32,13 @@ MEDIA_URL = os.getenv("MEDIA_URL", "/assets/media/")
 STATIC_ROOT = os.path.join(BASE_DIR, "assets/static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "assets/media")
 
-if not DEBUG:
-    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+if os.getenv("CSRF_TRUSTED_ORIGINS", ""):
     CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-else:
+
+if DEBUG:
     ALLOWED_HOSTS = ["*"]
 
 # Application definition
