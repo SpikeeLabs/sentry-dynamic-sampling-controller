@@ -77,5 +77,28 @@ services:
     command:
       - --statsd.mapping-config=/statsd/statsd.conf
 
+  prometheus:
+    image: prom/prometheus
+    profiles:
+      - metrics
+    volumes:
+      - ./etc/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana
+    profiles:
+      - metrics
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+
 volumes:
   controllerdata:
+  prometheus_data:
+  grafana_data:
