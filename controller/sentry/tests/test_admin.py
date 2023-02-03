@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from undecorated import undecorated
 
 from controller.sentry.admin import AppAdmin
-from controller.sentry.forms import BumpForm
+from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.models import App
 
 
@@ -146,6 +146,41 @@ def test_app_admin_bump(request, admin_with_user):
     assert app.active_window_end is not None
 
 
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_admin_metrics(request, admin_with_user):
+    app = App(wsgi_collect_metrics=False, celery_collect_metrics=False)
+    app.save()
+    form = MetricForm({"metrics": ["WSGI", "CELERY"]})
+
+    assert form.is_valid()
+    site, request = admin_with_user
+    enable_disable_metrics = undecorated(site.enable_disable_metrics)
+    enable_disable_metrics(site, request, App.objects.filter(reference=app.reference), form=form)
+    app.refresh_from_db()
+    assert app.wsgi_collect_metrics
+    assert app.celery_collect_metrics
+
+    form = MetricForm({"metrics": []})
+    assert form.is_valid()
+    site, request = admin_with_user
+    enable_disable_metrics = undecorated(site.enable_disable_metrics)
+    enable_disable_metrics(site, request, App.objects.filter(reference=app.reference), form=form)
+    app.refresh_from_db()
+    assert not app.wsgi_collect_metrics
+    assert not app.celery_collect_metrics
+
+    form = MetricForm({"metrics": ["WSGI"]})
+    assert form.is_valid()
+    site, request = admin_with_user
+    enable_disable_metrics = undecorated(site.enable_disable_metrics)
+    enable_disable_metrics(site, request, App.objects.filter(reference=app.reference), form=form)
+    app.refresh_from_db()
+    assert app.wsgi_collect_metrics
+    assert not app.celery_collect_metrics
+
+
 @patch("controller.sentry.admin.cache")
 @pytest.mark.django_db
 @pytest.mark.parametrize("user_group", ["Developer"])
@@ -197,13 +232,13 @@ def test_app_admin_get_changelist_actions(cache: Mock, admin_with_user, result, 
 @pytest.mark.parametrize(
     "user_group,panic,result",
     [
-        ("Owner", False, ["bump_sample_rate"]),
-        ("Admin", False, ["bump_sample_rate"]),
-        ("Developer", False, ["bump_sample_rate"]),
+        ("Owner", False, ["bump_sample_rate", "enable_disable_metrics"]),
+        ("Admin", False, ["bump_sample_rate", "enable_disable_metrics"]),
+        ("Developer", False, ["bump_sample_rate", "enable_disable_metrics"]),
         ("Viewer", False, []),
-        ("Owner", True, []),
-        ("Admin", True, []),
-        ("Developer", True, []),
+        ("Owner", True, ["enable_disable_metrics"]),
+        ("Admin", True, ["enable_disable_metrics"]),
+        ("Developer", True, ["enable_disable_metrics"]),
         ("Viewer", True, []),
     ],
 )

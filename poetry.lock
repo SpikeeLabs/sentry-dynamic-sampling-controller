@@ -640,14 +640,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-admin-action-tools"
-version = "1.1.4"
+version = "1.1.5"
 description = "Tools for django admin"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "django-admin-action-tools-1.1.4.tar.gz", hash = "sha256:a76a292d732a7a6180c3ef8a1905811f1607804607c27ea6134a741396c0824b"},
-    {file = "django_admin_action_tools-1.1.4-py3-none-any.whl", hash = "sha256:cb519251a281cffd56218b84810a561d9867325e11c9fd0dd8c0dda4d9882e07"},
+    {file = "django-admin-action-tools-1.1.5.tar.gz", hash = "sha256:b39c88646012f88622c5884fbe49afde16fd0854dca6c44671db5e303a782de6"},
+    {file = "django_admin_action_tools-1.1.5-py3-none-any.whl", hash = "sha256:bc3331b720100d4c9f00f5170c507a48eaaec947de298e8b789ba5a599bea6ae"},
 ]
 
 [package.dependencies]
@@ -2149,4 +2149,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1d1f4c578376664ac5abd07dcdcaf1edd913802800556633ef5d207fbb7c4960"
+content-hash = "5b29435b51eedba0ad0b1176e55be4d63fd1bfa643833959eeb3bb7561593289"

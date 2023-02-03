@@ -61,6 +61,10 @@ class App(models.Model):
         prefix = metric_type.value.lower()
         return getattr(self, f"{prefix}_collect_metrics"), getattr(self, f"{prefix}_metrics")
 
+    def set_metric(self, metric_type: MetricType, metric_state: bool):
+        prefix = metric_type.value.lower()
+        setattr(self, f"{prefix}_collect_metrics", metric_state)
+
     def get_sentry_id(self):
         res = self.reference.split("_")
         if len(res) != 3:
@@ -71,4 +75,5 @@ class App(models.Model):
         permissions = [
             ("bump_sample_rate_app", "Can bump sample rate"),
             ("panic_app", "Panic! Set all sample rate to 0"),
+            ("enable_disable_metrics_app", "Can Enable/Disable metrics"),
         ]
