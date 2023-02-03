@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 
+import sentry_sdk
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -263,4 +264,17 @@ if APP_AUTO_PRUNE:
     }
 
 
-SENTRY_TOKEN = os.getenv("SENTRY_TOKEN")
+SENTRY_API_TOKEN = os.getenv("SENTRY_API_TOKEN", "TEST")
+SENTRY_DSN = os.getenv("SENTRY_DSN")
+
+if SENTRY_DSN:
+    from sentry_dynamic_sampling_lib import init_wrapper
+
+    ENVIRONMENT = os.getenv("ENV", "production")
+    sentry_sdk.init(
+        dsn="https://167f729cbcd24c1984d1721b6c3bf53b@o1290673.ingest.sentry.io/4504617124888576",
+        environment=ENVIRONMENT,
+    )
+
+    # hook sentry_dynamic_sampling_lib into sentry
+    init_wrapper()

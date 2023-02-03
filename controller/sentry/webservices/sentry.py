@@ -26,7 +26,7 @@ class BearerAuth(AuthBase):
 class PaginatedSentryClient(metaclass=Singleton):
     def __init__(self) -> None:
         self.host = "https://sentry.io/api/0/"
-        self.auth = BearerAuth(settings.SENTRY_TOKEN)
+        self.auth = BearerAuth(settings.SENTRY_API_TOKEN)
 
     def __call(self, method: str, url):
         while True:
