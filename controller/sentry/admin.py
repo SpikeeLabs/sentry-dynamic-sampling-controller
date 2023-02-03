@@ -14,7 +14,8 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from django_json_widget.widgets import JSONEditorWidget
 from django_object_actions import DjangoObjectActions, takes_instance_or_queryset
 
-from controller.sentry.forms import BumpForm
+from controller.sentry.choices import MetricType
+from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.models import App
 from controller.sentry.utils import invalidate_cache
 
@@ -63,24 +64,28 @@ class AppAdmin(
         [
             "Sentry",
             {
-                "classes": ("collapse", "open"),
+                "classes": ("collapse",),
                 "fields": ("sentry_project_slug",),
             },
         ],
         [
-            "WSGI",
+            "Metric - WSGI",
             {
-                "classes": ("collapse", "open"),
-                "fields": ("wsgi_ignore_path", "wsgi_collect_metrics", "wsgi_metrics"),
+                "classes": ("collapse",),
+                "fields": (
+                    "wsgi_collect_metrics",
+                    "wsgi_ignore_path",
+                    "wsgi_metrics",
+                ),
             },
         ],
         [
-            "Celery",
+            "Metric - Celery",
             {
-                "classes": ("collapse", "open"),
+                "classes": ("collapse",),
                 "fields": (
-                    "celery_ignore_task",
                     "celery_collect_metrics",
+                    "celery_ignore_task",
                     "celery_metrics",
                 ),
             },
@@ -88,7 +93,7 @@ class AppAdmin(
     ]
     actions = ["bump_sample_rate"]
     changelist_actions = ["panic", "unpanic"]
-    change_actions = ["bump_sample_rate"]
+    change_actions = ["bump_sample_rate", "enable_disable_metrics"]
 
     def get_changelist_actions(self, request):
         allowed_actions = []
@@ -104,6 +109,7 @@ class AppAdmin(
                 allowed_actions.append(action)
         return allowed_actions
 
+    # ----- Bump Sample Rate
     @takes_instance_or_queryset
     @add_form_to_action(BumpForm)
     @confirm_action()
@@ -114,6 +120,8 @@ class AppAdmin(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
             active_window_end=new_date,
         )
+        for app in queryset:
+            invalidate_cache(f"/sentry/apps/{app.reference}/")
 
     bump_sample_rate.allowed_permissions = ("bump_sample_rate",)
 
@@ -125,6 +133,29 @@ class AppAdmin(
         panic = cache.get(settings.PANIC_KEY)
         return not panic and request.user.has_perm("%s.%s" % (opts.app_label, codename))
 
+    # ----- Update Metrics
+    @takes_instance_or_queryset
+    @add_form_to_action(MetricForm)
+    @admin.action(description="Enable/Disable Metrics Collection")
+    def enable_disable_metrics(self, request, queryset, form: MetricForm = None):  # pylint: disable=unused-argument
+        metrics = form.cleaned_data["metrics"]
+        app: App
+        for app in queryset:
+            for metric in MetricType:
+                app.set_metric(metric, metric.value in metrics)
+            invalidate_cache(f"/sentry/apps/{app.reference}/")
+            app.save()
+
+    enable_disable_metrics.allowed_permissions = ("enable_disable_metrics",)
+
+    def has_enable_disable_metrics_permission(self, request):
+        """Does the user have the enable_disable_metrics permission?"""
+        opts = self.opts
+        codename = get_permission_codename("enable_disable_metrics", opts)
+
+        return request.user.has_perm("%s.%s" % (opts.app_label, codename))
+
+    # ----- Panic / Unpanic
     @takes_instance_or_queryset
     @confirm_action(display_queryset=False)
     @admin.action(description="Panic")
@@ -157,6 +188,7 @@ class AppAdmin(
         codename = get_permission_codename("panic", opts)
         return panic and request.user.has_perm("%s.%s" % (opts.app_label, codename))
 
+    # Save model
     def save_model(self, request, obj, form, change) -> None:
         invalidate_cache(f"/sentry/apps/{obj.reference}/")
         return super().save_model(request, obj, form, change)
