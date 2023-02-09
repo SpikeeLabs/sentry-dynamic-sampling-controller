@@ -32,6 +32,9 @@ python manage.py migrate
 # add user
 python manage.py createsuperuser
 
+# load all permission group
+python manage.py loadpermissions
+
 # run server
 # admin @ http://localhost:8000/admin/
 python manage.py runserver

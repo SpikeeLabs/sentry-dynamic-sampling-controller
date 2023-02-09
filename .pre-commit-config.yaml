@@ -22,12 +22,11 @@ repos:
       - id: pylama
         args: # arguments to configure black
           - --max-line-length=119
-        # to remove when this is fixed https://github.com/klen/pylama/issues/224
-        additional_dependencies:
-          - pyflakes==2.4.0
+          # due to https://github.com/PyCQA/pycodestyle/issues/373
+          - -i E203
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
         args: ["-m=VERTICAL_HANGING_INDENT", "--combine-as", "--profile=black"]
@@ -65,7 +64,8 @@ repos:
     rev: "1.7.4"
     hooks:
       - id: bandit
-        files: "^orange/.*"
+        files: "^controller/.*"
+        exclude: "tests/.*"
 
   - repo: https://github.com/remastr/pre-commit-django-check-migrations
     rev: v0.1.0

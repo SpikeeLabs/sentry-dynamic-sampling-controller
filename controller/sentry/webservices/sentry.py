@@ -28,9 +28,9 @@ class PaginatedSentryClient(metaclass=Singleton):
         self.host = "https://sentry.io/api/0/"
         self.auth = BearerAuth(settings.SENTRY_API_TOKEN)
 
-    def __call(self, method: str, url):
+    def __call(self, method: str, url, params: dict = None):
         while True:
-            response = request(method, url, timeout=20, auth=self.auth)
+            response = request(method, url, timeout=20, auth=self.auth, params=params)
 
             # Checks if the response is rate limited
             if response.status_code == 429:
@@ -63,3 +63,16 @@ class PaginatedSentryClient(metaclass=Singleton):
     def list_projects(self) -> Generator[list[dict], None, None]:
         url = urljoin(self.host, "projects/")
         return self.__paginated(url)
+
+    def get_stats(self, sentry_id) -> dict:
+        url = urljoin(self.host, f"organizations/{settings.SENTRY_ORGANIZATION_SLUG}/stats_v2/")
+        params = {
+            "field": "sum(quantity)",
+            "groupBy": ["category", "outcome"],
+            "interval": "1h",
+            "project": sentry_id,
+            "statsPeriod": "7d",
+            "category": "transaction",
+        }
+        response = self.__call("GET", url, params=params)
+        return response.json()

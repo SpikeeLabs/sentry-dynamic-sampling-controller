@@ -4,11 +4,14 @@ import pytest
 from django.conf import settings
 from django.contrib.admin.sites import site as default_site
 from django.contrib.auth.models import Group
+from django.utils import timezone
 from undecorated import undecorated
 
 from controller.sentry.admin import AppAdmin
+from controller.sentry.choices import EventType
 from controller.sentry.forms import BumpForm, MetricForm
-from controller.sentry.models import App
+from controller.sentry.inlines import AppEventInline, ProjectEventInline
+from controller.sentry.models import App, Event, Project
 
 
 class MockRequest:
@@ -258,3 +261,85 @@ def test_app_admin_save_model(invalidate_cache: Mock, admin_with_user):
     app = App(reference="test")
     site.save_model(request, app, None, None)
     invalidate_cache.assert_called_once_with("/sentry/apps/test/")
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_admin_get_project(admin_with_user):
+    site, request = admin_with_user
+    project = Project(sentry_id="123")
+    app = App(reference="abc", project=project)
+    assert site.get_project(app) == f'<a href="/admin/sentry/project/123/change/">{str(project)}</a>'
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_admin_get_project_no_project(admin_with_user):
+    site, request = admin_with_user
+    app = App(reference="abc")
+    assert site.get_project(app) is None
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_get_event_status(admin_with_user):
+    site, request = admin_with_user
+    app = App(reference="abc")
+    assert site.get_event_status(app) == '<b style="color:gray;">Pending</b>'
+
+    app = App(reference="abc", project=Project(sentry_id="123"))
+    assert site.get_event_status(app) == '<b style="color:gray;">Pending</b>'
+
+    project = Project(sentry_id="123")
+    project.save()
+    event = Event(project=project, type=EventType.DISCARD, timestamp=timezone.now())
+    event.save()
+    app = App(reference="abc", project=project)
+    assert site.get_event_status(app) == '<b style="color:green;">No</b>'
+
+    project = Project(sentry_id="123")
+    project.save()
+    event = Event(project=project, type=EventType.FIRING, timestamp=timezone.now())
+    event.save()
+    app = App(reference="abc", project=project)
+    assert site.get_event_status(app) == '<b style="color:red;">Yes</b>'
+
+
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=Project)
+def test_project_event_inlines(admin_with_user):
+    site, request = admin_with_user
+    inline = ProjectEventInline(Project, site.admin_site)
+    assert not inline.has_add_permission({})
+
+    project = Project(sentry_id="123")
+    event = Event(project=project, type=EventType.FIRING, timestamp=timezone.now())
+
+    assert inline.pretty_type(event) == '<b style="color:red;">Firing</b>'
+
+    event = Event(project=project, type=EventType.DISCARD, timestamp=timezone.now())
+
+    assert inline.pretty_type(event) == '<b style="color:green;">Discard</b>'
+
+
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_event_inlines(admin_with_user):
+    site, request = admin_with_user
+    inline = AppEventInline(App, site.admin_site)
+    app = App(reference="123")
+    assert not inline.has_add_permission({})
+    assert len(inline.get_form_queryset(app)) == 0
+
+    project = Project(sentry_id="123")
+    project.save()
+    event = Event(project=project, type=EventType.FIRING, timestamp=timezone.now())
+    event.save()
+    app = App(reference="abc", project=project)
+    assert len(inline.get_form_queryset(app)) == 1
+
+    with pytest.raises(NotImplementedError):
+        inline.save_new_instance({}, {})
