@@ -253,32 +253,32 @@ CELERY_BROKER_URL = f"amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROK
 CELERY_BEAT_SCHEDULE = {
     "close-window": {
         "task": "controller.sentry.tasks.close_window",
-        "schedule": crontab(),
+        "schedule": crontab(),  # every minutes
     },
     "sentry-project-slug": {
         "task": "controller.sentry.tasks.pull_sentry_project_slug",
-        "schedule": crontab(),
+        "schedule": crontab(),  # every minutes
     },
     "populate-app": {
         "task": "controller.sentry.tasks.populate_app",
-        "schedule": crontab(),
+        "schedule": crontab(),  # every minutes
     },
     "monitor-sentry-usage": {
         "task": "controller.sentry.tasks.monitor_sentry_usage",
-        "schedule": crontab(),
+        "schedule": crontab(minute="1", hour="*"),  # every hour at minute 1
     },
 }
 
 if APP_AUTO_PRUNE:
     CELERY_BEAT_SCHEDULE["prune-inactive-app"] = {
         "task": "controller.sentry.tasks.prune_inactive_app",
-        "schedule": crontab(minute="0", hour="*"),
+        "schedule": crontab(minute="0", hour="*"),  # every hour
     }
 
 if EVENT_AUTO_PRUNE:
     CELERY_BEAT_SCHEDULE["prune-old-event"] = {
         "task": "controller.sentry.tasks.prune_old_event",
-        "schedule": crontab(minute="0", hour="*"),
+        "schedule": crontab(minute="0", hour="*"),  # every hour
     }
 
 
