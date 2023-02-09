@@ -87,7 +87,10 @@ def perform_detect(sentry_id) -> None:
 
     stats = client.get_stats(project.sentry_id)
     detector = SpikesDetector.from_project(project)
-    res = detector.compute_sentry(stats)
+    res, dump = detector.compute_sentry(stats)
+
+    project.detection_result = dump
+    project.save()
 
     previous_signal = 0
     events = []

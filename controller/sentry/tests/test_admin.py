@@ -17,6 +17,11 @@ from controller.sentry.models import App, Event, Project
 class MockRequest:
     def __init__(self, user) -> None:
         self.user = user
+        self.META = {}
+        self.method = "GET"
+        self.COOKIES = {}
+        self.POST = {}
+        self.GET = {}
 
 
 @pytest.fixture
@@ -343,3 +348,80 @@ def test_app_event_inlines(admin_with_user):
 
     with pytest.raises(NotImplementedError):
         inline.save_new_instance({}, {})
+
+
+@patch("django_object_actions.utils.BaseDjangoObjectActions.change_view")
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=Project)
+def test_project_chart_no_data(super_call: Mock, admin_with_user):
+    site, request = admin_with_user
+    project = Project(sentry_id="123")
+    project.save()
+    extra_context = object()
+    site.change_view(request, project.sentry_id, extra_context=extra_context)
+
+    super_call.assert_called_once_with(request, project.sentry_id, "", extra_context)
+
+
+@patch("django_object_actions.utils.BaseDjangoObjectActions.change_view")
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=Project)
+def test_project_chart(super_call: Mock, admin_with_user):
+    site, request = admin_with_user
+    project = Project(sentry_id="123")
+    project.detection_result = {
+        "signal": [0, 1],
+        "avg_filter": [0, 1],
+        "std_filter": [0, 2],
+        "series": [0, 5],
+        "intervals": ["a", "b"],
+    }
+    project.save()
+    site.change_view(request, project.sentry_id)
+
+    expected_context = {
+        "adminchart_chartjs_config": {
+            "type": "line",
+            "data": {
+                "datasets": [
+                    {
+                        "label": "Series",
+                        "backgroundColor": "#36a2eb",
+                        "borderColor": "#36a2eb",
+                        "data": [0, 5],
+                        "yAxisID": "series",
+                    },
+                    {
+                        "label": "Signal",
+                        "backgroundColor": "#ff6384",
+                        "borderColor": "#ff6384",
+                        "data": [0, 1],
+                        "yAxisID": "signal",
+                    },
+                    {
+                        "label": "Threshold",
+                        "backgroundColor": "#9966ff",
+                        "borderColor": "#9966ff",
+                        "data": [0, 11],
+                        "yAxisID": "series",
+                    },
+                ],
+                "labels": ["a", "b"],
+            },
+            "options": {
+                "aspectRatio": 4,
+                "scales": {
+                    "xAxis": {"type": "timeseries"},
+                    "series": {"position": "left"},
+                    "signal": {"position": "right"},
+                },
+                "plugins": {"legend": {"position": "bottom"}, "title": {"display": True, "text": "Detection Result"}},
+                "elements": {"line": {"stepped": True}, "point": {"radius": 0}},
+                "interaction": {"mode": "index", "intersect": False},
+            },
+        }
+    }
+
+    super_call.assert_called_once_with(request, project.sentry_id, "", expected_context)

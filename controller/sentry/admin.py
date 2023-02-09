@@ -18,13 +18,14 @@ from django_object_actions import DjangoObjectActions, takes_instance_or_queryse
 from controller.sentry.choices import EventType, MetricType
 from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.inlines import AppEventInline, ProjectEventInline
-from controller.sentry.mixins import PrettyTypeMixin, ProjectLinkMixin
+from controller.sentry.mixins import ChartMixin, PrettyTypeMixin, ProjectLinkMixin
 from controller.sentry.models import App, Event, Project
 from controller.sentry.utils import invalidate_cache
 
 
 @admin.register(Project)
 class ProjectAdmin(
+    ChartMixin,
     AdminConfirmMixin,
     ActionFormMixin,
     DjangoObjectActions,
@@ -41,17 +42,75 @@ class ProjectAdmin(
     ordering = search_fields
 
     formfield_overrides = {
-        models.JSONField: {"widget": JSONEditorWidget},
+        models.JSONField: {"widget": JSONEditorWidget(width="100%")},
     }
 
     fieldsets = [
         [
             None,
-            {"fields": ("sentry_id", "sentry_project_slug", "detection_param")},
+            {
+                "fields": (
+                    "sentry_id",
+                    "sentry_project_slug",
+                    ("detection_param", "detection_result"),
+                )
+            },
         ]
     ]
 
     inlines = [ProjectEventInline]
+
+    def get_chart_data(self, sentry_id):
+        project = Project.objects.get(sentry_id=sentry_id)
+        if project.detection_result is None:
+            return None
+
+        threshold = project.detection_param["threshold"]
+
+        options = {
+            "aspectRatio": 4,
+            "scales": {
+                "xAxis": {"type": "timeseries"},
+                "series": {"position": "left"},
+                "signal": {"position": "right"},
+            },
+            "plugins": {"legend": {"position": "bottom"}, "title": {"display": True, "text": "Detection Result"}},
+            "elements": {"line": {"stepped": True}, "point": {"radius": 0}},
+            "interaction": {"mode": "index", "intersect": False},
+        }
+        data = {
+            "datasets": [
+                {
+                    "label": "Series",
+                    "backgroundColor": "#36a2eb",
+                    "borderColor": "#36a2eb",
+                    "data": project.detection_result["series"],
+                    "yAxisID": "series",
+                },
+                {
+                    "label": "Signal",
+                    "backgroundColor": "#ff6384",
+                    "borderColor": "#ff6384",
+                    "data": project.detection_result["signal"],
+                    "yAxisID": "signal",
+                },
+                {
+                    "label": "Threshold",
+                    "backgroundColor": "#9966ff",
+                    "borderColor": "#9966ff",
+                    "data": [
+                        avg_filter + threshold * std_filter
+                        for avg_filter, std_filter in zip(
+                            project.detection_result["avg_filter"],
+                            project.detection_result["std_filter"],
+                        )
+                    ],
+                    "yAxisID": "series",
+                },
+            ],
+            "labels": project.detection_result["intervals"],
+        }
+        return data, options
 
 
 @admin.register(Event)
@@ -71,7 +130,7 @@ class EventAdmin(
     ordering = search_fields
 
     formfield_overrides = {
-        models.JSONField: {"widget": JSONEditorWidget},
+        models.JSONField: {"widget": JSONEditorWidget(width="100%")},
     }
 
     fieldsets = [
@@ -109,7 +168,7 @@ class AppAdmin(
     ordering = search_fields
 
     formfield_overrides = {
-        models.JSONField: {"widget": JSONEditorWidget},
+        models.JSONField: {"widget": JSONEditorWidget(width="100%")},
     }
 
     fieldsets = [
