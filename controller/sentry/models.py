@@ -1,21 +1,45 @@
+from functools import partial
+from uuid import uuid4
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django_better_admin_arrayfield.models.fields import ArrayField
 
-from controller.sentry.choices import MetricType
+from controller.sentry.choices import EventType, MetricType
 from controller.sentry.metrics import celery_merger, wsgi_merger
 
 
-def get_default_wsgi_ignore_path():
-    return settings.DEFAULT_WSGI_IGNORE_PATHS
-
-
-def get_default_celery_ignore_task():
-    return settings.DEFAULT_CELERY_IGNORE_TASKS
+def settings_default_value(key):
+    return getattr(settings, key)
 
 
 MERGER = {MetricType.WSGI: wsgi_merger, MetricType.CELERY: celery_merger}
+
+
+class Project(models.Model):
+    """Project"""
+
+    sentry_id = models.CharField(primary_key=True, max_length=50)
+    sentry_project_slug = models.CharField(max_length=50, db_index=True, null=True, blank=True)
+
+    detection_param = models.JSONField(default=partial(settings_default_value, "DEFAULT_SPIKE_DETECTION_PARAM"))
+
+    def __str__(self) -> str:
+        return f"Project({self.sentry_id} - {self.sentry_project_slug if self.sentry_project_slug else 'Pending'})"
+
+
+class Event(models.Model):
+    """Event"""
+
+    reference = models.UUIDField(primary_key=True, default=uuid4)
+    type = models.CharField(choices=EventType.choices, max_length=10)
+    timestamp = models.DateTimeField()
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="events")
+
+    class Meta:
+        ordering = ["timestamp"]
 
 
 class App(models.Model):
@@ -29,13 +53,15 @@ class App(models.Model):
     active_window_end = models.DateTimeField(null=True, blank=True)
 
     # Sentry Api
-    sentry_project_slug = models.CharField(max_length=50, null=True, blank=True)
+    project = models.ForeignKey(Project, null=True, blank=True, on_delete=models.SET_NULL, related_name="apps")
+    env = models.CharField(max_length=50, null=True, blank=True)
+    command = models.CharField(max_length=50, null=True, blank=True)
 
     # WSGI
     wsgi_ignore_path = ArrayField(
         models.CharField(max_length=50, blank=True),
         blank=True,
-        default=get_default_wsgi_ignore_path,
+        default=partial(settings_default_value, "DEFAULT_WSGI_IGNORE_PATHS"),
     )
     wsgi_collect_metrics = models.BooleanField(default=False)
     wsgi_metrics = models.JSONField(null=True, blank=True)
@@ -44,7 +70,7 @@ class App(models.Model):
     celery_ignore_task = ArrayField(
         models.CharField(max_length=50, blank=True),
         blank=True,
-        default=get_default_celery_ignore_task,
+        default=partial(settings_default_value, "DEFAULT_CELERY_IGNORE_TASKS"),
     )
     celery_collect_metrics = models.BooleanField(default=False)
     celery_metrics = models.JSONField(null=True, blank=True)
@@ -64,12 +90,6 @@ class App(models.Model):
     def set_metric(self, metric_type: MetricType, metric_state: bool):
         prefix = metric_type.value.lower()
         setattr(self, f"{prefix}_collect_metrics", metric_state)
-
-    def get_sentry_id(self):
-        res = self.reference.split("_")
-        if len(res) != 3:
-            return None
-        return res[0]
 
     class Meta:
         permissions = [

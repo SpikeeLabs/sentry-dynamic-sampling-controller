@@ -227,9 +227,13 @@ if MAX_BUMP_TIME_SEC == 0:
 PANIC_KEY = "PANIC"
 
 DEVELOPER_GROUP = os.getenv("DEVELOPER_GROUP", "Developer")
+DEVELOPER_ACTIONS = ["bump_sample_rate_app", "enable_disable_metrics_app"]
 
 APP_AUTO_PRUNE = os.getenv("APP_AUTO_PRUNE", "true").lower() == "true"
 APP_AUTO_PRUNE_MAX_AGE_DAY = int(os.getenv("APP_AUTO_PRUNE_MAX_AGE_DAY", "30"))
+
+EVENT_AUTO_PRUNE = os.getenv("EVENT_AUTO_PRUNE", "true").lower() == "true"
+EVENT_AUTO_PRUNE_MAX_AGE_DAY = int(os.getenv("EVENT_AUTO_PRUNE_MAX_AGE_DAY", "30"))
 
 
 # Celery
@@ -255,16 +259,39 @@ CELERY_BEAT_SCHEDULE = {
         "task": "controller.sentry.tasks.pull_sentry_project_slug",
         "schedule": crontab(),
     },
+    "populate-app": {
+        "task": "controller.sentry.tasks.populate_app",
+        "schedule": crontab(),
+    },
+    "monitor-sentry-usage": {
+        "task": "controller.sentry.tasks.monitor_sentry_usage",
+        "schedule": crontab(),
+    },
 }
 
 if APP_AUTO_PRUNE:
-    CELERY_BEAT_SCHEDULE["prune-inactive"] = {
+    CELERY_BEAT_SCHEDULE["prune-inactive-app"] = {
         "task": "controller.sentry.tasks.prune_inactive_app",
+        "schedule": crontab(minute="0", hour="*"),
+    }
+
+if EVENT_AUTO_PRUNE:
+    CELERY_BEAT_SCHEDULE["prune-old-event"] = {
+        "task": "controller.sentry.tasks.prune_old_event",
         "schedule": crontab(minute="0", hour="*"),
     }
 
 
 SENTRY_API_TOKEN = os.getenv("SENTRY_API_TOKEN", "TEST")
+SENTRY_ORGANIZATION_SLUG = os.getenv("SENTRY_ORGANIZATION_SLUG")
+
+DEFAULT_SPIKE_DETECTION_PARAM = {
+    "lag": int(os.getenv("SPIKE_DETECTION_LAG", "48")),
+    "threshold": int(os.getenv("SPIKE_DETECTION_THRESHOLD", "5")),
+    "influence": float(os.getenv("SPIKE_DETECTION_INFLUENCE", "0")),
+}
+
+
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 if SENTRY_DSN:

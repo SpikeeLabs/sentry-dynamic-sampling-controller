@@ -10,18 +10,81 @@ from django.contrib.auth import get_permission_codename
 from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
+from django.utils.html import format_html
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from django_json_widget.widgets import JSONEditorWidget
 from django_object_actions import DjangoObjectActions, takes_instance_or_queryset
 
-from controller.sentry.choices import MetricType
+from controller.sentry.choices import EventType, MetricType
 from controller.sentry.forms import BumpForm, MetricForm
-from controller.sentry.models import App
+from controller.sentry.inlines import AppEventInline, ProjectEventInline
+from controller.sentry.mixins import PrettyTypeMixin, ProjectLinkMixin
+from controller.sentry.models import App, Event, Project
 from controller.sentry.utils import invalidate_cache
+
+
+@admin.register(Project)
+class ProjectAdmin(
+    AdminConfirmMixin,
+    ActionFormMixin,
+    DjangoObjectActions,
+    DynamicArrayMixin,
+    admin.ModelAdmin,
+):
+
+    list_display = [
+        "sentry_id",
+        "sentry_project_slug",
+    ]
+
+    search_fields = ["sentry_id", "sentry_project_slug"]
+    ordering = search_fields
+
+    formfield_overrides = {
+        models.JSONField: {"widget": JSONEditorWidget},
+    }
+
+    fieldsets = [
+        [
+            None,
+            {"fields": ("sentry_id", "sentry_project_slug", "detection_param")},
+        ]
+    ]
+
+    inlines = [ProjectEventInline]
+
+
+@admin.register(Event)
+class EventAdmin(
+    ProjectLinkMixin,
+    AdminConfirmMixin,
+    ActionFormMixin,
+    DjangoObjectActions,
+    DynamicArrayMixin,
+    PrettyTypeMixin,
+    admin.ModelAdmin,
+):
+
+    list_display = ["reference", "pretty_type", "timestamp", "get_project"]
+
+    search_fields = ["reference", "type", "project__sentry_project_slug"]
+    ordering = search_fields
+
+    formfield_overrides = {
+        models.JSONField: {"widget": JSONEditorWidget},
+    }
+
+    fieldsets = [
+        [
+            None,
+            {"fields": ("reference", "type", "project", "timestamp")},
+        ]
+    ]
 
 
 @admin.register(App)
 class AppAdmin(
+    ProjectLinkMixin,
     AdminConfirmMixin,
     ActionFormMixin,
     DjangoObjectActions,
@@ -32,7 +95,8 @@ class AppAdmin(
 
     list_display = [
         "reference",
-        "sentry_project_slug",
+        "get_event_status",
+        "get_project",
         "last_seen",
         "default_sample_rate",
         "active_sample_rate",
@@ -41,9 +105,7 @@ class AppAdmin(
         "celery_collect_metrics",
     ]
 
-    search_fields = [
-        "reference",
-    ]
+    search_fields = ["reference", "project__sentry_project_slug", "env", "command"]
     ordering = search_fields
 
     formfield_overrides = {
@@ -65,7 +127,7 @@ class AppAdmin(
             "Sentry",
             {
                 "classes": ("collapse",),
-                "fields": ("sentry_project_slug",),
+                "fields": ("project", "env", "command"),
             },
         ],
         [
@@ -94,6 +156,17 @@ class AppAdmin(
     actions = ["bump_sample_rate"]
     changelist_actions = ["panic", "unpanic"]
     change_actions = ["bump_sample_rate", "enable_disable_metrics"]
+
+    inlines = [AppEventInline]
+
+    @admin.display(description="Spamming Sentry")
+    def get_event_status(self, obj):
+        text = '<b style="color:{};">{}</b>'
+        if obj.project and (event := obj.project.events.last()):
+            if event.type == EventType.DISCARD:
+                return format_html(text, "green", "No")
+            return format_html(text, "red", "Yes")
+        return format_html(text, "gray", "Pending")
 
     def get_changelist_actions(self, request):
         allowed_actions = []

@@ -1,16 +1,31 @@
 from datetime import timedelta
 from itertools import chain
+from typing import Optional
 
-from celery import shared_task
+from celery import group, shared_task
 from celery.utils.log import get_task_logger
+from dateutil import parser
 from django.conf import settings
-from django.db.models import F
+from django.db.models import Count, F
 from django.utils import timezone
 
-from controller.sentry.models import App
+from controller.sentry.choices import EventType
+from controller.sentry.detector import SpikesDetector
+from controller.sentry.models import App, Event, Project
 from controller.sentry.webservices.sentry import PaginatedSentryClient
 
 LOGGER = get_task_logger(__name__)
+
+
+@shared_task()
+def populate_app():
+    apps = App.objects.filter(project__isnull=True)
+    for app in apps:
+        res = app.reference.split("_")
+        if len(res) == 3:
+            sentry_id, env, command = res
+            project, _ = Project.objects.get_or_create(sentry_id=sentry_id)
+            app = App.objects.filter(reference=app.reference).update(command=command, env=env, project=project)
 
 
 @shared_task()
@@ -20,6 +35,19 @@ def prune_inactive_app() -> None:
     if apps_count := apps.count():
         LOGGER.info("Pruning %s apps", apps_count)
         apps.delete()
+    projects = Project.objects.annotate(apps_count=Count("apps")).filter(apps_count=0)
+    if projects_count := projects.count():
+        LOGGER.info("Pruning %s projects", projects_count)
+        projects.delete()
+
+
+@shared_task()
+def prune_old_event() -> None:
+    period_end = timezone.now() - timedelta(days=settings.EVENT_AUTO_PRUNE_MAX_AGE_DAY)
+    events = Event.objects.filter(timestamp__lt=period_end)
+    if events_count := events.count():
+        LOGGER.info("Pruning %s apps", events_count)
+        events.delete()
 
 
 @shared_task()
@@ -31,16 +59,52 @@ def close_window() -> None:
 @shared_task()
 def pull_sentry_project_slug() -> None:
     client = PaginatedSentryClient()
-    apps = App.objects.filter(sentry_project_slug__isnull=True)
+    projects = Project.objects.filter(sentry_project_slug__isnull=True)
 
-    apps_by_id = {app.get_sentry_id(): app for app in apps}
+    projects_by_id = {project.sentry_id: project for project in projects}
 
-    modified_apps = []
+    modified_projects = []
     for project in chain.from_iterable(client.list_projects()):
         _id = project["id"]
-        if _id in apps_by_id:
-            app = apps_by_id[_id]
-            app.sentry_project_slug = project["slug"]
-            modified_apps.append(app)
+        if _id not in projects_by_id:
+            continue
+        projects_by_id[_id].sentry_project_slug = project["slug"]
+        modified_projects.append(projects_by_id[_id])
 
-    App.objects.bulk_update(modified_apps, ["sentry_project_slug"])
+    Project.objects.bulk_update(modified_projects, ["sentry_project_slug"])
+
+
+@shared_task()
+def monitor_sentry_usage() -> None:
+    projects = Project.objects.all()
+    group(perform_detect.s(p.sentry_id) for p in projects).delay()
+
+
+@shared_task()
+def perform_detect(sentry_id) -> None:
+    client = PaginatedSentryClient()
+    project = Project.objects.get(sentry_id=sentry_id)
+
+    stats = client.get_stats(project.sentry_id)
+    detector = SpikesDetector.from_project(project)
+    res = detector.compute_sentry(stats)
+
+    previous_signal = 0
+    events = []
+    last_event: Optional[Event] = project.events.last()
+
+    for date, signal in res.items():
+        if previous_signal == signal:
+            continue
+
+        date = parser.parse(date)
+
+        if last_event and date <= last_event.timestamp:
+            previous_signal = signal
+            continue
+
+        event_type = EventType.FIRING if previous_signal == 0 else EventType.DISCARD
+        events.append(Event(type=event_type, project=project, timestamp=date))
+        previous_signal = signal
+
+    Event.objects.bulk_create(events)

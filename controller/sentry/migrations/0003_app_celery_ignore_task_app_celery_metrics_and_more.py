@@ -3,8 +3,6 @@
 import django_better_admin_arrayfield.models.fields
 from django.db import migrations, models
 
-import controller.sentry.models
-
 
 class Migration(migrations.Migration):
 
@@ -19,7 +17,6 @@ class Migration(migrations.Migration):
             field=django_better_admin_arrayfield.models.fields.ArrayField(
                 base_field=models.CharField(blank=True, max_length=50),
                 blank=True,
-                default=controller.sentry.models.get_default_celery_ignore_task,
                 size=None,
             ),
         ),
