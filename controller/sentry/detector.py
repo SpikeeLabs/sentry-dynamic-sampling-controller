@@ -56,10 +56,17 @@ class SpikesDetector:
         if series is None:
             raise ValueError("No series with accepted outcome")
 
-        signal, _, _ = self.compute(series)
+        signal, avg_filter, std_filter = self.compute(series)
 
         annotated_result = OrderedDict((date, signal) for date, signal in zip(stats["intervals"], signal))
-        return annotated_result
+        dump = {
+            "signal": signal,
+            "avg_filter": avg_filter,
+            "std_filter": std_filter,
+            "series": series,
+            "intervals": stats["intervals"],
+        }
+        return annotated_result, dump
 
     def compute(self, data):
         signals = [0] * self.lag

@@ -1,0 +1,19 @@
+{% extends "django_object_actions/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media }}
+<script src="{% static 'admin/chart/js/chart.min.js' %}"></script>
+<script src="{% static 'admin/chart/js/chart.date.min.js' %}"></script>
+<script src="{% static 'admin/chart/js/adminchart.js' %}"></script>
+{{ adminchart_chartjs_config|json_script:"adminchart-chartjs-config" }}
+{% endblock %}
+
+
+
+
+{% block object-tools %}
+{{ block.super }}
+<div id="admincharts"></div>
+{% endblock %}
