@@ -24,6 +24,7 @@ class Project(models.Model):
     sentry_project_slug = models.CharField(max_length=50, db_index=True, null=True, blank=True)
 
     detection_param = models.JSONField(default=partial(settings_default_value, "DEFAULT_SPIKE_DETECTION_PARAM"))
+    detection_result = models.JSONField(blank=True, null=True)
 
     def __str__(self) -> str:
         return f"Project({self.sentry_id} - {self.sentry_project_slug if self.sentry_project_slug else 'Pending'})"

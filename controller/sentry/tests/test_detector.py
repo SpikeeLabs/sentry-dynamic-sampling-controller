@@ -28,7 +28,7 @@ def test_spike_detector(all_json: tuple[dict]):
     assert detector.threshold == project.detection_param["threshold"]
     assert detector.influence == project.detection_param["influence"]
 
-    res = detector.compute_sentry(stats)
+    res, _ = detector.compute_sentry(stats)
 
     assert res == expected
 

@@ -159,14 +159,18 @@ def test_perform_detect(spike_detector_mock: MagicMock, client_mock: MagicMock):
     client_mock.return_value.get_stats.return_value = result
 
     detector: MagicMock = spike_detector_mock.from_project.return_value
-    detector.compute_sentry.return_value = OrderedDict(
-        [
-            ("2023-02-01T15:00:00Z", 0),
-            ("2023-02-01T16:00:00Z", 1),
-            ("2023-02-01T17:00:00Z", 0),
-            ("2023-02-01T18:00:00Z", 1),
-            ("2023-02-01T19:00:00Z", 0),
-        ]
+    dump = {"test": "a"}
+    detector.compute_sentry.return_value = (
+        OrderedDict(
+            [
+                ("2023-02-01T15:00:00Z", 0),
+                ("2023-02-01T16:00:00Z", 1),
+                ("2023-02-01T17:00:00Z", 0),
+                ("2023-02-01T18:00:00Z", 1),
+                ("2023-02-01T19:00:00Z", 0),
+            ]
+        ),
+        dump,
     )
 
     perform_detect(sentry_id)
@@ -180,3 +184,4 @@ def test_perform_detect(spike_detector_mock: MagicMock, client_mock: MagicMock):
 
     project.refresh_from_db()
     assert project.events.exclude(reference=event.reference).count() == 2
+    assert project.detection_result == dump
