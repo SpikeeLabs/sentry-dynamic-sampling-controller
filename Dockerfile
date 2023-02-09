@@ -23,7 +23,7 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
 
 # get poetry
 RUN apk update \
-    && apk add --update --no-cache curl==7.87.0-r1 \
+    && apk add --update --no-cache curl==7.87.0-r1 gcc=12.2.1_git20220924-r4 linux-headers=5.19.5-r0 build-base=0.5-r3 \
     && curl -sSL https://install.python-poetry.org | python -
 
 RUN python -m venv "$VENV_PATH"
