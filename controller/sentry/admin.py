@@ -1,3 +1,6 @@
+"""Admin."""
+from typing import TYPE_CHECKING, Optional
+
 from admin_action_tools import (
     ActionFormMixin,
     AdminConfirmMixin,
@@ -22,6 +25,11 @@ from controller.sentry.mixins import ChartMixin, PrettyTypeMixin, ProjectLinkMix
 from controller.sentry.models import App, Event, Project
 from controller.sentry.utils import invalidate_cache
 
+if TYPE_CHECKING:  # pragma: no cover  # pragma: no cover
+    from django.db.models import QuerySet
+    from django.forms import ModelForm
+    from django.http import HttpRequest
+
 
 @admin.register(Project)
 class ProjectAdmin(
@@ -32,6 +40,7 @@ class ProjectAdmin(
     DynamicArrayMixin,
     admin.ModelAdmin,
 ):
+    """Project Admin."""
 
     list_display = [
         "sentry_id",
@@ -61,6 +70,14 @@ class ProjectAdmin(
     inlines = [ProjectEventInline]
 
     def get_chart_data(self, sentry_id):
+        """This method return the chart data.
+
+        Args:
+            sentry_id (str): sentry id
+
+        Returns:
+            Optional[Tuple[dict, dict]]: tuple of data and options
+        """
         project = Project.objects.get(sentry_id=sentry_id)
         if project.detection_result is None:
             return None
@@ -123,6 +140,7 @@ class EventAdmin(
     PrettyTypeMixin,
     admin.ModelAdmin,
 ):
+    """Event Admin."""
 
     list_display = ["reference", "pretty_type", "timestamp", "get_project"]
 
@@ -150,6 +168,8 @@ class AppAdmin(
     DynamicArrayMixin,
     admin.ModelAdmin,
 ):
+    """App Admin."""
+
     read_only_fields = ["last_seen"]
 
     list_display = [
@@ -219,7 +239,15 @@ class AppAdmin(
     inlines = [AppEventInline]
 
     @admin.display(description="Spamming Sentry")
-    def get_event_status(self, obj):
+    def get_event_status(self, obj: App) -> str:
+        """This method return a pretty event status html string.
+
+        Args:
+            obj (App): The app
+
+        Returns:
+            str: The pretty status
+        """
         text = '<b style="color:{};">{}</b>'
         if obj.project and (event := obj.project.events.last()):
             if event.type == EventType.DISCARD:
@@ -227,14 +255,32 @@ class AppAdmin(
             return format_html(text, "red", "Yes")
         return format_html(text, "gray", "Pending")
 
-    def get_changelist_actions(self, request):
+    def get_changelist_actions(self, request: "HttpRequest") -> list[str]:
+        """This method return allowed changelist actions.
+
+        Args:
+            request (HttpRequest): The request
+
+        Returns:
+            list[str]: All possible actions
+        """
         allowed_actions = []
         for action in self.changelist_actions:
             if getattr(self, f"has_{action}_permission")(request):
                 allowed_actions.append(action)
         return allowed_actions
 
-    def get_change_actions(self, request, object_id, form_url):
+    def get_change_actions(self, request: "HttpRequest", object_id: str, form_url: Optional[str]) -> list[str]:
+        """This method return allowed change actions.
+
+        Args:
+            request (HttpRequest): The request
+            object_id (str): The App reference
+            form_url (Optional[str]): The form_url
+
+        Returns:
+            list[str]: All possible actions
+        """
         allowed_actions = []
         for action in self.change_actions:
             if getattr(self, f"has_{action}_permission")(request):
@@ -246,7 +292,19 @@ class AppAdmin(
     @add_form_to_action(BumpForm)
     @confirm_action()
     @admin.action(description="Bump Sample Rate")
-    def bump_sample_rate(self, request, queryset, form: BumpForm = None):  # pylint: disable=unused-argument
+    def bump_sample_rate(
+        self,
+        request: "HttpRequest",
+        queryset: "QuerySet[App]",
+        form: BumpForm = None,  # pylint: disable=unused-argument
+    ) -> None:
+        """This method is responsible for the bump sample rate action.
+
+        Args:
+            request (HttpRequest): The request
+            queryset (QuerySet[App]): The Apps to change
+            form (BumpForm): The form
+        """
         new_date = timezone.now() + form.cleaned_data["duration"]
         queryset.update(
             active_sample_rate=form.cleaned_data["new_sample_rate"],
@@ -257,8 +315,15 @@ class AppAdmin(
 
     bump_sample_rate.allowed_permissions = ("bump_sample_rate",)
 
-    def has_bump_sample_rate_permission(self, request):
-        """Does the user have the bump permission?"""
+    def has_bump_sample_rate_permission(self, request: "HttpRequest") -> bool:
+        """This method return True if the user have the permission for bump sample rate action.
+
+        Args:
+            request (HttpRequest): The request
+
+        Returns:
+            bool: Is allowed
+        """
         opts = self.opts
         codename = get_permission_codename("bump_sample_rate", opts)
 
@@ -269,7 +334,19 @@ class AppAdmin(
     @takes_instance_or_queryset
     @add_form_to_action(MetricForm)
     @admin.action(description="Enable/Disable Metrics Collection")
-    def enable_disable_metrics(self, request, queryset, form: MetricForm = None):  # pylint: disable=unused-argument
+    def enable_disable_metrics(
+        self,
+        request: "HttpRequest",
+        queryset: "QuerySet[App]",
+        form: MetricForm = None,  # pylint: disable=unused-argument
+    ) -> None:
+        """This method is responsible for the enable/disable metrics action.
+
+        Args:
+            request (HttpRequest): The request
+            queryset (QuerySet[App]): The Apps to change
+            form (MetricForm): The form
+        """
         metrics = form.cleaned_data["metrics"]
         app: App
         for app in queryset:
@@ -280,8 +357,15 @@ class AppAdmin(
 
     enable_disable_metrics.allowed_permissions = ("enable_disable_metrics",)
 
-    def has_enable_disable_metrics_permission(self, request):
-        """Does the user have the enable_disable_metrics permission?"""
+    def has_enable_disable_metrics_permission(self, request: "HttpRequest") -> bool:
+        """This method return True if the user have the permission for enable/disable metrics action.
+
+        Args:
+            request (HttpRequest): The request
+
+        Returns:
+            bool: Is allowed
+        """
         opts = self.opts
         codename = get_permission_codename("enable_disable_metrics", opts)
 
@@ -291,14 +375,27 @@ class AppAdmin(
     @takes_instance_or_queryset
     @confirm_action(display_queryset=False)
     @admin.action(description="Panic")
-    def panic(self, request, queryset):  # pylint: disable=unused-argument
+    def panic(self, request: "HttpRequest", queryset: "QuerySet[App]") -> None:  # pylint: disable=unused-argument
+        """This method activate the panic mode.
+
+        Args:
+            request (HttpRequest): The request
+            queryset (QuerySet[App]): All the Apps (unused)
+        """
         cache.set(settings.PANIC_KEY, True, timeout=None)
 
     panic.allowed_permissions = ("panic",)
     panic.attrs = {"style": "background-color: red;"}
 
-    def has_panic_permission(self, request):
-        """Does the user have the panic permission?"""
+    def has_panic_permission(self, request: "HttpRequest") -> bool:
+        """This method return True if the user have the permission for panic action.
+
+        Args:
+            request (HttpRequest): The request
+
+        Returns:
+            bool: Is allowed
+        """
         panic = cache.get(settings.PANIC_KEY)
         opts = self.opts
         codename = get_permission_codename("panic", opts)
@@ -307,20 +404,41 @@ class AppAdmin(
     @takes_instance_or_queryset
     @confirm_action(display_queryset=False)
     @admin.action(description="UnPanic")
-    def unpanic(self, request, queryset):  # pylint: disable=unused-argument
+    def unpanic(self, request: "HttpRequest", queryset: "QuerySet[App]") -> None:  # pylint: disable=unused-argument
+        """This method deactivate the panic mode.
+
+        Args:
+            request (HttpRequest): The request
+            queryset (QuerySet[App]): All the Apps (unused)
+        """
         cache.delete(settings.PANIC_KEY)
 
     unpanic.allowed_permissions = ("unpanic",)
     unpanic.attrs = {"style": "background-color: green;"}
 
-    def has_unpanic_permission(self, request):
-        """Does the user have the panic permission?"""
+    def has_unpanic_permission(self, request: "HttpRequest") -> bool:
+        """This method return True if the user have the permission for unpanic action.
+
+        Args:
+            request (HttpRequest): The request
+
+        Returns:
+            bool: Is allowed
+        """
         panic = cache.get(settings.PANIC_KEY)
         opts = self.opts
         codename = get_permission_codename("panic", opts)
         return panic and request.user.has_perm("%s.%s" % (opts.app_label, codename))
 
     # Save model
-    def save_model(self, request, obj, form, change) -> None:
+    def save_model(self, request: "HttpRequest", obj: App, form: "ModelForm", change: bool) -> None:
+        """This method is responsible to save app in the admin.
+
+        Args:
+            request (HttpRequest): The request
+            obj (App): The app to save
+            form (ModelForm): form
+            change (bool): change
+        """
         invalidate_cache(f"/sentry/apps/{obj.reference}/")
         return super().save_model(request, obj, form, change)

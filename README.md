@@ -9,10 +9,10 @@ This project aims to provide dynamic sampling without relying on Sentry Dynamic 
 
 It work by installing the library [sentry-dynamic-sampling-lib](https://github.com/SpikeeLabs/sentry-dynamic-sampling-lib) on each project that use sentry. This lib hooks into the sentry callback to change the sampling rate. To get the rate the lib calls this service.
 
+Docs : [here](https://spikeelabs.github.io/sentry-dynamic-sampling-controller/)
 
 
-
-## Development
+## Install
 ```bash
 # install deps
 poetry install
@@ -39,4 +39,11 @@ python manage.py loadpermissions
 # admin @ http://localhost:8000/admin/
 python manage.py runserver
 
+```
+
+
+## Develop
+```bash
+# build docs
+sphinx-build -b html docs public
 ```

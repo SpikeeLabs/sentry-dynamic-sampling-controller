@@ -1,3 +1,4 @@
+"""Serializers."""
 from rest_framework import serializers
 
 from controller.sentry.choices import MetricType
@@ -5,9 +6,11 @@ from controller.sentry.models import App
 
 
 class AppSerializer(serializers.ModelSerializer):
-    """App"""
+    """App Serializer."""
 
     class Meta:
+        """App Meta CLass."""
+
         model = App
         fields = [
             "reference",
@@ -22,6 +25,7 @@ class AppSerializer(serializers.ModelSerializer):
 
 # pylint: disable=abstract-method
 class MetricSerializer(serializers.Serializer):
+    """Metrics Serializer."""
 
     type = serializers.ChoiceField(choices=MetricType.choices)
     data = serializers.JSONField()
