@@ -20,10 +20,7 @@ repos:
     rev: 0.1.2
     hooks:
       - id: pylama
-        args: # arguments to configure black
-          - --max-line-length=119
-          # due to https://github.com/PyCQA/pycodestyle/issues/373
-          - -i E203
+        additional_dependencies: [toml, mypy, eradicate, pydocstyle==6.1.1]
 
   - repo: https://github.com/pycqa/isort
     rev: 5.12.0
