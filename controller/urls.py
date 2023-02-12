@@ -1,7 +1,8 @@
-"""controller URL Configuration
+"""controller URL Configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
+
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -28,7 +29,10 @@ router.register(r"apps", views.AppViewSet, basename="apps")
 
 
 class CustomLogin(View):
+    """CustomLogin."""
+
     def get(self, request, **kwargs):  # pylint: disable=unused-argument
+        """Redirect admin/login/ to OIDC."""
         url = reverse("oidc_authentication_init")
         return HttpResponseRedirect(url + ("?next={}".format(request.GET["next"]) if "next" in request.GET else ""))
 

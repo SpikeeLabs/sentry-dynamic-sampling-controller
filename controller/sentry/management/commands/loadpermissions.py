@@ -1,3 +1,4 @@
+"""loadpermissions command."""
 from itertools import chain
 
 from django.conf import settings
@@ -6,9 +7,20 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
+    """loadpermissions command."""
+
     help = "Set default permissions."  # noqa: A003
 
     def handle(self, *args, **options):
+        """Handle the loadpermissions command.
+
+        This command set the default permissions of groups
+            * Owner (all access)
+            * Admin (all access on sentry app)
+            * Developer (view sentry object and use developer actions)
+            * Viewer (view sentry object)
+
+        """
         owner, _ = Group.objects.get_or_create(name="Owner")
         admin, _ = Group.objects.get_or_create(name="Admin")
         developer, _ = Group.objects.get_or_create(name=settings.DEVELOPER_GROUP)

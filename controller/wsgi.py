@@ -1,5 +1,4 @@
-"""
-WSGI config for controller project.
+"""WSGI config for controller project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
