@@ -2,6 +2,8 @@ name: tests-unittest
 
 on:
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   test:
