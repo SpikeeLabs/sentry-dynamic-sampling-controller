@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasks &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Serializers" href="serializers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../sentry.html">sentry</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sentry.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../sentry.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="admin.html">Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apps.html">Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixins.html">Mixins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serializers.html">Serializers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.close_window"><code class="docutils literal notranslate"><span class="pre">close_window</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.monitor_sentry_usage"><code class="docutils literal notranslate"><span class="pre">monitor_sentry_usage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.perform_detect"><code class="docutils literal notranslate"><span class="pre">perform_detect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.populate_app"><code class="docutils literal notranslate"><span class="pre">populate_app</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.prune_inactive_app"><code class="docutils literal notranslate"><span class="pre">prune_inactive_app</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.prune_old_event"><code class="docutils literal notranslate"><span class="pre">prune_old_event</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.tasks.pull_sentry_project_slug"><code class="docutils literal notranslate"><span class="pre">pull_sentry_project_slug</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../sentry.html">sentry</a></li>
+      <li class="breadcrumb-item active">Tasks</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/references/sentry/tasks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-controller.sentry.tasks">
+<span id="tasks"></span><h1>Tasks<a class="headerlink" href="#module-controller.sentry.tasks" title="Permalink to this heading"></a></h1>
+<p>Tasks.</p>
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.close_window">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">close_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#close_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.close_window" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for closing sample rate window.</p>
+<p>For all apps with an <cite>active_window_end</cite> in the pass.
+Close the windows by setting</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>active_sample_rate</cite> to <cite>default_sample_rate</cite></p></li>
+<li><p><cite>active_window_end</cite> to null</p></li>
+</ul>
+</div></blockquote>
+<p>This task should be run regularly.</p>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.monitor_sentry_usage">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">monitor_sentry_usage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#monitor_sentry_usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.monitor_sentry_usage" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for starting all the perform_detect tasks.</p>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.perform_detect">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">perform_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentry_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#perform_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.perform_detect" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for the spike detection.</p>
+<p>Get stats for this project and run the spike detection algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentry_id</strong> (<em>str</em>) – The sentry id of the project</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.populate_app">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">populate_app</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#populate_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.populate_app" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for populating apps.</p>
+<p>For each new app, link the associated project to the app.</p>
+<p>This task should be run regularly.</p>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.prune_inactive_app">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">prune_inactive_app</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#prune_inactive_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.prune_inactive_app" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for pruning apps and projects.</p>
+<p>For each app not seen in <cite>settings.APP_AUTO_PRUNE_MAX_AGE_DAY</cite> days, remove the app.</p>
+<p>For each project with no apps, remove the project.</p>
+<p>This task should be run regularly.</p>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.prune_old_event">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">prune_old_event</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#prune_old_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.prune_old_event" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for pruning old event.</p>
+<p>Remove all event older than <cite>settings.EVENT_AUTO_PRUNE_MAX_AGE_DAY</cite> days.</p>
+<p>This task should be run regularly.</p>
+</dd></dl>
+
+<dl class="py task">
+<dt class="sig sig-object py" id="controller.sentry.tasks.pull_sentry_project_slug">
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.tasks.</span></span><span class="sig-name descname"><span class="pre">pull_sentry_project_slug</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/tasks.html#pull_sentry_project_slug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.tasks.pull_sentry_project_slug" title="Permalink to this definition"></a></dt>
+<dd><p>This task is responsible for getting the project slug from Sentry API.</p>
+<p>For all projects without a <cite>sentry_project_slug</cite>.
+Find their project slug and update the project</p>
+<p>This task should be run regularly.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="serializers.html" class="btn btn-neutral float-left" title="Serializers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>controller.sentry.admin &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../references/sentry.html">sentry</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">controller.sentry.admin</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for controller.sentry.admin</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Admin.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">admin_action_tools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ActionFormMixin</span><span class="p">,</span>
+    <span class="n">AdminConfirmMixin</span><span class="p">,</span>
+    <span class="n">add_form_to_action</span><span class="p">,</span>
+    <span class="n">confirm_action</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_permission_codename</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">format_html</span>
+<span class="kn">from</span> <span class="nn">django_better_admin_arrayfield.admin.mixins</span> <span class="kn">import</span> <span class="n">DynamicArrayMixin</span>
+<span class="kn">from</span> <span class="nn">django_json_widget.widgets</span> <span class="kn">import</span> <span class="n">JSONEditorWidget</span>
+<span class="kn">from</span> <span class="nn">django_object_actions</span> <span class="kn">import</span> <span class="n">DjangoObjectActions</span><span class="p">,</span> <span class="n">takes_instance_or_queryset</span>
+
+<span class="kn">from</span> <span class="nn">controller.sentry.choices</span> <span class="kn">import</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">MetricType</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.forms</span> <span class="kn">import</span> <span class="n">BumpForm</span><span class="p">,</span> <span class="n">MetricForm</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.inlines</span> <span class="kn">import</span> <span class="n">AppEventInline</span><span class="p">,</span> <span class="n">ProjectEventInline</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.mixins</span> <span class="kn">import</span> <span class="n">ChartMixin</span><span class="p">,</span> <span class="n">PrettyTypeMixin</span><span class="p">,</span> <span class="n">ProjectLinkMixin</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.models</span> <span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.utils</span> <span class="kn">import</span> <span class="n">invalidate_cache</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover  # pragma: no cover</span>
+    <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">QuerySet</span>
+    <span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">ModelForm</span>
+    <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpRequest</span>
+
+
+<div class="viewcode-block" id="ProjectAdmin"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.ProjectAdmin">[docs]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Project</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ProjectAdmin</span><span class="p">(</span>
+    <span class="n">ChartMixin</span><span class="p">,</span>
+    <span class="n">AdminConfirmMixin</span><span class="p">,</span>
+    <span class="n">ActionFormMixin</span><span class="p">,</span>
+    <span class="n">DjangoObjectActions</span><span class="p">,</span>
+    <span class="n">DynamicArrayMixin</span><span class="p">,</span>
+    <span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project Admin.&quot;&quot;&quot;</span>
+
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;sentry_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sentry_project_slug&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sentry_id&quot;</span><span class="p">,</span> <span class="s2">&quot;sentry_project_slug&quot;</span><span class="p">]</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="n">search_fields</span>
+
+    <span class="n">formfield_overrides</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">JSONField</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">JSONEditorWidget</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="p">)},</span>
+    <span class="p">}</span>
+
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;sentry_id&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;sentry_project_slug&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">&quot;detection_param&quot;</span><span class="p">,</span> <span class="s2">&quot;detection_result&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span><span class="n">ProjectEventInline</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ProjectAdmin.get_chart_data"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.ProjectAdmin.get_chart_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_chart_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentry_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return the chart data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sentry_id (str): sentry id</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Tuple[dict, dict]]: tuple of data and options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sentry_id</span><span class="o">=</span><span class="n">sentry_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_param</span><span class="p">[</span><span class="s2">&quot;threshold&quot;</span><span class="p">]</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;aspectRatio&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;xAxis&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;series&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;signal&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;right&quot;</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;legend&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom&quot;</span><span class="p">},</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Detection Result&quot;</span><span class="p">}},</span>
+            <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;stepped&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}},</span>
+            <span class="s2">&quot;interaction&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="s2">&quot;intersect&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;datasets&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Series&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#36a2eb&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#36a2eb&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;series&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;series&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Signal&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff6384&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff6384&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;signal&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;signal&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Threshold&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#9966ff&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#9966ff&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="n">avg_filter</span> <span class="o">+</span> <span class="n">threshold</span> <span class="o">*</span> <span class="n">std_filter</span>
+                        <span class="k">for</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                            <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;avg_filter&quot;</span><span class="p">],</span>
+                            <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;std_filter&quot;</span><span class="p">],</span>
+                        <span class="p">)</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;series&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">options</span></div></div>
+
+
+<div class="viewcode-block" id="EventAdmin"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.EventAdmin">[docs]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Event</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EventAdmin</span><span class="p">(</span>
+    <span class="n">ProjectLinkMixin</span><span class="p">,</span>
+    <span class="n">AdminConfirmMixin</span><span class="p">,</span>
+    <span class="n">ActionFormMixin</span><span class="p">,</span>
+    <span class="n">DjangoObjectActions</span><span class="p">,</span>
+    <span class="n">DynamicArrayMixin</span><span class="p">,</span>
+    <span class="n">PrettyTypeMixin</span><span class="p">,</span>
+    <span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Event Admin.&quot;&quot;&quot;</span>
+
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;pretty_type&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;get_project&quot;</span><span class="p">]</span>
+
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;project__sentry_project_slug&quot;</span><span class="p">]</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="n">search_fields</span>
+
+    <span class="n">formfield_overrides</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">JSONField</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">JSONEditorWidget</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="p">)},</span>
+    <span class="p">}</span>
+
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">)},</span>
+        <span class="p">]</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AppAdmin"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin">[docs]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">App</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AppAdmin</span><span class="p">(</span>
+    <span class="n">ProjectLinkMixin</span><span class="p">,</span>
+    <span class="n">AdminConfirmMixin</span><span class="p">,</span>
+    <span class="n">ActionFormMixin</span><span class="p">,</span>
+    <span class="n">DjangoObjectActions</span><span class="p">,</span>
+    <span class="n">DynamicArrayMixin</span><span class="p">,</span>
+    <span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;App Admin.&quot;&quot;&quot;</span>
+
+    <span class="n">read_only_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;last_seen&quot;</span><span class="p">]</span>
+
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;reference&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;get_event_status&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;get_project&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_seen&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;default_sample_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;active_sample_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;active_window_end&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;wsgi_collect_metrics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;celery_collect_metrics&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;project__sentry_project_slug&quot;</span><span class="p">,</span> <span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">]</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="n">search_fields</span>
+
+    <span class="n">formfield_overrides</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">JSONField</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">JSONEditorWidget</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="p">)},</span>
+    <span class="p">}</span>
+
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;last_seen&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;default_sample_rate&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">&quot;active_sample_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;active_window_end&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Sentry&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;collapse&quot;</span><span class="p">,),</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Metric - WSGI&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;collapse&quot;</span><span class="p">,),</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;wsgi_collect_metrics&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;wsgi_ignore_path&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;wsgi_metrics&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Metric - Celery&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;collapse&quot;</span><span class="p">,),</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">&quot;celery_collect_metrics&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;celery_ignore_task&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;celery_metrics&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">]</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bump_sample_rate&quot;</span><span class="p">]</span>
+    <span class="n">changelist_actions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;panic&quot;</span><span class="p">,</span> <span class="s2">&quot;unpanic&quot;</span><span class="p">]</span>
+    <span class="n">change_actions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bump_sample_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;enable_disable_metrics&quot;</span><span class="p">]</span>
+
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span><span class="n">AppEventInline</span><span class="p">]</span>
+
+<div class="viewcode-block" id="AppAdmin.get_event_status"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.get_event_status">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Spamming Sentry&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_event_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">App</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return a pretty event status html string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            obj (App): The app</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The pretty status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;&lt;b style=&quot;color:</span><span class="si">{}</span><span class="s1">;&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/b&gt;&#39;</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">project</span> <span class="ow">and</span> <span class="p">(</span><span class="n">event</span> <span class="o">:=</span> <span class="n">obj</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">last</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">EventType</span><span class="o">.</span><span class="n">DISCARD</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;Yes&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="s2">&quot;Pending&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AppAdmin.get_changelist_actions"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.get_changelist_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_changelist_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return allowed changelist actions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: All possible actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allowed_actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">changelist_actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;has_</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">_permission&quot;</span><span class="p">)(</span><span class="n">request</span><span class="p">):</span>
+                <span class="n">allowed_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">allowed_actions</span></div>
+
+<div class="viewcode-block" id="AppAdmin.get_change_actions"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.get_change_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">form_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return allowed change actions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            object_id (str): The App reference</span>
+<span class="sd">            form_url (Optional[str]): The form_url</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: All possible actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allowed_actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;has_</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">_permission&quot;</span><span class="p">)(</span><span class="n">request</span><span class="p">):</span>
+                <span class="n">allowed_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">allowed_actions</span></div>
+
+    <span class="c1"># ----- Bump Sample Rate</span>
+<div class="viewcode-block" id="AppAdmin.bump_sample_rate"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.bump_sample_rate">[docs]</a>    <span class="nd">@takes_instance_or_queryset</span>
+    <span class="nd">@add_form_to_action</span><span class="p">(</span><span class="n">BumpForm</span><span class="p">)</span>
+    <span class="nd">@confirm_action</span><span class="p">()</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Bump Sample Rate&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">bump_sample_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span>
+        <span class="n">queryset</span><span class="p">:</span> <span class="s2">&quot;QuerySet[App]&quot;</span><span class="p">,</span>
+        <span class="n">form</span><span class="p">:</span> <span class="n">BumpForm</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is responsible for the bump sample rate action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            queryset (QuerySet[App]): The Apps to change</span>
+<span class="sd">            form (BumpForm): The form</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span>
+        <span class="n">queryset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="n">active_sample_rate</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;new_sample_rate&quot;</span><span class="p">],</span>
+            <span class="n">active_window_end</span><span class="o">=</span><span class="n">new_date</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
+            <span class="n">invalidate_cache</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/sentry/apps/</span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">reference</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span></div>
+
+    <span class="n">bump_sample_rate</span><span class="o">.</span><span class="n">allowed_permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;bump_sample_rate&quot;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="AppAdmin.has_bump_sample_rate_permission"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.has_bump_sample_rate_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_bump_sample_rate_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return True if the user have the permission for bump sample rate action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Is allowed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
+        <span class="n">codename</span> <span class="o">=</span> <span class="n">get_permission_codename</span><span class="p">(</span><span class="s2">&quot;bump_sample_rate&quot;</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
+
+        <span class="n">panic</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PANIC_KEY</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">panic</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">codename</span><span class="p">))</span></div>
+
+    <span class="c1"># ----- Update Metrics</span>
+<div class="viewcode-block" id="AppAdmin.enable_disable_metrics"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.enable_disable_metrics">[docs]</a>    <span class="nd">@takes_instance_or_queryset</span>
+    <span class="nd">@add_form_to_action</span><span class="p">(</span><span class="n">MetricForm</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enable/Disable Metrics Collection&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">enable_disable_metrics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span>
+        <span class="n">queryset</span><span class="p">:</span> <span class="s2">&quot;QuerySet[App]&quot;</span><span class="p">,</span>
+        <span class="n">form</span><span class="p">:</span> <span class="n">MetricForm</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is responsible for the enable/disable metrics action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            queryset (QuerySet[App]): The Apps to change</span>
+<span class="sd">            form (MetricForm): The form</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
+        <span class="n">app</span><span class="p">:</span> <span class="n">App</span>
+        <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">MetricType</span><span class="p">:</span>
+                <span class="n">app</span><span class="o">.</span><span class="n">set_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">)</span>
+            <span class="n">invalidate_cache</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/sentry/apps/</span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">reference</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+    <span class="n">enable_disable_metrics</span><span class="o">.</span><span class="n">allowed_permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;enable_disable_metrics&quot;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="AppAdmin.has_enable_disable_metrics_permission"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.has_enable_disable_metrics_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_enable_disable_metrics_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return True if the user have the permission for enable/disable metrics action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Is allowed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
+        <span class="n">codename</span> <span class="o">=</span> <span class="n">get_permission_codename</span><span class="p">(</span><span class="s2">&quot;enable_disable_metrics&quot;</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">codename</span><span class="p">))</span></div>
+
+    <span class="c1"># ----- Panic / Unpanic</span>
+<div class="viewcode-block" id="AppAdmin.panic"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.panic">[docs]</a>    <span class="nd">@takes_instance_or_queryset</span>
+    <span class="nd">@confirm_action</span><span class="p">(</span><span class="n">display_queryset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Panic&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">panic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="p">:</span> <span class="s2">&quot;QuerySet[App]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=unused-argument</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method activate the panic mode.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            queryset (QuerySet[App]): All the Apps (unused)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PANIC_KEY</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+    <span class="n">panic</span><span class="o">.</span><span class="n">allowed_permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;panic&quot;</span><span class="p">,)</span>
+    <span class="n">panic</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;background-color: red;&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AppAdmin.has_panic_permission"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.has_panic_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_panic_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return True if the user have the permission for panic action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Is allowed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">panic</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PANIC_KEY</span><span class="p">)</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
+        <span class="n">codename</span> <span class="o">=</span> <span class="n">get_permission_codename</span><span class="p">(</span><span class="s2">&quot;panic&quot;</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">panic</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">codename</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AppAdmin.unpanic"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.unpanic">[docs]</a>    <span class="nd">@takes_instance_or_queryset</span>
+    <span class="nd">@confirm_action</span><span class="p">(</span><span class="n">display_queryset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;UnPanic&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">unpanic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="p">:</span> <span class="s2">&quot;QuerySet[App]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=unused-argument</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method deactivate the panic mode.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            queryset (QuerySet[App]): All the Apps (unused)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PANIC_KEY</span><span class="p">)</span></div>
+
+    <span class="n">unpanic</span><span class="o">.</span><span class="n">allowed_permissions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;unpanic&quot;</span><span class="p">,)</span>
+    <span class="n">unpanic</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;background-color: green;&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AppAdmin.has_unpanic_permission"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.has_unpanic_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_unpanic_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return True if the user have the permission for unpanic action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Is allowed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">panic</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PANIC_KEY</span><span class="p">)</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opts</span>
+        <span class="n">codename</span> <span class="o">=</span> <span class="n">get_permission_codename</span><span class="p">(</span><span class="s2">&quot;panic&quot;</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">panic</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">codename</span><span class="p">))</span></div>
+
+    <span class="c1"># Save model</span>
+<div class="viewcode-block" id="AppAdmin.save_model"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">App</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="s2">&quot;ModelForm&quot;</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is responsible to save app in the admin.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            obj (App): The app to save</span>
+<span class="sd">            form (ModelForm): form</span>
+<span class="sd">            change (bool): change</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">invalidate_cache</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/sentry/apps/</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">reference</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">change</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

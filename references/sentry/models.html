@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Models &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Serializers" href="serializers.html" />
+    <link rel="prev" title="Mixins" href="mixins.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../sentry.html">sentry</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sentry.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../sentry.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="admin.html">Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apps.html">Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixins.html">Mixins</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.models.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.models.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.models.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.models.settings_default_value"><code class="docutils literal notranslate"><span class="pre">settings_default_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="serializers.html">Serializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks.html">Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../sentry.html">sentry</a></li>
+      <li class="breadcrumb-item active">Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/references/sentry/models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-controller.sentry.models">
+<span id="models"></span><h1>Models<a class="headerlink" href="#module-controller.sentry.models" title="Permalink to this heading"></a></h1>
+<p>Models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.models.App">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.models.</span></span><span class="sig-name descname"><span class="pre">App</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/models.html#App"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.App" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
+<p>App Models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Primary key: Reference</p></li>
+<li><p><strong>last_seen</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Last seen</p></li>
+<li><p><strong>default_sample_rate</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FloatField" title="(in Django v5.0)"><em>FloatField</em></a>) – Default sample rate</p></li>
+<li><p><strong>active_sample_rate</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FloatField" title="(in Django v5.0)"><em>FloatField</em></a>) – Active sample rate</p></li>
+<li><p><strong>active_window_end</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Active window end</p></li>
+<li><p><strong>env</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Env</p></li>
+<li><p><strong>command</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Command</p></li>
+<li><p><strong>wsgi_ignore_path</strong> (<em>ArrayField</em>) – Wsgi ignore path</p></li>
+<li><p><strong>wsgi_collect_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.BooleanField" title="(in Django v5.0)"><em>BooleanField</em></a>) – Wsgi collect metrics</p></li>
+<li><p><strong>wsgi_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><em>JSONField</em></a>) – Wsgi metrics</p></li>
+<li><p><strong>celery_ignore_task</strong> (<em>ArrayField</em>) – Celery ignore task</p></li>
+<li><p><strong>celery_collect_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.BooleanField" title="(in Django v5.0)"><em>BooleanField</em></a>) – Celery collect metrics</p></li>
+<li><p><strong>celery_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><em>JSONField</em></a>) – Celery metrics</p></li>
+</ul>
+</dd>
+</dl>
+<p>Relationship fields:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Project" title="controller.sentry.models.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">Project</span></code></a>) – Project (related name: <a class="reference internal" href="#controller.sentry.models.Project.apps" title="controller.sentry.models.Project.apps"><code class="xref py py-attr docutils literal notranslate"><span class="pre">apps</span></code></a>)</p>
+</dd>
+</dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.App.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#controller.sentry.models.App.DoesNotExist" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.App.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#controller.sentry.models.App.MultipleObjectsReturned" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.active_sample_rate">
+<span class="sig-name descname"><span class="pre">active_sample_rate</span></span><a class="headerlink" href="#controller.sentry.models.App.active_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FloatField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatField</span></code></a></p>
+<p>Active sample rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.active_window_end">
+<span class="sig-name descname"><span class="pre">active_window_end</span></span><a class="headerlink" href="#controller.sentry.models.App.active_window_end" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DateTimeField</span></code></a></p>
+<p>Active window end</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.celery_collect_metrics">
+<span class="sig-name descname"><span class="pre">celery_collect_metrics</span></span><a class="headerlink" href="#controller.sentry.models.App.celery_collect_metrics" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.BooleanField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanField</span></code></a></p>
+<p>Celery collect metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.celery_ignore_task">
+<span class="sig-name descname"><span class="pre">celery_ignore_task</span></span><a class="headerlink" href="#controller.sentry.models.App.celery_ignore_task" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayField</span></code></p>
+<p>Celery ignore task</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.celery_metrics">
+<span class="sig-name descname"><span class="pre">celery_metrics</span></span><a class="headerlink" href="#controller.sentry.models.App.celery_metrics" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JSONField</span></code></a></p>
+<p>Celery metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.command">
+<span class="sig-name descname"><span class="pre">command</span></span><a class="headerlink" href="#controller.sentry.models.App.command" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Command</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.default_sample_rate">
+<span class="sig-name descname"><span class="pre">default_sample_rate</span></span><a class="headerlink" href="#controller.sentry.models.App.default_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FloatField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatField</span></code></a></p>
+<p>Default sample rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.env">
+<span class="sig-name descname"><span class="pre">env</span></span><a class="headerlink" href="#controller.sentry.models.App.env" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Env</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.App.get_metric">
+<span class="sig-name descname"><span class="pre">get_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="choices.html#controller.sentry.choices.MetricType" title="controller.sentry.choices.MetricType"><span class="pre">MetricType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/controller/sentry/models.html#App.get_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.App.get_metric" title="Permalink to this definition"></a></dt>
+<dd><p>Get metrics from <a class="reference internal" href="choices.html#controller.sentry.choices.MetricType" title="controller.sentry.choices.MetricType"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.sentry.choices.MetricType</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metric_type</strong> (<a class="reference internal" href="choices.html#controller.sentry.choices.MetricType" title="controller.sentry.choices.MetricType"><em>MetricType</em></a>) – Metric type</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Is collecting metrics
+dict: The metric value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.last_seen">
+<span class="sig-name descname"><span class="pre">last_seen</span></span><a class="headerlink" href="#controller.sentry.models.App.last_seen" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DateTimeField</span></code></a></p>
+<p>Last seen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.App.merge">
+<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validated_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/models.html#App.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.App.merge" title="Permalink to this definition"></a></dt>
+<dd><p>Merge Metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>validated_data</strong> (<em>dict</em>) – new data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#controller.sentry.models.App.objects" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.project">
+<span class="sig-name descname"><span class="pre">project</span></span><a class="headerlink" href="#controller.sentry.models.App.project" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Project" title="controller.sentry.models.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">Project</span></code></a></p>
+<p>Project (related name: <a class="reference internal" href="#controller.sentry.models.Project.apps" title="controller.sentry.models.Project.apps"><code class="xref py py-attr docutils literal notranslate"><span class="pre">apps</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.project_id">
+<span class="sig-name descname"><span class="pre">project_id</span></span><a class="headerlink" href="#controller.sentry.models.App.project_id" title="Permalink to this definition"></a></dt>
+<dd><p>Internal field, use <a class="reference internal" href="#controller.sentry.models.App.project" title="controller.sentry.models.App.project"><code class="xref py py-class docutils literal notranslate"><span class="pre">project</span></code></a> instead.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><a class="headerlink" href="#controller.sentry.models.App.reference" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Primary key: Reference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.App.set_metric">
+<span class="sig-name descname"><span class="pre">set_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="choices.html#controller.sentry.choices.MetricType" title="controller.sentry.choices.MetricType"><span class="pre">MetricType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/models.html#App.set_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.App.set_metric" title="Permalink to this definition"></a></dt>
+<dd><p>Set metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metric_type</strong> (<a class="reference internal" href="choices.html#controller.sentry.choices.MetricType" title="controller.sentry.choices.MetricType"><em>MetricType</em></a>) – Metric type</p></li>
+<li><p><strong>metric_state</strong> (<em>bool</em>) – Should collect metrics</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.wsgi_collect_metrics">
+<span class="sig-name descname"><span class="pre">wsgi_collect_metrics</span></span><a class="headerlink" href="#controller.sentry.models.App.wsgi_collect_metrics" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.BooleanField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanField</span></code></a></p>
+<p>Wsgi collect metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.wsgi_ignore_path">
+<span class="sig-name descname"><span class="pre">wsgi_ignore_path</span></span><a class="headerlink" href="#controller.sentry.models.App.wsgi_ignore_path" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayField</span></code></p>
+<p>Wsgi ignore path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.wsgi_metrics">
+<span class="sig-name descname"><span class="pre">wsgi_metrics</span></span><a class="headerlink" href="#controller.sentry.models.App.wsgi_metrics" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JSONField</span></code></a></p>
+<p>Wsgi metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.models.Event">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.models.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/models.html#Event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.Event" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
+<p>Event Models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Reference</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Type</p></li>
+<li><p><strong>timestamp</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Timestamp</p></li>
+</ul>
+</dd>
+</dl>
+<p>Relationship fields:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Project" title="controller.sentry.models.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">Project</span></code></a>) – Project (related name: <a class="reference internal" href="#controller.sentry.models.Project.events" title="controller.sentry.models.Project.events"><code class="xref py py-attr docutils literal notranslate"><span class="pre">events</span></code></a>)</p>
+</dd>
+</dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#controller.sentry.models.Event.DoesNotExist" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#controller.sentry.models.Event.MultipleObjectsReturned" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.get_next_by_timestamp">
+<span class="sig-name descname"><span class="pre">get_next_by_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.DateTimeField:</span> <span class="pre">timestamp&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.sentry.models.Event.get_next_by_timestamp" title="Permalink to this definition"></a></dt>
+<dd><p>Finds next instance based on <a class="reference internal" href="#controller.sentry.models.Event.timestamp" title="controller.sentry.models.Event.timestamp"><code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code></a>. See <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_next_by_FOO" title="(in Django v5.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_next_by_FOO()</span></code></a> for more information.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.get_previous_by_timestamp">
+<span class="sig-name descname"><span class="pre">get_previous_by_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.DateTimeField:</span> <span class="pre">timestamp&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.sentry.models.Event.get_previous_by_timestamp" title="Permalink to this definition"></a></dt>
+<dd><p>Finds previous instance based on <a class="reference internal" href="#controller.sentry.models.Event.timestamp" title="controller.sentry.models.Event.timestamp"><code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code></a>. See <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_previous_by_FOO" title="(in Django v5.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_previous_by_FOO()</span></code></a> for more information.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.get_type_display">
+<span class="sig-name descname"><span class="pre">get_type_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.CharField:</span> <span class="pre">type&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.sentry.models.Event.get_type_display" title="Permalink to this definition"></a></dt>
+<dd><p>Shows the label of the <a class="reference internal" href="#controller.sentry.models.Event.type" title="controller.sentry.models.Event.type"><code class="xref py py-attr docutils literal notranslate"><span class="pre">type</span></code></a>. See <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_FOO_display" title="(in Django v5.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_FOO_display()</span></code></a> for more information.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#controller.sentry.models.Event.objects" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.project">
+<span class="sig-name descname"><span class="pre">project</span></span><a class="headerlink" href="#controller.sentry.models.Event.project" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Project" title="controller.sentry.models.Project"><code class="xref py py-class docutils literal notranslate"><span class="pre">Project</span></code></a></p>
+<p>Project (related name: <a class="reference internal" href="#controller.sentry.models.Project.events" title="controller.sentry.models.Project.events"><code class="xref py py-attr docutils literal notranslate"><span class="pre">events</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.project_id">
+<span class="sig-name descname"><span class="pre">project_id</span></span><a class="headerlink" href="#controller.sentry.models.Event.project_id" title="Permalink to this definition"></a></dt>
+<dd><p>Internal field, use <a class="reference internal" href="#controller.sentry.models.Event.project" title="controller.sentry.models.Event.project"><code class="xref py py-class docutils literal notranslate"><span class="pre">project</span></code></a> instead.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><a class="headerlink" href="#controller.sentry.models.Event.reference" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUIDField</span></code></a></p>
+<p>Primary key: Reference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><a class="headerlink" href="#controller.sentry.models.Event.timestamp" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DateTimeField</span></code></a></p>
+<p>Timestamp</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Event.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#controller.sentry.models.Event.type" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Type</p>
+<p>Choices:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FIRING</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISCARD</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.models.Project">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.models.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/models.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.Project" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
+<p>Project Models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sentry_id</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Primary key: Sentry id</p></li>
+<li><p><strong>sentry_project_slug</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Sentry project slug</p></li>
+<li><p><strong>detection_param</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><em>JSONField</em></a>) – Detection param</p></li>
+<li><p><strong>detection_result</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><em>JSONField</em></a>) – Detection result</p></li>
+</ul>
+</dd>
+</dl>
+<p>Reverse relationships:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>events</strong> (Reverse <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a>) – All events of this project (related name of <a class="reference internal" href="#controller.sentry.models.Event.project" title="controller.sentry.models.Event.project"><code class="xref py py-attr docutils literal notranslate"><span class="pre">project</span></code></a>)</p></li>
+<li><p><strong>apps</strong> (Reverse <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#controller.sentry.models.App" title="controller.sentry.models.App"><code class="xref py py-class docutils literal notranslate"><span class="pre">App</span></code></a>) – All apps of this project (related name of <a class="reference internal" href="#controller.sentry.models.App.project" title="controller.sentry.models.App.project"><code class="xref py py-attr docutils literal notranslate"><span class="pre">project</span></code></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#controller.sentry.models.Project.DoesNotExist" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#controller.sentry.models.Project.MultipleObjectsReturned" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.apps">
+<span class="sig-name descname"><span class="pre">apps</span></span><a class="headerlink" href="#controller.sentry.models.Project.apps" title="Permalink to this definition"></a></dt>
+<dd><p>Reverse <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#controller.sentry.models.App" title="controller.sentry.models.App"><code class="xref py py-class docutils literal notranslate"><span class="pre">App</span></code></a></p>
+<p>All apps of this project (related name of <a class="reference internal" href="#controller.sentry.models.App.project" title="controller.sentry.models.App.project"><code class="xref py py-attr docutils literal notranslate"><span class="pre">project</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.detection_param">
+<span class="sig-name descname"><span class="pre">detection_param</span></span><a class="headerlink" href="#controller.sentry.models.Project.detection_param" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JSONField</span></code></a></p>
+<p>Detection param</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.detection_result">
+<span class="sig-name descname"><span class="pre">detection_result</span></span><a class="headerlink" href="#controller.sentry.models.Project.detection_result" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JSONField</span></code></a></p>
+<p>Detection result</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.events">
+<span class="sig-name descname"><span class="pre">events</span></span><a class="headerlink" href="#controller.sentry.models.Project.events" title="Permalink to this definition"></a></dt>
+<dd><p>Reverse <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a></p>
+<p>All events of this project (related name of <a class="reference internal" href="#controller.sentry.models.Event.project" title="controller.sentry.models.Event.project"><code class="xref py py-attr docutils literal notranslate"><span class="pre">project</span></code></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#controller.sentry.models.Project.objects" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.sentry_id">
+<span class="sig-name descname"><span class="pre">sentry_id</span></span><a class="headerlink" href="#controller.sentry.models.Project.sentry_id" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Primary key: Sentry id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.sentry_project_slug">
+<span class="sig-name descname"><span class="pre">sentry_project_slug</span></span><a class="headerlink" href="#controller.sentry.models.Project.sentry_project_slug" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharField</span></code></a></p>
+<p>Sentry project slug</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="controller.sentry.models.settings_default_value">
+<span class="sig-prename descclassname"><span class="pre">controller.sentry.models.</span></span><span class="sig-name descname"><span class="pre">settings_default_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/models.html#settings_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.models.settings_default_value" title="Permalink to this definition"></a></dt>
+<dd><p>This function returns the default value from settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The key to retrieve from settings.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The settings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mixins.html" class="btn btn-neutral float-left" title="Mixins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="serializers.html" class="btn btn-neutral float-right" title="Serializers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mixins &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="Inlines" href="inlines.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../sentry.html">sentry</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sentry.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../sentry.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="admin.html">Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apps.html">Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Mixins</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.mixins.ChartMixin"><code class="docutils literal notranslate"><span class="pre">ChartMixin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.mixins.PrettyTypeMixin"><code class="docutils literal notranslate"><span class="pre">PrettyTypeMixin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.mixins.ProjectLinkMixin"><code class="docutils literal notranslate"><span class="pre">ProjectLinkMixin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serializers.html">Serializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks.html">Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../sentry.html">sentry</a></li>
+      <li class="breadcrumb-item active">Mixins</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/references/sentry/mixins.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-controller.sentry.mixins">
+<span id="mixins"></span><h1>Mixins<a class="headerlink" href="#module-controller.sentry.mixins" title="Permalink to this heading"></a></h1>
+<p>Mixins.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.mixins.ChartMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.mixins.</span></span><span class="sig-name descname"><span class="pre">ChartMixin</span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#ChartMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.ChartMixin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin to get a chart on admin.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.mixins.ChartMixin.change_form_template">
+<span class="sig-name descname"><span class="pre">change_form_template</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'admin/chart_change_form.html'</span></em><a class="headerlink" href="#controller.sentry.mixins.ChartMixin.change_form_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.mixins.ChartMixin.change_view">
+<span class="sig-name descname"><span class="pre">change_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">HttpResponse</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#ChartMixin.change_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.ChartMixin.change_view" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to inject Chart data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – Http request</p></li>
+<li><p><strong>object_id</strong> (<em>str</em>) – object id</p></li>
+<li><p><strong>form_url</strong> (<em>str</em>) – form_url (Default to Blank string)</p></li>
+<li><p><strong>extra_context</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – extra context  (Default to None)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.mixins.PrettyTypeMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.mixins.</span></span><span class="sig-name descname"><span class="pre">PrettyTypeMixin</span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#PrettyTypeMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.PrettyTypeMixin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin to add a pretty event type.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.mixins.PrettyTypeMixin.pretty_type">
+<span class="sig-name descname"><span class="pre">pretty_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><span class="pre">Event</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#PrettyTypeMixin.pretty_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.PrettyTypeMixin.pretty_type" title="Permalink to this definition"></a></dt>
+<dd><p>Pretty event type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><em>Event</em></a>) – The event</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pretty type</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.mixins.ProjectLinkMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.mixins.</span></span><span class="sig-name descname"><span class="pre">ProjectLinkMixin</span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#ProjectLinkMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.ProjectLinkMixin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin to get a project link.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.mixins.ProjectLinkMixin.get_project">
+<span class="sig-name descname"><span class="pre">get_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/mixins.html#ProjectLinkMixin.get_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.mixins.ProjectLinkMixin.get_project" title="Permalink to this definition"></a></dt>
+<dd><p>Get project link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>Union</em><em>[</em><a class="reference internal" href="models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><em>Event</em></a><em>, </em><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a><em>]</em>) – Event or App</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Petty formatted html link</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="inlines.html" class="btn btn-neutral float-left" title="Inlines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

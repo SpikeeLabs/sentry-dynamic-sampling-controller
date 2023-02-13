@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Apps" href="apps.html" />
+    <link rel="prev" title="Sentry Web-Wervices" href="webservices/sentry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../sentry.html">sentry</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sentry.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../sentry.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Admin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.admin.AppAdmin"><code class="docutils literal notranslate"><span class="pre">AppAdmin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.admin.EventAdmin"><code class="docutils literal notranslate"><span class="pre">EventAdmin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.admin.ProjectAdmin"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="apps.html">Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixins.html">Mixins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serializers.html">Serializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks.html">Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../sentry.html">sentry</a></li>
+      <li class="breadcrumb-item active">Admin</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/references/sentry/admin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-controller.sentry.admin">
+<span id="admin"></span><h1>Admin<a class="headerlink" href="#module-controller.sentry.admin" title="Permalink to this heading"></a></h1>
+<p>Admin.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.admin.</span></span><span class="sig-name descname"><span class="pre">AppAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="mixins.html#controller.sentry.mixins.ProjectLinkMixin" title="controller.sentry.mixins.ProjectLinkMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProjectLinkMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">AdminConfirmMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ActionFormMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DjangoObjectActions</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicArrayMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>App Admin.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.actions">
+<span class="sig-name descname"><span class="pre">actions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['bump_sample_rate']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.actions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.bump_sample_rate">
+<span class="sig-name descname"><span class="pre">bump_sample_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuerySet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forms.html#controller.sentry.forms.BumpForm" title="controller.sentry.forms.BumpForm"><span class="pre">BumpForm</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.bump_sample_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.bump_sample_rate" title="Permalink to this definition"></a></dt>
+<dd><p>This method is responsible for the bump sample rate action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>queryset</strong> (<em>QuerySet</em><em>[</em><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a><em>]</em>) – The Apps to change</p></li>
+<li><p><strong>form</strong> (<a class="reference internal" href="forms.html#controller.sentry.forms.BumpForm" title="controller.sentry.forms.BumpForm"><em>BumpForm</em></a>) – The form</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.change_actions">
+<span class="sig-name descname"><span class="pre">change_actions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['bump_sample_rate',</span> <span class="pre">'enable_disable_metrics']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.change_actions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.changelist_actions">
+<span class="sig-name descname"><span class="pre">changelist_actions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['panic',</span> <span class="pre">'unpanic']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.changelist_actions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.enable_disable_metrics">
+<span class="sig-name descname"><span class="pre">enable_disable_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuerySet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forms.html#controller.sentry.forms.MetricForm" title="controller.sentry.forms.MetricForm"><span class="pre">MetricForm</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.enable_disable_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.enable_disable_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>This method is responsible for the enable/disable metrics action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>queryset</strong> (<em>QuerySet</em><em>[</em><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a><em>]</em>) – The Apps to change</p></li>
+<li><p><strong>form</strong> (<a class="reference internal" href="forms.html#controller.sentry.forms.MetricForm" title="controller.sentry.forms.MetricForm"><em>MetricForm</em></a>) – The form</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.formfield_overrides">
+<span class="sig-name descname"><span class="pre">formfield_overrides</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{&lt;class</span> <span class="pre">'django.db.models.JSONField'&gt;:</span> <span class="pre">{'widget':</span> <span class="pre">&lt;django_json_widget.widgets.JSONEditorWidget</span> <span class="pre">object&gt;}}</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.formfield_overrides" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.get_change_actions">
+<span class="sig-name descname"><span class="pre">get_change_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.get_change_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.get_change_actions" title="Permalink to this definition"></a></dt>
+<dd><p>This method return allowed change actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>object_id</strong> (<em>str</em>) – The App reference</p></li>
+<li><p><strong>form_url</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The form_url</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All possible actions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.get_changelist_actions">
+<span class="sig-name descname"><span class="pre">get_changelist_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.get_changelist_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.get_changelist_actions" title="Permalink to this definition"></a></dt>
+<dd><p>This method return allowed changelist actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All possible actions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.get_event_status">
+<span class="sig-name descname"><span class="pre">get_event_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.get_event_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.get_event_status" title="Permalink to this definition"></a></dt>
+<dd><p>This method return a pretty event status html string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a>) – The app</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pretty status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.has_bump_sample_rate_permission">
+<span class="sig-name descname"><span class="pre">has_bump_sample_rate_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.has_bump_sample_rate_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.has_bump_sample_rate_permission" title="Permalink to this definition"></a></dt>
+<dd><p>This method return True if the user have the permission for bump sample rate action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Is allowed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.has_enable_disable_metrics_permission">
+<span class="sig-name descname"><span class="pre">has_enable_disable_metrics_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.has_enable_disable_metrics_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.has_enable_disable_metrics_permission" title="Permalink to this definition"></a></dt>
+<dd><p>This method return True if the user have the permission for enable/disable metrics action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Is allowed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.has_panic_permission">
+<span class="sig-name descname"><span class="pre">has_panic_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.has_panic_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.has_panic_permission" title="Permalink to this definition"></a></dt>
+<dd><p>This method return True if the user have the permission for panic action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Is allowed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.has_unpanic_permission">
+<span class="sig-name descname"><span class="pre">has_unpanic_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.has_unpanic_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.has_unpanic_permission" title="Permalink to this definition"></a></dt>
+<dd><p>This method return True if the user have the permission for unpanic action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Is allowed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.inlines">
+<span class="sig-name descname"><span class="pre">inlines</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;class</span> <span class="pre">'controller.sentry.inlines.AppEventInline'&gt;]</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.inlines" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'get_event_status',</span> <span class="pre">'get_project',</span> <span class="pre">'last_seen',</span> <span class="pre">'default_sample_rate',</span> <span class="pre">'active_sample_rate',</span> <span class="pre">'active_window_end',</span> <span class="pre">'wsgi_collect_metrics',</span> <span class="pre">'celery_collect_metrics']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.list_display" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#controller.sentry.admin.AppAdmin.media" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'project__sentry_project_slug',</span> <span class="pre">'env',</span> <span class="pre">'command']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.panic">
+<span class="sig-name descname"><span class="pre">panic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuerySet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.panic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.panic" title="Permalink to this definition"></a></dt>
+<dd><p>This method activate the panic mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>queryset</strong> (<em>QuerySet</em><em>[</em><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a><em>]</em>) – All the Apps (unused)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.read_only_fields">
+<span class="sig-name descname"><span class="pre">read_only_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['last_seen']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.read_only_fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.save_model">
+<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ModelForm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.save_model" title="Permalink to this definition"></a></dt>
+<dd><p>This method is responsible to save app in the admin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a>) – The app to save</p></li>
+<li><p><strong>form</strong> (<em>ModelForm</em>) – form</p></li>
+<li><p><strong>change</strong> (<em>bool</em>) – change</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'project__sentry_project_slug',</span> <span class="pre">'env',</span> <span class="pre">'command']</span></em><a class="headerlink" href="#controller.sentry.admin.AppAdmin.search_fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.AppAdmin.unpanic">
+<span class="sig-name descname"><span class="pre">unpanic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HttpRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuerySet</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><span class="pre">App</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#AppAdmin.unpanic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.AppAdmin.unpanic" title="Permalink to this definition"></a></dt>
+<dd><p>This method deactivate the panic mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request</p></li>
+<li><p><strong>queryset</strong> (<em>QuerySet</em><em>[</em><a class="reference internal" href="models.html#controller.sentry.models.App" title="controller.sentry.models.App"><em>App</em></a><em>]</em>) – All the Apps (unused)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.admin.</span></span><span class="sig-name descname"><span class="pre">EventAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#EventAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.EventAdmin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="mixins.html#controller.sentry.mixins.ProjectLinkMixin" title="controller.sentry.mixins.ProjectLinkMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProjectLinkMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">AdminConfirmMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ActionFormMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DjangoObjectActions</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicArrayMixin</span></code>, <a class="reference internal" href="mixins.html#controller.sentry.mixins.PrettyTypeMixin" title="controller.sentry.mixins.PrettyTypeMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrettyTypeMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Event Admin.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin.formfield_overrides">
+<span class="sig-name descname"><span class="pre">formfield_overrides</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{&lt;class</span> <span class="pre">'django.db.models.JSONField'&gt;:</span> <span class="pre">{'widget':</span> <span class="pre">&lt;django_json_widget.widgets.JSONEditorWidget</span> <span class="pre">object&gt;}}</span></em><a class="headerlink" href="#controller.sentry.admin.EventAdmin.formfield_overrides" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'pretty_type',</span> <span class="pre">'timestamp',</span> <span class="pre">'get_project']</span></em><a class="headerlink" href="#controller.sentry.admin.EventAdmin.list_display" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#controller.sentry.admin.EventAdmin.media" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'type',</span> <span class="pre">'project__sentry_project_slug']</span></em><a class="headerlink" href="#controller.sentry.admin.EventAdmin.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.EventAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reference',</span> <span class="pre">'type',</span> <span class="pre">'project__sentry_project_slug']</span></em><a class="headerlink" href="#controller.sentry.admin.EventAdmin.search_fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.admin.</span></span><span class="sig-name descname"><span class="pre">ProjectAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#ProjectAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="mixins.html#controller.sentry.mixins.ChartMixin" title="controller.sentry.mixins.ChartMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChartMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">AdminConfirmMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ActionFormMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DjangoObjectActions</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicArrayMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Project Admin.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.formfield_overrides">
+<span class="sig-name descname"><span class="pre">formfield_overrides</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{&lt;class</span> <span class="pre">'django.db.models.JSONField'&gt;:</span> <span class="pre">{'widget':</span> <span class="pre">&lt;django_json_widget.widgets.JSONEditorWidget</span> <span class="pre">object&gt;}}</span></em><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.formfield_overrides" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.get_chart_data">
+<span class="sig-name descname"><span class="pre">get_chart_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentry_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/admin.html#ProjectAdmin.get_chart_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.get_chart_data" title="Permalink to this definition"></a></dt>
+<dd><p>This method return the chart data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentry_id</strong> (<em>str</em>) – sentry id</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple of data and options</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[dict, dict]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.inlines">
+<span class="sig-name descname"><span class="pre">inlines</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;class</span> <span class="pre">'controller.sentry.inlines.ProjectEventInline'&gt;]</span></em><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.inlines" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['sentry_id',</span> <span class="pre">'sentry_project_slug']</span></em><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.list_display" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.media" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['sentry_id',</span> <span class="pre">'sentry_project_slug']</span></em><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.admin.ProjectAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['sentry_id',</span> <span class="pre">'sentry_project_slug']</span></em><a class="headerlink" href="#controller.sentry.admin.ProjectAdmin.search_fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="webservices/sentry.html" class="btn btn-neutral float-left" title="Sentry Web-Wervices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="apps.html" class="btn btn-neutral float-right" title="Apps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

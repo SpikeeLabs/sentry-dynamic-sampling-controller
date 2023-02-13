@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sentry &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Commands" href="sentry/management/index.html" />
+    <link rel="prev" title="How does it work" href="../how_does_it_work.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_does_it_work.html">How does it work</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sentry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/management/index.html">Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/metrics/index.html">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/webservices/index.html">Web-Wervices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html">Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/apps.html">Apps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/auth.html">Auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html">Choices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/forms.html">Forms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html">Inlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html">Mixins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html">Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/serializers.html">Serializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/tasks.html">Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/utils.html">Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html">Views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">sentry</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/references/sentry.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sentry">
+<h1>sentry<a class="headerlink" href="#sentry" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sentry/management/index.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/management/commands.loadpermissions.html">loadpermissions command</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/management/commands.loadpermissions.html#controller.sentry.management.commands.loadpermissions.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sentry/management/commands.loadpermissions.html#controller.sentry.management.commands.loadpermissions.Command.handle"><code class="docutils literal notranslate"><span class="pre">Command.handle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/management/commands.loadpermissions.html#controller.sentry.management.commands.loadpermissions.Command.help"><code class="docutils literal notranslate"><span class="pre">Command.help</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/metrics/index.html">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/metrics/celery.html">Celery Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/metrics/celery.html#controller.sentry.metrics.celery.celery_merger"><code class="docutils literal notranslate"><span class="pre">celery_merger()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/metrics/wsgi.html">WSGI Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/metrics/wsgi.html#controller.sentry.metrics.wsgi.wsgi_merger"><code class="docutils literal notranslate"><span class="pre">wsgi_merger()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/webservices/index.html">Web-Wervices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/webservices/sentry.html">Sentry Web-Wervices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.BearerAuth"><code class="docutils literal notranslate"><span class="pre">BearerAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.BearerAuth.token"><code class="docutils literal notranslate"><span class="pre">BearerAuth.token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.BearerAuth.__init__"><code class="docutils literal notranslate"><span class="pre">BearerAuth.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient.host"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient.host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient.auth"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient.auth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient.__init__"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient.get_stats"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient.get_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sentry/webservices/sentry.html#controller.sentry.webservices.sentry.PaginatedSentryClient.list_projects"><code class="docutils literal notranslate"><span class="pre">PaginatedSentryClient.list_projects()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sentry/admin.html">Admin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin"><code class="docutils literal notranslate"><span class="pre">AppAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.actions"><code class="docutils literal notranslate"><span class="pre">AppAdmin.actions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.bump_sample_rate"><code class="docutils literal notranslate"><span class="pre">AppAdmin.bump_sample_rate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.change_actions"><code class="docutils literal notranslate"><span class="pre">AppAdmin.change_actions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.changelist_actions"><code class="docutils literal notranslate"><span class="pre">AppAdmin.changelist_actions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.enable_disable_metrics"><code class="docutils literal notranslate"><span class="pre">AppAdmin.enable_disable_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.formfield_overrides"><code class="docutils literal notranslate"><span class="pre">AppAdmin.formfield_overrides</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.get_change_actions"><code class="docutils literal notranslate"><span class="pre">AppAdmin.get_change_actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.get_changelist_actions"><code class="docutils literal notranslate"><span class="pre">AppAdmin.get_changelist_actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.get_event_status"><code class="docutils literal notranslate"><span class="pre">AppAdmin.get_event_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.has_bump_sample_rate_permission"><code class="docutils literal notranslate"><span class="pre">AppAdmin.has_bump_sample_rate_permission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.has_enable_disable_metrics_permission"><code class="docutils literal notranslate"><span class="pre">AppAdmin.has_enable_disable_metrics_permission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.has_panic_permission"><code class="docutils literal notranslate"><span class="pre">AppAdmin.has_panic_permission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.has_unpanic_permission"><code class="docutils literal notranslate"><span class="pre">AppAdmin.has_unpanic_permission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.inlines"><code class="docutils literal notranslate"><span class="pre">AppAdmin.inlines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">AppAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.media"><code class="docutils literal notranslate"><span class="pre">AppAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">AppAdmin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.panic"><code class="docutils literal notranslate"><span class="pre">AppAdmin.panic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.read_only_fields"><code class="docutils literal notranslate"><span class="pre">AppAdmin.read_only_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.save_model"><code class="docutils literal notranslate"><span class="pre">AppAdmin.save_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">AppAdmin.search_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.unpanic"><code class="docutils literal notranslate"><span class="pre">AppAdmin.unpanic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin"><code class="docutils literal notranslate"><span class="pre">EventAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin.formfield_overrides"><code class="docutils literal notranslate"><span class="pre">EventAdmin.formfield_overrides</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">EventAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin.media"><code class="docutils literal notranslate"><span class="pre">EventAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">EventAdmin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.EventAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">EventAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.formfield_overrides"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.formfield_overrides</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.get_chart_data"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.get_chart_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.inlines"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.inlines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.media"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/apps.html">Apps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/apps.html#controller.sentry.apps.SentryConfig"><code class="docutils literal notranslate"><span class="pre">SentryConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/apps.html#controller.sentry.apps.SentryConfig.name"><code class="docutils literal notranslate"><span class="pre">SentryConfig.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/apps.html#controller.sentry.apps.SentryConfig.verbose_name"><code class="docutils literal notranslate"><span class="pre">SentryConfig.verbose_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/auth.html">Auth</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/auth.html#controller.sentry.auth.ControllerOIDCAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">ControllerOIDCAuthenticationBackend</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/auth.html#controller.sentry.auth.ControllerOIDCAuthenticationBackend.create_user"><code class="docutils literal notranslate"><span class="pre">ControllerOIDCAuthenticationBackend.create_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/auth.html#controller.sentry.auth.ControllerOIDCAuthenticationBackend.update_user"><code class="docutils literal notranslate"><span class="pre">ControllerOIDCAuthenticationBackend.update_user()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/auth.html#controller.sentry.auth.get_group"><code class="docutils literal notranslate"><span class="pre">get_group()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/choices.html">Choices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.EventType"><code class="docutils literal notranslate"><span class="pre">EventType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.EventType.FIRING"><code class="docutils literal notranslate"><span class="pre">EventType.FIRING</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.EventType.DISCARD"><code class="docutils literal notranslate"><span class="pre">EventType.DISCARD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#id0"><code class="docutils literal notranslate"><span class="pre">EventType.DISCARD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#id1"><code class="docutils literal notranslate"><span class="pre">EventType.FIRING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.MetricType"><code class="docutils literal notranslate"><span class="pre">MetricType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.MetricType.WSGI"><code class="docutils literal notranslate"><span class="pre">MetricType.WSGI</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#controller.sentry.choices.MetricType.CELERY"><code class="docutils literal notranslate"><span class="pre">MetricType.CELERY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#id2"><code class="docutils literal notranslate"><span class="pre">MetricType.CELERY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/choices.html#id3"><code class="docutils literal notranslate"><span class="pre">MetricType.WSGI</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/detector.html">Detector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector"><code class="docutils literal notranslate"><span class="pre">SpikesDetector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.lag"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.lag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.threshold"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.influence"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.influence</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.__init__"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.compute"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.compute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.compute_sentry"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.compute_sentry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/detector.html#controller.sentry.detector.SpikesDetector.from_project"><code class="docutils literal notranslate"><span class="pre">SpikesDetector.from_project()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/forms.html">Forms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.BumpForm"><code class="docutils literal notranslate"><span class="pre">BumpForm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.BumpForm.clean_duration"><code class="docutils literal notranslate"><span class="pre">BumpForm.clean_duration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.BumpForm.clean_new_sample_rate"><code class="docutils literal notranslate"><span class="pre">BumpForm.clean_new_sample_rate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.BumpForm.media"><code class="docutils literal notranslate"><span class="pre">BumpForm.media</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.MetricForm"><code class="docutils literal notranslate"><span class="pre">MetricForm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/forms.html#controller.sentry.forms.MetricForm.media"><code class="docutils literal notranslate"><span class="pre">MetricForm.media</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/inlines.html">Inlines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.AppEventInline"><code class="docutils literal notranslate"><span class="pre">AppEventInline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.AppEventInline.get_form_queryset"><code class="docutils literal notranslate"><span class="pre">AppEventInline.get_form_queryset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.AppEventInline.media"><code class="docutils literal notranslate"><span class="pre">AppEventInline.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.AppEventInline.save_new_instance"><code class="docutils literal notranslate"><span class="pre">AppEventInline.save_new_instance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.can_delete"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.can_delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.extra"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.extra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.fields"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.has_add_permission"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.has_add_permission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.model"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.ordering"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.readonly_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.EventInlineMixin.show_change_link"><code class="docutils literal notranslate"><span class="pre">EventInlineMixin.show_change_link</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.ProjectEventInline"><code class="docutils literal notranslate"><span class="pre">ProjectEventInline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html#controller.sentry.inlines.ProjectEventInline.media"><code class="docutils literal notranslate"><span class="pre">ProjectEventInline.media</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/mixins.html">Mixins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.ChartMixin"><code class="docutils literal notranslate"><span class="pre">ChartMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.ChartMixin.change_form_template"><code class="docutils literal notranslate"><span class="pre">ChartMixin.change_form_template</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.ChartMixin.change_view"><code class="docutils literal notranslate"><span class="pre">ChartMixin.change_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.PrettyTypeMixin"><code class="docutils literal notranslate"><span class="pre">PrettyTypeMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.PrettyTypeMixin.pretty_type"><code class="docutils literal notranslate"><span class="pre">PrettyTypeMixin.pretty_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.ProjectLinkMixin"><code class="docutils literal notranslate"><span class="pre">ProjectLinkMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html#controller.sentry.mixins.ProjectLinkMixin.get_project"><code class="docutils literal notranslate"><span class="pre">ProjectLinkMixin.get_project()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/models.html">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">App.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">App.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.active_sample_rate"><code class="docutils literal notranslate"><span class="pre">App.active_sample_rate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.active_window_end"><code class="docutils literal notranslate"><span class="pre">App.active_window_end</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.celery_collect_metrics"><code class="docutils literal notranslate"><span class="pre">App.celery_collect_metrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.celery_ignore_task"><code class="docutils literal notranslate"><span class="pre">App.celery_ignore_task</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.celery_metrics"><code class="docutils literal notranslate"><span class="pre">App.celery_metrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.command"><code class="docutils literal notranslate"><span class="pre">App.command</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.default_sample_rate"><code class="docutils literal notranslate"><span class="pre">App.default_sample_rate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.env"><code class="docutils literal notranslate"><span class="pre">App.env</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.get_metric"><code class="docutils literal notranslate"><span class="pre">App.get_metric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.last_seen"><code class="docutils literal notranslate"><span class="pre">App.last_seen</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.merge"><code class="docutils literal notranslate"><span class="pre">App.merge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.objects"><code class="docutils literal notranslate"><span class="pre">App.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.project"><code class="docutils literal notranslate"><span class="pre">App.project</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.project_id"><code class="docutils literal notranslate"><span class="pre">App.project_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.reference"><code class="docutils literal notranslate"><span class="pre">App.reference</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.set_metric"><code class="docutils literal notranslate"><span class="pre">App.set_metric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.wsgi_collect_metrics"><code class="docutils literal notranslate"><span class="pre">App.wsgi_collect_metrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.wsgi_ignore_path"><code class="docutils literal notranslate"><span class="pre">App.wsgi_ignore_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.App.wsgi_metrics"><code class="docutils literal notranslate"><span class="pre">App.wsgi_metrics</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.get_next_by_timestamp"><code class="docutils literal notranslate"><span class="pre">Event.get_next_by_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.get_previous_by_timestamp"><code class="docutils literal notranslate"><span class="pre">Event.get_previous_by_timestamp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.get_type_display"><code class="docutils literal notranslate"><span class="pre">Event.get_type_display()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.objects"><code class="docutils literal notranslate"><span class="pre">Event.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.project"><code class="docutils literal notranslate"><span class="pre">Event.project</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.project_id"><code class="docutils literal notranslate"><span class="pre">Event.project_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.reference"><code class="docutils literal notranslate"><span class="pre">Event.reference</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.timestamp"><code class="docutils literal notranslate"><span class="pre">Event.timestamp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Event.type"><code class="docutils literal notranslate"><span class="pre">Event.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Project.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Project.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.apps"><code class="docutils literal notranslate"><span class="pre">Project.apps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.detection_param"><code class="docutils literal notranslate"><span class="pre">Project.detection_param</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.detection_result"><code class="docutils literal notranslate"><span class="pre">Project.detection_result</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.events"><code class="docutils literal notranslate"><span class="pre">Project.events</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.objects"><code class="docutils literal notranslate"><span class="pre">Project.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.sentry_id"><code class="docutils literal notranslate"><span class="pre">Project.sentry_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.sentry_project_slug"><code class="docutils literal notranslate"><span class="pre">Project.sentry_project_slug</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/models.html#controller.sentry.models.settings_default_value"><code class="docutils literal notranslate"><span class="pre">settings_default_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/serializers.html">Serializers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/serializers.html#controller.sentry.serializers.AppSerializer"><code class="docutils literal notranslate"><span class="pre">AppSerializer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/serializers.html#controller.sentry.serializers.MetricSerializer"><code class="docutils literal notranslate"><span class="pre">MetricSerializer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/tasks.html">Tasks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.close_window"><code class="docutils literal notranslate"><span class="pre">close_window</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.monitor_sentry_usage"><code class="docutils literal notranslate"><span class="pre">monitor_sentry_usage</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.perform_detect"><code class="docutils literal notranslate"><span class="pre">perform_detect</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.populate_app"><code class="docutils literal notranslate"><span class="pre">populate_app</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.prune_inactive_app"><code class="docutils literal notranslate"><span class="pre">prune_inactive_app</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.prune_old_event"><code class="docutils literal notranslate"><span class="pre">prune_old_event</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/tasks.html#controller.sentry.tasks.pull_sentry_project_slug"><code class="docutils literal notranslate"><span class="pre">pull_sentry_project_slug</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/utils.html">Utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/utils.html#controller.sentry.utils.Singleton"><code class="docutils literal notranslate"><span class="pre">Singleton</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/utils.html#controller.sentry.utils.invalidate_cache"><code class="docutils literal notranslate"><span class="pre">invalidate_cache()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentry/utils.html#controller.sentry.utils.is_panic_activated"><code class="docutils literal notranslate"><span class="pre">is_panic_activated()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/views.html">Views</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet"><code class="docutils literal notranslate"><span class="pre">AppViewSet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet.metrics"><code class="docutils literal notranslate"><span class="pre">AppViewSet.metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet.model"><code class="docutils literal notranslate"><span class="pre">AppViewSet.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet.queryset"><code class="docutils literal notranslate"><span class="pre">AppViewSet.queryset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet.retrieve"><code class="docutils literal notranslate"><span class="pre">AppViewSet.retrieve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/views.html#controller.sentry.views.AppViewSet.serializer_class"><code class="docutils literal notranslate"><span class="pre">AppViewSet.serializer_class</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../how_does_it_work.html" class="btn btn-neutral float-left" title="How does it work" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sentry/management/index.html" class="btn btn-neutral float-right" title="Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

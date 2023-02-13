@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How does it work &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="sentry" href="references/sentry.html" />
+    <link rel="prev" title="Sentry Dynamic Sampling Controller" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Sentry Dynamic Sampling Controller
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sentry Dynamic Sampling Controller</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How does it work</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#app-key">App Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project">Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bump-sample-rate">Bump Sample Rate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#panic-mode">Panic Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smart-features">Smart Features</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references/sentry.html">sentry</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sentry Dynamic Sampling Controller</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How does it work</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/how_does_it_work.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-does-it-work">
+<h1>How does it work<a class="headerlink" href="#how-does-it-work" title="Permalink to this heading"></a></h1>
+<p>This project aims to provide dynamic sampling without relying on Sentry Dynamic Sampling.</p>
+<p>It work by installing the library <a class="reference external" href="https://github.com/SpikeeLabs/sentry-dynamic-sampling-lib">sentry-dynamic-sampling-lib</a>
+on each project that use sentry. This lib hooks into the sentry callback to change the sampling rate.
+To get the rate the lib calls this service.</p>
+<p>Regularly the lib update his sample rate from the controller.</p>
+<p>On the controller you can configure the sample rate for each <a class="reference internal" href="references/sentry/models.html#controller.sentry.models.App" title="controller.sentry.models.App"><code class="xref py py-class docutils literal notranslate"><span class="pre">app</span></code></a> (Where an app is defined by it’s sentry id, ENV, and command name).</p>
+<section id="app-key">
+<h2>App Key<a class="headerlink" href="#app-key" title="Permalink to this heading"></a></h2>
+<p>If you have 2 app deployed in to environment (staging, pre-prod) you will have 2 apps in sentry controller</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>sentryid_staging_python</p></li>
+<li><p>sentryid_preprod_python</p></li>
+</ul>
+</div></blockquote>
+<p>If you have multiple processes (worker and api) you will have 2 apps in sentry controller</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>sentryid_staging_celery</p></li>
+<li><p>sentryid_staging_wsgi</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="project">
+<h2>Project<a class="headerlink" href="#project" title="Permalink to this heading"></a></h2>
+<p>Project regroup apps by theirs sentry_id. Project are created automatically after apps creation.
+Project are use to get information’s from Sentry API.</p>
+</section>
+<section id="bump-sample-rate">
+<h2>Bump Sample Rate<a class="headerlink" href="#bump-sample-rate" title="Permalink to this heading"></a></h2>
+<p>Developer can bump the sample rate for any app, but they must provide an active duration. At the end of the window the sample rate is set back to it’s default value.
+This allow user to set and forget without exploding your sentry quotas.</p>
+</section>
+<section id="panic-mode">
+<h2>Panic Mode<a class="headerlink" href="#panic-mode" title="Permalink to this heading"></a></h2>
+<p>If you still reach your sentry quotas, you can enable the panic mode. This mode set all sample rate to 0 without changing it in the database.</p>
+</section>
+<section id="smart-features">
+<h2>Smart Features<a class="headerlink" href="#smart-features" title="Permalink to this heading"></a></h2>
+<p>Every hour the controller fetch every project stats on Sentry. Using this stats we can detect misbehaving apps.
+For each misbehaving we create one <a class="reference internal" href="references/sentry/models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">event</span></code></a> when the surge in transaction starts and one when it’s end.</p>
+<p>For now, the controller does not act on misbehaving apps.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Sentry Dynamic Sampling Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="references/sentry.html" class="btn btn-neutral float-right" title="sentry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, jeanloup.monnier &lt;jean-loup.monnier@spikeelabs.fr&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
