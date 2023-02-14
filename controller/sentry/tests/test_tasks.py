@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from controller.sentry.choices import EventType
+from controller.sentry.exceptions import SentryNoOutcomeException
 from controller.sentry.models import App, Event, Project
 from controller.sentry.tasks import (
     close_window,
@@ -185,3 +186,27 @@ def test_perform_detect(spike_detector_mock: MagicMock, client_mock: MagicMock):
     project.refresh_from_db()
     assert project.events.exclude(reference=event.reference).count() == 2
     assert project.detection_result == dump
+
+
+@patch("controller.sentry.tasks.PaginatedSentryClient")
+@patch("controller.sentry.tasks.SpikesDetector")
+@pytest.mark.django_db
+def test_perform_detect_no_data(spike_detector_mock: MagicMock, client_mock: MagicMock):
+    sentry_id = "123"
+    project = Project(sentry_id=sentry_id)
+    project.save()
+
+    detector: MagicMock = spike_detector_mock.from_project.return_value
+    dump = {"test": "a"}
+    detector.compute_sentry.side_effect = SentryNoOutcomeException
+
+    perform_detect(sentry_id)
+
+    client_mock.assert_called_once_with()
+    client_mock.return_value.get_stats.assert_called_once_with(sentry_id)
+
+    spike_detector_mock.from_project.assert_called_once_with(project)
+
+    project.refresh_from_db()
+    assert project.events.count() == 0
+    assert project.detection_result is None

@@ -12,6 +12,7 @@ from django.utils import timezone
 
 from controller.sentry.choices import EventType
 from controller.sentry.detector import SpikesDetector
+from controller.sentry.exceptions import SentryNoOutcomeException
 from controller.sentry.models import App, Event, Project
 from controller.sentry.webservices.sentry import PaginatedSentryClient
 
@@ -133,7 +134,10 @@ def perform_detect(sentry_id) -> None:
 
     stats = client.get_stats(project.sentry_id)
     detector = SpikesDetector.from_project(project)
-    res, dump = detector.compute_sentry(stats)
+    try:
+        res, dump = detector.compute_sentry(stats)
+    except SentryNoOutcomeException:
+        return
 
     project.detection_result = dump
     project.save()

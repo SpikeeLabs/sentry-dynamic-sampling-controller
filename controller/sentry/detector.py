@@ -4,6 +4,7 @@ from collections import OrderedDict
 from copy import copy
 from statistics import mean, stdev
 
+from controller.sentry.exceptions import SentryNoOutcomeException
 from controller.sentry.models import Project
 
 
@@ -79,13 +80,16 @@ class SpikesDetector:
         Returns:
             OrderedDict: Annotated signal
             dict[str, list]: Full algorithm results
+
+        Raises:
+            SentryNoOutcomeException: When there is no series with accepted outcome
         """
         series = next(
             (group["series"]["sum(quantity)"] for group in stats["groups"] if group["by"]["outcome"] == "accepted"),
             None,
         )
         if series is None:
-            raise ValueError("No series with accepted outcome")
+            raise SentryNoOutcomeException("No series with accepted outcome")
 
         signal, avg_filter, std_filter = self.compute(series)
 

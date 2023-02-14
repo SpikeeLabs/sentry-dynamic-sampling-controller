@@ -3,6 +3,7 @@ import json
 import pytest
 
 from controller.sentry.detector import SpikesDetector
+from controller.sentry.exceptions import SentryNoOutcomeException
 from controller.sentry.models import Project
 
 
@@ -41,5 +42,5 @@ def test_spike_detector_empty():
     assert detector.threshold == project.detection_param["threshold"]
     assert detector.influence == project.detection_param["influence"]
 
-    with pytest.raises(ValueError):
+    with pytest.raises(SentryNoOutcomeException):
         detector.compute_sentry({"groups": []})
