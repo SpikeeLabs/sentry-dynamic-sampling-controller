@@ -34,9 +34,6 @@ if TYPE_CHECKING:  # pragma: no cover  # pragma: no cover
 @admin.register(Project)
 class ProjectAdmin(
     ChartMixin,
-    AdminConfirmMixin,
-    ActionFormMixin,
-    DjangoObjectActions,
     DynamicArrayMixin,
     admin.ModelAdmin,
 ):

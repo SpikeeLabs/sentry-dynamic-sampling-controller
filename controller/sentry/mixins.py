@@ -66,15 +66,18 @@ class ChartMixin:
             form_url (str): form_url (Default to Blank string)
             extra_context (Optional[dict]): extra context  (Default to None)
         """
-        if extra_context is None:
-            extra_context = {}
+        response = super().change_view(request, object_id, form_url, extra_context)
+
+        # This could be a redirect and not have context_data
+        if not hasattr(response, "context_data"):
+            return response
 
         if result := self.get_chart_data(object_id):
             dataset, options = result
-            extra_context["adminchart_chartjs_config"] = {
+            response.context_data["adminchart_chartjs_config"] = {
                 "type": "line",
                 "data": dataset,
                 "options": options,
             }
 
-        return super().change_view(request, object_id, form_url, extra_context)
+        return response

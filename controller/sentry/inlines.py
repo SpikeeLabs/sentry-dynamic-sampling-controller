@@ -29,6 +29,10 @@ class EventInlineMixin(PrettyTypeMixin):
         """Don't allow adding."""
         return False
 
+    def has_change_permission(self, request, obj=None) -> bool:  # pylint: disable=unused-argument
+        """Don't allow modifying."""
+        return False
+
 
 class ProjectEventInline(EventInlineMixin, admin.TabularInline):
     """ProjectEventInline derived from EventInlineMixin and admin.TabularInline."""
