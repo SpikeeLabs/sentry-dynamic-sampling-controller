@@ -24,6 +24,12 @@ class MockRequest:
         self.GET = {}
 
 
+class MockResponse:
+    def __init__(self, context_data=None) -> None:
+        if context_data:
+            self.context_data = {}
+
+
 @pytest.fixture
 def user_with_group(request, django_user_model, user_group):
     marker = request.node.get_closest_marker("user_group")
@@ -319,6 +325,7 @@ def test_project_event_inlines(admin_with_user):
     site, request = admin_with_user
     inline = ProjectEventInline(Project, site.admin_site)
     assert not inline.has_add_permission({})
+    assert not inline.has_change_permission({})
 
     project = Project(sentry_id="123")
     event = Event(project=project, type=EventType.FIRING, timestamp=timezone.now())
@@ -337,6 +344,7 @@ def test_app_event_inlines(admin_with_user):
     inline = AppEventInline(App, site.admin_site)
     app = App(reference="123")
     assert not inline.has_add_permission({})
+    assert not inline.has_change_permission({})
     assert len(inline.get_form_queryset(app)) == 0
 
     project = Project(sentry_id="123")
@@ -350,7 +358,7 @@ def test_app_event_inlines(admin_with_user):
         inline.save_new_instance({}, {})
 
 
-@patch("django_object_actions.utils.BaseDjangoObjectActions.change_view")
+@patch("django.contrib.admin.ModelAdmin.change_view")
 @pytest.mark.django_db
 @pytest.mark.parametrize("user_group", ["Developer"])
 @pytest.mark.admin_site(model_class=Project)
@@ -364,7 +372,27 @@ def test_project_chart_no_data(super_call: Mock, admin_with_user):
     super_call.assert_called_once_with(request, project.sentry_id, "", extra_context)
 
 
-@patch("django_object_actions.utils.BaseDjangoObjectActions.change_view")
+@patch("django.contrib.admin.ModelAdmin.change_view")
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=Project)
+def test_project_chart_no_context(super_call: Mock, admin_with_user):
+    site, request = admin_with_user
+    project = Project(sentry_id="123")
+    project.detection_result = {
+        "signal": [0, 1],
+        "avg_filter": [0, 1],
+        "std_filter": [0, 2],
+        "series": [0, 5],
+        "intervals": ["a", "b"],
+    }
+    project.save()
+    super_call.return_value = MockResponse(context_data=False)
+    response = site.change_view(request, project.sentry_id)
+    assert not hasattr(response, "context_data")
+
+
+@patch("django.contrib.admin.ModelAdmin.change_view")
 @pytest.mark.django_db
 @pytest.mark.parametrize("user_group", ["Developer"])
 @pytest.mark.admin_site(model_class=Project)
@@ -379,7 +407,8 @@ def test_project_chart(super_call: Mock, admin_with_user):
         "intervals": ["a", "b"],
     }
     project.save()
-    site.change_view(request, project.sentry_id)
+    super_call.return_value = MockResponse(context_data=True)
+    response = site.change_view(request, project.sentry_id)
 
     expected_context = {
         "adminchart_chartjs_config": {
@@ -424,4 +453,6 @@ def test_project_chart(super_call: Mock, admin_with_user):
         }
     }
 
-    super_call.assert_called_once_with(request, project.sentry_id, "", expected_context)
+    super_call.assert_called_once_with(request, project.sentry_id, "", None)
+
+    assert response.context_data == expected_context
