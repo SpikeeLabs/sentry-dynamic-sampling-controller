@@ -46,7 +46,7 @@ If you still reach your sentry quotas, you can enable the panic mode. This mode 
 
 
 Smart Features
--------------
+--------------
 Every hour the controller fetch every project stats on Sentry. Using this stats we can detect misbehaving apps.
 For each misbehaving we create one :class:`event <controller.sentry.models.Event>` when the surge in transaction starts and one when it's end.
 
