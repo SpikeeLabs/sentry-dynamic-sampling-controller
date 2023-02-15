@@ -23,6 +23,7 @@ Submodules
    sentry/choices
    sentry/detector
    sentry/exceptions
+   sentry/filters
    sentry/forms
    sentry/inlines
    sentry/mixins

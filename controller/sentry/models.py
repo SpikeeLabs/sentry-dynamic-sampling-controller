@@ -35,6 +35,7 @@ class Project(models.Model):
 
     detection_param = models.JSONField(default=partial(settings_default_value, "DEFAULT_SPIKE_DETECTION_PARAM"))
     detection_result = models.JSONField(blank=True, null=True)
+    last_event = models.ForeignKey("Event", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
 
     def __str__(self) -> str:
         """Return Project string."""
