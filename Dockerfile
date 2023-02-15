@@ -44,7 +44,7 @@ RUN poetry build && "$VENV_PATH/bin/pip" install dist/*.whl \
 # Static base
 FROM builder-base as static-base
 
-RUN python manage.py collectstatic
+RUN python manage.py download_vendor_files && python manage.py collectstatic
 
 # Static
 FROM nginx:mainline-alpine as static

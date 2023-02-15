@@ -35,6 +35,28 @@ STATIC_URL = os.getenv("STATIC_URL", "/assets/static/")
 MEDIA_URL = os.getenv("MEDIA_URL", "/assets/media/")
 STATIC_ROOT = os.path.join(BASE_DIR, "assets/static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "assets/media")
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "vendor/"),)
+
+VENDOR = {
+    "chartjs": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/",
+        "js": [
+            {
+                "path": "chart.min.js",
+                "sri": "sha384-9MhbyIRcBVQiiC7FSd7T38oJNj2Zh+EfxS7/vjhBi4OOT78NlHSnzM31EZRWR1LZ",
+            }
+        ],
+    },
+    "chartjs-date": {
+        "url": "https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/",
+        "js": [
+            {
+                "path": "chartjs-adapter-date-fns.bundle.min.js",
+                "sri": "sha384-cVMg8E3QFwTvGCDuK+ET4PD341jF3W8nO1auiXfuZNQkzbUUiBGLsIQUE+b1mxws",
+            }
+        ],
+    },
+}
 
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
@@ -77,6 +99,7 @@ INSTALLED_APPS = [
     "health_check.cache",
     "health_check.storage",
     "django_celery_results",
+    "vendor_files",
     "controller.sentry",
 ]
 
