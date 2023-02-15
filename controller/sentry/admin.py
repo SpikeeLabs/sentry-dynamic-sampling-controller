@@ -87,7 +87,7 @@ class ProjectAdmin(
             "scales": {
                 "xAxis": {"type": "timeseries"},
                 "series": {"position": "left"},
-                "signal": {"position": "right"},
+                "signal": {"position": "right", "min": 0, "max": 2},
             },
             "plugins": {"legend": {"position": "bottom"}, "title": {"display": True, "text": "Detection Result"}},
             "elements": {"line": {"stepped": True}, "point": {"radius": 0}},
