@@ -942,6 +942,22 @@ django = "*"
 typing-extensions = "*"
 
 [[package]]
+name = "django-vendor-files"
+version = "0.3"
+description = "A small extension to download css and js vendor files from CDNs and host them locally."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-vendor-files-0.3.tar.gz", hash = "sha256:9f19af52293140d8aee983cc5523e45810cf37398e332d6b6d0fee034c809c97"},
+    {file = "django_vendor_files-0.3-py3-none-any.whl", hash = "sha256:e404a6aef9daf274d851fae5db03d9a02e58722ef1fd50cd77bb19c9b5367312"},
+]
+
+[package.dependencies]
+Django = ">=1.11"
+requests = "*"
+
+[[package]]
 name = "django-widget-tweaks"
 version = "1.4.12"
 description = "Tweak the form field rendering in templates, not in python-level form definitions."
@@ -3302,4 +3318,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "1932ee076de7cb65f1f03489baf4ee156a18888e695c6b324f76b1a838f25ccb"
+content-hash = "3351ab9e9ff0708b2cd1fe1152816addc5ada46bda3c46e1024c9343fc178c5a"
