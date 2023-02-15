@@ -9,6 +9,7 @@ from undecorated import undecorated
 
 from controller.sentry.admin import AppAdmin
 from controller.sentry.choices import EventType
+from controller.sentry.filters import IsSpammingListFilter
 from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.inlines import AppEventInline, ProjectEventInline
 from controller.sentry.models import App, Event, Project
@@ -456,3 +457,39 @@ def test_project_chart(super_call: Mock, admin_with_user):
     super_call.assert_called_once_with(request, project.sentry_id, "", None)
 
     assert response.context_data == expected_context
+
+
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_filter(admin_with_user):
+    site, request = admin_with_user
+
+    project = Project.objects.create(sentry_id="123")
+    event = Event.objects.create(project=project, type=EventType.DISCARD, timestamp=timezone.now())
+    project.last_event = event
+    project.save()
+    app_discard = App.objects.create(reference="app_discard", project=project)
+
+    project = Project.objects.create(sentry_id="456")
+    event = Event.objects.create(project=project, type=EventType.FIRING, timestamp=timezone.now())
+    project.last_event = event
+    project.save()
+    app_firing = App.objects.create(reference="app_firing", project=project)
+
+    App.objects.create(reference="app_without")
+
+    filter_yes = IsSpammingListFilter(None, {"spamming": "yes"}, App, site)
+    filter_no = IsSpammingListFilter(None, {"spamming": "no"}, App, site)
+    filter_none = IsSpammingListFilter(None, {}, App, site)
+
+    assert filter_yes.lookups(request, site) == (("yes", "Yes"), ("no", "No"))
+
+    assert list(filter_yes.queryset(request, App.objects.all())) == list(
+        App.objects.filter(reference=app_discard.reference)
+    )
+
+    assert list(filter_no.queryset(request, App.objects.all())) == list(
+        App.objects.filter(reference=app_firing.reference)
+    )
+
+    assert list(filter_none.queryset(request, App.objects.all())) == list(App.objects.all())

@@ -161,3 +161,6 @@ def perform_detect(sentry_id) -> None:
         previous_signal = signal
 
     Event.objects.bulk_create(events)
+    if events:
+        project.last_event = events[-1]
+        project.save()
