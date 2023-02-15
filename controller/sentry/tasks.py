@@ -142,6 +142,9 @@ def perform_detect(sentry_id) -> None:
     project.detection_result = dump
     project.save()
 
+    # remove the last item since this stats on the last hour are not complete
+    res.popitem()
+
     previous_signal = 0
     events = []
     last_event: Optional[Event] = project.events.last()
