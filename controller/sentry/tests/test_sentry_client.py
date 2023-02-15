@@ -120,7 +120,7 @@ def test_client_get_stats(mock_request: MagicMock):
             "groupBy": ["category", "outcome"],
             "interval": "1h",
             "project": sentry_id,
-            "statsPeriod": "7d",
+            "statsPeriod": settings.SENTRY_STATS_PERIOD,
             "category": "transaction",
         },
     )

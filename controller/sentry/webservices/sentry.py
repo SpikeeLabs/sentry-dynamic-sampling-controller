@@ -140,7 +140,7 @@ class PaginatedSentryClient(metaclass=Singleton):
             "groupBy": ["category", "outcome"],
             "interval": "1h",
             "project": sentry_id,
-            "statsPeriod": "7d",
+            "statsPeriod": settings.SENTRY_STATS_PERIOD,
             "category": "transaction",
         }
         response = self.__call("GET", url, params=params)
