@@ -11,6 +11,8 @@ It work by installing the library [sentry-dynamic-sampling-lib](https://github.c
 
 Docs : [here](https://spikeelabs.github.io/sentry-dynamic-sampling-controller/)
 
+How to deploy : [here](https://spikeelabs.github.io/sentry-dynamic-sampling-controller/how_to_deploy.html)
+
 
 ## Install
 ```bash

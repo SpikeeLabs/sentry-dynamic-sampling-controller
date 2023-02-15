@@ -15,6 +15,7 @@
 
    self
    how_does_it_work
+   how_to_deploy
 
 
 .. toctree::
