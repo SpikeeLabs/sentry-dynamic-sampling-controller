@@ -82,17 +82,7 @@ class ProjectAdmin(
 
         threshold = project.detection_param["threshold"]
 
-        options = {
-            "aspectRatio": 4,
-            "scales": {
-                "xAxis": {"type": "timeseries"},
-                "series": {"position": "left"},
-                "signal": {"position": "right", "min": 0, "max": 2},
-            },
-            "plugins": {"legend": {"position": "bottom"}, "title": {"display": True, "text": "Detection Result"}},
-            "elements": {"line": {"stepped": True}, "point": {"radius": 0}},
-            "interaction": {"mode": "index", "intersect": False},
-        }
+        options = settings.DEFAULT_GRAPH_OPTION
         data = {
             "datasets": [
                 {

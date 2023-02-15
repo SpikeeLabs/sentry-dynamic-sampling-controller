@@ -5,8 +5,10 @@
 {% block extrahead %}
 {{ block.super }}
 {{ media }}
+{% vendor 'hammerjs' %}
 {% vendor 'chartjs' %}
 {% vendor 'chartjs-date' %}
+{% vendor 'chartjs-zoom' %}
 <script src="{% static 'admin/chart/js/adminchart.js' %}"></script>
 {{ adminchart_chartjs_config|json_script:"adminchart-chartjs-config" }}
 {% endblock %}

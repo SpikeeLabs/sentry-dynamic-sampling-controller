@@ -7,7 +7,8 @@ const scope = [
   "validator",
   "metrics",
   "panic",
-  "sentry-api"
+  "sentry-api",
+  "graph"
 ];
 
 module.exports = {
