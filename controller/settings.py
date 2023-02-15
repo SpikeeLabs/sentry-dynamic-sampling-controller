@@ -56,6 +56,24 @@ VENDOR = {
             }
         ],
     },
+    "chartjs-zoom": {
+        "url": "https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0/dist/",
+        "js": [
+            {
+                "path": "chartjs-plugin-zoom.min.js",
+                "sri": "sha384-AC/SQgflSDa6sFR0rk5chlHjSLMS9fHmSE50vY7uoBiqrCWtDUXoOBCKaoQQFBrl",
+            }
+        ],
+    },
+    "hammerjs": {
+        "url": "https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/",
+        "js": [
+            {
+                "path": "hammer.min.js",
+                "sri": "sha384-Cs3dgUx6+jDxxuqHvVH8Onpyj2LF1gKZurLDlhqzuJmUqVYMJ0THTWpxK5Z086Zm",
+            }
+        ],
+    },
 }
 
 
@@ -328,3 +346,29 @@ if SENTRY_DSN:
 
     # hook sentry_dynamic_sampling_lib into sentry
     init_wrapper()
+
+
+# Graph
+DEFAULT_GRAPH_OPTION = {
+    "aspectRatio": 4,
+    "scales": {
+        "xAxis": {"type": "timeseries"},
+        "series": {"position": "left", "min": 0},
+        "signal": {"position": "right", "min": 0, "max": 2},
+    },
+    "plugins": {
+        "legend": {"position": "bottom"},
+        "title": {"display": True, "text": "Detection Result"},
+        "zoom": {
+            "zoom": {
+                "wheel": {"enabled": True, "modifierKey": "ctrl"},
+                "pinch": {"enabled": True},
+                "mode": "x",
+            },
+            "limits": {"xAxis": {"min": "original", "max": "original"}},
+            "pan": {"enabled": True, "mode": "x", "modifierKey": "ctrl"},
+        },
+    },
+    "elements": {"line": {"stepped": True}, "point": {"radius": 0}},
+    "interaction": {"mode": "index", "intersect": False},
+}
