@@ -6,7 +6,8 @@ const scope = [
   "task",
   "validator",
   "metrics",
-  "panic"
+  "panic",
+  "sentry-api"
 ];
 
 module.exports = {
