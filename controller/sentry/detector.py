@@ -71,7 +71,7 @@ class SpikesDetector:
         """
         return cls(**project.detection_param)
 
-    def compute_sentry(self, stats: dict) -> tuple[OrderedDict, dict[str, list]]:
+    def compute_sentry(self, stats: dict) -> tuple[OrderedDict, list[tuple[str, int, int, float, float]]]:
         """Method to compute from a sentry stats dict.
 
         Args:
@@ -79,7 +79,7 @@ class SpikesDetector:
 
         Returns:
             OrderedDict: Annotated signal
-            dict[str, list]: Full algorithm results
+            list[tuple[str, int, int, float, float]]: Full algorithm results
 
         Raises:
             SentryNoOutcomeException: When there is no series with accepted outcome
@@ -93,14 +93,11 @@ class SpikesDetector:
 
         signal, avg_filter, std_filter = self.compute(series)
 
-        annotated_result = OrderedDict((date, signal) for date, signal in zip(stats["intervals"], signal))
-        dump = {
-            "signal": signal,
-            "avg_filter": avg_filter,
-            "std_filter": std_filter,
-            "series": series,
-            "intervals": stats["intervals"],
-        }
+        annotated_result = OrderedDict((date, sig) for date, sig in zip(stats["intervals"], signal))
+        dump = []
+        for data in zip(stats["intervals"], series, signal, avg_filter, std_filter):
+            dump.append(data)
+
         return annotated_result, dump
 
     def compute(self, data) -> tuple[list[int], list[float], list[float]]:

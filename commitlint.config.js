@@ -8,7 +8,8 @@ const scope = [
   "metrics",
   "panic",
   "sentry-api",
-  "graph"
+  "graph",
+  "detector"
 ];
 
 module.exports = {
