@@ -60,6 +60,7 @@
 <li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Inlines</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#controller.sentry.inlines.AppEventInline"><code class="docutils literal notranslate"><span class="pre">AppEventInline</span></code></a></li>
@@ -166,6 +167,12 @@
 <dt class="sig sig-object py" id="controller.sentry.inlines.EventInlineMixin.has_add_permission">
 <span class="sig-name descname"><span class="pre">has_add_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/inlines.html#EventInlineMixin.has_add_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.inlines.EventInlineMixin.has_add_permission" title="Permalink to this definition"></a></dt>
 <dd><p>Don’t allow adding.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="controller.sentry.inlines.EventInlineMixin.has_change_permission">
+<span class="sig-name descname"><span class="pre">has_change_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/controller/sentry/inlines.html#EventInlineMixin.has_change_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.inlines.EventInlineMixin.has_change_permission" title="Permalink to this definition"></a></dt>
+<dd><p>Don’t allow modifying.</p>
 </dd></dl>
 
 <dl class="py attribute">

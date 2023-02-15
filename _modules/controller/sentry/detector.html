@@ -83,6 +83,7 @@
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stdev</span>
 
+<span class="kn">from</span> <span class="nn">controller.sentry.exceptions</span> <span class="kn">import</span> <span class="n">SentryNoOutcomeException</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.models</span> <span class="kn">import</span> <span class="n">Project</span>
 
 
@@ -158,13 +159,16 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            OrderedDict: Annotated signal</span>
 <span class="sd">            dict[str, list]: Full algorithm results</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SentryNoOutcomeException: When there is no series with accepted outcome</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">series</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
             <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;series&quot;</span><span class="p">][</span><span class="s2">&quot;sum(quantity)&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;by&quot;</span><span class="p">][</span><span class="s2">&quot;outcome&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;accepted&quot;</span><span class="p">),</span>
             <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No series with accepted outcome&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SentryNoOutcomeException</span><span class="p">(</span><span class="s2">&quot;No series with accepted outcome&quot;</span><span class="p">)</span>
 
         <span class="n">signal</span><span class="p">,</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
 

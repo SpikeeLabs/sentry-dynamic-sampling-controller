@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serializers &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
+  <title>Exceptions &mdash; Sentry Dynamic Sampling Controller 1.3.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -22,8 +22,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Tasks" href="tasks.html" />
-    <link rel="prev" title="Models" href="models.html" /> 
+    <link rel="next" title="Forms" href="forms.html" />
+    <link rel="prev" title="Detector" href="detector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,16 +60,16 @@
 <li class="toctree-l3"><a class="reference internal" href="auth.html">Auth</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Exceptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.exceptions.SentryException"><code class="docutils literal notranslate"><span class="pre">SentryException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.exceptions.SentryNoOutcomeException"><code class="docutils literal notranslate"><span class="pre">SentryNoOutcomeException</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mixins.html">Mixins</a></li>
 <li class="toctree-l3"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Serializers</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.serializers.AppSerializer"><code class="docutils literal notranslate"><span class="pre">AppSerializer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#controller.sentry.serializers.MetricSerializer"><code class="docutils literal notranslate"><span class="pre">MetricSerializer</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="serializers.html">Serializers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tasks.html">Tasks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="views.html">Views</a></li>
@@ -94,9 +94,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../sentry.html">sentry</a></li>
-      <li class="breadcrumb-item active">Serializers</li>
+      <li class="breadcrumb-item active">Exceptions</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/references/sentry/serializers.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/references/sentry/exceptions.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -104,21 +104,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-controller.sentry.serializers">
-<span id="serializers"></span><h1>Serializers<a class="headerlink" href="#module-controller.sentry.serializers" title="Permalink to this heading"></a></h1>
-<p>Serializers.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="controller.sentry.serializers.AppSerializer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.serializers.</span></span><span class="sig-name descname"><span class="pre">AppSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/serializers.html#AppSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.serializers.AppSerializer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
-<p>App Serializer.</p>
+  <section id="module-controller.sentry.exceptions">
+<span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-controller.sentry.exceptions" title="Permalink to this heading"></a></h1>
+<p>Exceptions.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.exceptions.SentryException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.exceptions.</span></span><span class="sig-name descname"><span class="pre">SentryException</span></span><a class="reference internal" href="../../_modules/controller/sentry/exceptions.html#SentryException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.exceptions.SentryException" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>All sentry related Exception.</p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="controller.sentry.serializers.MetricSerializer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.serializers.</span></span><span class="sig-name descname"><span class="pre">MetricSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/controller/sentry/serializers.html#MetricSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.serializers.MetricSerializer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
-<p>Metrics Serializer.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="controller.sentry.exceptions.SentryNoOutcomeException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">controller.sentry.exceptions.</span></span><span class="sig-name descname"><span class="pre">SentryNoOutcomeException</span></span><a class="reference internal" href="../../_modules/controller/sentry/exceptions.html#SentryNoOutcomeException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.sentry.exceptions.SentryNoOutcomeException" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception Raised when sentry doesn’t return any stats.</p>
 </dd></dl>
 
 </section>
@@ -127,8 +127,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tasks.html" class="btn btn-neutral float-right" title="Tasks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="detector.html" class="btn btn-neutral float-left" title="Detector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="forms.html" class="btn btn-neutral float-right" title="Forms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

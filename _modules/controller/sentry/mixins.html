@@ -145,18 +145,21 @@
 <span class="sd">            form_url (str): form_url (Default to Blank string)</span>
 <span class="sd">            extra_context (Optional[dict]): extra context  (Default to None)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">extra_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">extra_context</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">change_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">form_url</span><span class="p">,</span> <span class="n">extra_context</span><span class="p">)</span>
+
+        <span class="c1"># This could be a redirect and not have context_data</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;context_data&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">response</span>
 
         <span class="k">if</span> <span class="n">result</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_chart_data</span><span class="p">(</span><span class="n">object_id</span><span class="p">):</span>
             <span class="n">dataset</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">result</span>
-            <span class="n">extra_context</span><span class="p">[</span><span class="s2">&quot;adminchart_chartjs_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">context_data</span><span class="p">[</span><span class="s2">&quot;adminchart_chartjs_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">dataset</span><span class="p">,</span>
                 <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span>
             <span class="p">}</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">change_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">form_url</span><span class="p">,</span> <span class="n">extra_context</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">response</span></div></div>
 </pre></div>
 
            </div>
