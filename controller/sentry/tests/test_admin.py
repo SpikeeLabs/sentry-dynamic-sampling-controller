@@ -400,13 +400,10 @@ def test_project_chart_no_context(super_call: Mock, admin_with_user):
 def test_project_chart(super_call: Mock, admin_with_user):
     site, request = admin_with_user
     project = Project(sentry_id="123")
-    project.detection_result = {
-        "signal": [0, 1],
-        "avg_filter": [0, 1],
-        "std_filter": [0, 2],
-        "series": [0, 5],
-        "intervals": ["a", "b"],
-    }
+    project.detection_result = [
+        ("a", 0, 0, 0, 0),
+        ("b", 5, 1, 1, 2),
+    ]
     project.save()
     super_call.return_value = MockResponse(context_data=True)
     response = site.change_view(request, project.sentry_id)
@@ -420,14 +417,14 @@ def test_project_chart(super_call: Mock, admin_with_user):
                         "label": "Series",
                         "backgroundColor": "#36a2eb",
                         "borderColor": "#36a2eb",
-                        "data": [0, 5],
+                        "data": (0, 5),
                         "yAxisID": "series",
                     },
                     {
                         "label": "Signal",
                         "backgroundColor": "#ff6384",
                         "borderColor": "#ff6384",
-                        "data": [0, 1],
+                        "data": (0, 1),
                         "yAxisID": "signal",
                     },
                     {
@@ -438,7 +435,7 @@ def test_project_chart(super_call: Mock, admin_with_user):
                         "yAxisID": "series",
                     },
                 ],
-                "labels": ["a", "b"],
+                "labels": ("a", "b"),
             },
             "options": settings.DEFAULT_GRAPH_OPTION,
         }

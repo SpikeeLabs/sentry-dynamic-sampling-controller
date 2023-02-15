@@ -83,20 +83,21 @@ class ProjectAdmin(
         threshold = project.detection_param["threshold"]
 
         options = settings.DEFAULT_GRAPH_OPTION
+        labels, series, signal, avg_filter, std_filter = list(zip(*project.detection_result))
         data = {
             "datasets": [
                 {
                     "label": "Series",
                     "backgroundColor": "#36a2eb",
                     "borderColor": "#36a2eb",
-                    "data": project.detection_result["series"],
+                    "data": series,
                     "yAxisID": "series",
                 },
                 {
                     "label": "Signal",
                     "backgroundColor": "#ff6384",
                     "borderColor": "#ff6384",
-                    "data": project.detection_result["signal"],
+                    "data": signal,
                     "yAxisID": "signal",
                 },
                 {
@@ -104,16 +105,12 @@ class ProjectAdmin(
                     "backgroundColor": "#9966ff",
                     "borderColor": "#9966ff",
                     "data": [
-                        avg_filter + threshold * std_filter
-                        for avg_filter, std_filter in zip(
-                            project.detection_result["avg_filter"],
-                            project.detection_result["std_filter"],
-                        )
+                        avg_filter + threshold * std_filter for avg_filter, std_filter in zip(avg_filter, std_filter)
                     ],
                     "yAxisID": "series",
                 },
             ],
-            "labels": project.detection_result["intervals"],
+            "labels": labels,
         }
         return data, options
 
