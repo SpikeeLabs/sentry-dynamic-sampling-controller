@@ -24,6 +24,7 @@ from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.inlines import AppEventInline, ProjectEventInline
 from controller.sentry.mixins import ChartMixin, PrettyTypeMixin, ProjectLinkMixin
 from controller.sentry.models import App, Event, Project
+from controller.sentry.tasks import perform_detect
 from controller.sentry.utils import invalidate_cache
 
 if TYPE_CHECKING:  # pragma: no cover  # pragma: no cover
@@ -113,6 +114,21 @@ class ProjectAdmin(
             "labels": labels,
         }
         return data, options
+
+    def save_model(self, request: "HttpRequest", obj: Project, form: "ModelForm[Project]", change: dict) -> None:
+        """This method is responsible to save project in the admin.
+
+        We hook into it to start a :func:`perform_detect <controller.sentry.tasks.perform_detect>` task
+
+        Args:
+            request (HttpRequest): The request
+            obj (Project): The app to save
+            form (ModelForm[Project]): form
+            change (bool): change
+        """
+        if change:
+            perform_detect.delay(obj.sentry_id)
+        return super().save_model(request, obj, form, change)
 
 
 @admin.register(Event)

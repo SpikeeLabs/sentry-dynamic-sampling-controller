@@ -480,3 +480,18 @@ def test_app_filter(admin_with_user):
     )
 
     assert list(filter_none.queryset(request, App.objects.all())) == list(App.objects.all())
+
+
+@patch("controller.sentry.admin.perform_detect")
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=Project)
+def test_project_admin_save_model(perform_detect: Mock, admin_with_user):
+    site, request = admin_with_user
+    project = Project(sentry_id="test_project")
+    site.save_model(request, project, None, True)
+    perform_detect.delay.assert_called_once_with(project.sentry_id)
+
+    perform_detect.reset_mock()
+    site.save_model(request, project, None, None)
+    perform_detect.delay.assert_not_called()
