@@ -19,6 +19,7 @@ from django_json_widget.widgets import JSONEditorWidget
 from django_object_actions import DjangoObjectActions, takes_instance_or_queryset
 
 from controller.sentry.choices import EventType, MetricType
+from controller.sentry.filters import IsSpammingListFilter
 from controller.sentry.forms import BumpForm, MetricForm
 from controller.sentry.inlines import AppEventInline, ProjectEventInline
 from controller.sentry.mixins import ChartMixin, PrettyTypeMixin, ProjectLinkMixin
@@ -180,6 +181,8 @@ class AppAdmin(
         "wsgi_collect_metrics",
         "celery_collect_metrics",
     ]
+
+    list_filter = ["env", "command", IsSpammingListFilter]
 
     search_fields = ["reference", "project__sentry_project_slug", "env", "command"]
     ordering = search_fields
