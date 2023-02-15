@@ -169,6 +169,7 @@ def test_perform_detect(spike_detector_mock: MagicMock, client_mock: MagicMock):
                 ("2023-02-01T17:00:00Z", 0),
                 ("2023-02-01T18:00:00Z", 1),
                 ("2023-02-01T19:00:00Z", 0),
+                ("2023-02-01T20:00:00Z", 0),
             ]
         ),
         dump,
@@ -185,6 +186,50 @@ def test_perform_detect(spike_detector_mock: MagicMock, client_mock: MagicMock):
 
     project.refresh_from_db()
     assert project.events.exclude(reference=event.reference).count() == 2
+    assert project.last_event == project.events.last()
+    assert project.detection_result == dump
+
+
+@patch("controller.sentry.tasks.PaginatedSentryClient")
+@patch("controller.sentry.tasks.SpikesDetector")
+@pytest.mark.django_db
+def test_perform_detect_last_item_not_used(spike_detector_mock: MagicMock, client_mock: MagicMock):
+    sentry_id = "123"
+    project = Project(sentry_id=sentry_id)
+    project.save()
+
+    event = Event(project=project, type=EventType.DISCARD, timestamp=parser.parse("2023-02-01T17:00:00Z"))
+    event.save()
+
+    result = object()
+    client_mock.return_value.get_stats.return_value = result
+
+    detector: MagicMock = spike_detector_mock.from_project.return_value
+    dump = {"test": "a"}
+    detector.compute_sentry.return_value = (
+        OrderedDict(
+            [
+                ("2023-02-01T15:00:00Z", 0),
+                ("2023-02-01T16:00:00Z", 1),
+                ("2023-02-01T17:00:00Z", 0),
+                ("2023-02-01T18:00:00Z", 1),
+                ("2023-02-01T19:00:00Z", 0),
+            ]
+        ),
+        dump,
+    )
+
+    perform_detect(sentry_id)
+
+    client_mock.assert_called_once_with()
+    client_mock.return_value.get_stats.assert_called_once_with(sentry_id)
+
+    spike_detector_mock.from_project.assert_called_once_with(project)
+
+    detector.compute_sentry.assert_called_once_with(result)
+
+    project.refresh_from_db()
+    assert project.events.exclude(reference=event.reference).count() == 1
     assert project.last_event == project.events.last()
     assert project.detection_result == dump
 
