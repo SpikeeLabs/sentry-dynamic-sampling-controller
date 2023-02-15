@@ -1,11 +1,12 @@
 {% extends "django_object_actions/change_form.html" %}
-{% load static %}
+{% load static vendor_tags %}
+
 
 {% block extrahead %}
 {{ block.super }}
 {{ media }}
-<script src="{% static 'admin/chart/js/chart.min.js' %}"></script>
-<script src="{% static 'admin/chart/js/chart.date.min.js' %}"></script>
+{% vendor 'chartjs' %}
+{% vendor 'chartjs-date' %}
 <script src="{% static 'admin/chart/js/adminchart.js' %}"></script>
 {{ adminchart_chartjs_config|json_script:"adminchart-chartjs-config" }}
 {% endblock %}
