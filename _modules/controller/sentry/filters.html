@@ -130,7 +130,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">())</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">queryset</span>
 
-        <span class="n">event_type</span> <span class="o">=</span> <span class="n">EventType</span><span class="o">.</span><span class="n">FIRING</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span> <span class="k">else</span> <span class="n">EventType</span><span class="o">.</span><span class="n">DISCARD</span>
+        <span class="n">event_type</span> <span class="o">=</span> <span class="n">EventType</span><span class="o">.</span><span class="n">DISCARD</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span> <span class="k">else</span> <span class="n">EventType</span><span class="o">.</span><span class="n">FIRING</span>
 
         <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">project__last_event__type</span><span class="o">=</span><span class="n">event_type</span><span class="p">)</span></div></div>
 </pre></div>
