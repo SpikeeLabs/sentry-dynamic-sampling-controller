@@ -472,11 +472,11 @@ def test_app_filter(admin_with_user):
     assert filter_yes.lookups(request, site) == (("yes", "Yes"), ("no", "No"))
 
     assert list(filter_yes.queryset(request, App.objects.all())) == list(
-        App.objects.filter(reference=app_discard.reference)
+        App.objects.filter(reference=app_firing.reference)
     )
 
     assert list(filter_no.queryset(request, App.objects.all())) == list(
-        App.objects.filter(reference=app_firing.reference)
+        App.objects.filter(reference=app_discard.reference)
     )
 
     assert list(filter_none.queryset(request, App.objects.all())) == list(App.objects.all())

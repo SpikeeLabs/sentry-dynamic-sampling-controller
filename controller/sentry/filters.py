@@ -50,6 +50,6 @@ class IsSpammingListFilter(admin.SimpleListFilter):
         if (value := self.value()) is None:
             return queryset
 
-        event_type = EventType.FIRING if value == "no" else EventType.DISCARD
+        event_type = EventType.DISCARD if value == "no" else EventType.FIRING
 
         return queryset.filter(project__last_event__type=event_type)
