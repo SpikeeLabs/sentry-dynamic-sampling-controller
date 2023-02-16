@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Commands" href="sentry/management/index.html" />
-    <link rel="prev" title="How does it work" href="../how_does_it_work.html" /> 
+    <link rel="prev" title="How to Deploy" href="../how_to_deploy.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,6 +49,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="current">
@@ -66,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sentry/choices.html">Choices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/detector.html">Detector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/exceptions.html">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/filters.html">Filters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/forms.html">Forms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/inlines.html">Inlines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/mixins.html">Mixins</a></li>
@@ -175,6 +177,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.has_unpanic_permission"><code class="docutils literal notranslate"><span class="pre">AppAdmin.has_unpanic_permission()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.inlines"><code class="docutils literal notranslate"><span class="pre">AppAdmin.inlines</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">AppAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">AppAdmin.list_filter</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.media"><code class="docutils literal notranslate"><span class="pre">AppAdmin.media</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">AppAdmin.ordering</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.AppAdmin.panic"><code class="docutils literal notranslate"><span class="pre">AppAdmin.panic()</span></code></a></li>
@@ -199,6 +202,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.list_display</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.media"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.media</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.save_model"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.save_model()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/admin.html#controller.sentry.admin.ProjectAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ProjectAdmin.search_fields</span></code></a></li>
 </ul>
 </li>
@@ -254,6 +258,16 @@
 <li class="toctree-l1"><a class="reference internal" href="sentry/exceptions.html">Exceptions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sentry/exceptions.html#controller.sentry.exceptions.SentryException"><code class="docutils literal notranslate"><span class="pre">SentryException</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sentry/exceptions.html#controller.sentry.exceptions.SentryNoOutcomeException"><code class="docutils literal notranslate"><span class="pre">SentryNoOutcomeException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sentry/filters.html">Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sentry/filters.html#controller.sentry.filters.IsSpammingListFilter"><code class="docutils literal notranslate"><span class="pre">IsSpammingListFilter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sentry/filters.html#controller.sentry.filters.IsSpammingListFilter.lookups"><code class="docutils literal notranslate"><span class="pre">IsSpammingListFilter.lookups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/filters.html#controller.sentry.filters.IsSpammingListFilter.parameter_name"><code class="docutils literal notranslate"><span class="pre">IsSpammingListFilter.parameter_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/filters.html#controller.sentry.filters.IsSpammingListFilter.queryset"><code class="docutils literal notranslate"><span class="pre">IsSpammingListFilter.queryset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/filters.html#controller.sentry.filters.IsSpammingListFilter.title"><code class="docutils literal notranslate"><span class="pre">IsSpammingListFilter.title</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sentry/forms.html">Forms</a><ul>
@@ -356,6 +370,8 @@
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.detection_param"><code class="docutils literal notranslate"><span class="pre">Project.detection_param</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.detection_result"><code class="docutils literal notranslate"><span class="pre">Project.detection_result</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.events"><code class="docutils literal notranslate"><span class="pre">Project.events</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.last_event"><code class="docutils literal notranslate"><span class="pre">Project.last_event</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.last_event_id"><code class="docutils literal notranslate"><span class="pre">Project.last_event_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.objects"><code class="docutils literal notranslate"><span class="pre">Project.objects</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.sentry_id"><code class="docutils literal notranslate"><span class="pre">Project.sentry_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="sentry/models.html#controller.sentry.models.Project.sentry_project_slug"><code class="docutils literal notranslate"><span class="pre">Project.sentry_project_slug</span></code></a></li>
@@ -405,7 +421,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../how_does_it_work.html" class="btn btn-neutral float-left" title="How does it work" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../how_to_deploy.html" class="btn btn-neutral float-left" title="How to Deploy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="sentry/management/index.html" class="btn btn-neutral float-right" title="Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

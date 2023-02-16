@@ -46,6 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul>
@@ -221,6 +222,9 @@
     <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span> <span class="o">=</span> <span class="n">dump</span>
     <span class="n">project</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
+    <span class="c1"># remove the last item since this stats on the last hour are not complete</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+
     <span class="n">previous_signal</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">last_event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
@@ -239,7 +243,10 @@
         <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Event</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">date</span><span class="p">))</span>
         <span class="n">previous_signal</span> <span class="o">=</span> <span class="n">signal</span>
 
-    <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">(</span><span class="n">events</span><span class="p">)</span></div>
+    <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">project</span><span class="o">.</span><span class="n">last_event</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">project</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

@@ -46,6 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul>
@@ -98,10 +99,12 @@
 <span class="kn">from</span> <span class="nn">django_object_actions</span> <span class="kn">import</span> <span class="n">DjangoObjectActions</span><span class="p">,</span> <span class="n">takes_instance_or_queryset</span>
 
 <span class="kn">from</span> <span class="nn">controller.sentry.choices</span> <span class="kn">import</span> <span class="n">EventType</span><span class="p">,</span> <span class="n">MetricType</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.filters</span> <span class="kn">import</span> <span class="n">IsSpammingListFilter</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.forms</span> <span class="kn">import</span> <span class="n">BumpForm</span><span class="p">,</span> <span class="n">MetricForm</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.inlines</span> <span class="kn">import</span> <span class="n">AppEventInline</span><span class="p">,</span> <span class="n">ProjectEventInline</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.mixins</span> <span class="kn">import</span> <span class="n">ChartMixin</span><span class="p">,</span> <span class="n">PrettyTypeMixin</span><span class="p">,</span> <span class="n">ProjectLinkMixin</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.models</span> <span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">controller.sentry.tasks</span> <span class="kn">import</span> <span class="n">perform_detect</span>
 <span class="kn">from</span> <span class="nn">controller.sentry.utils</span> <span class="kn">import</span> <span class="n">invalidate_cache</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover  # pragma: no cover</span>
@@ -160,31 +163,22 @@
 
         <span class="n">threshold</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_param</span><span class="p">[</span><span class="s2">&quot;threshold&quot;</span><span class="p">]</span>
 
-        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;aspectRatio&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;scales&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;xAxis&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">},</span>
-                <span class="s2">&quot;series&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">},</span>
-                <span class="s2">&quot;signal&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;right&quot;</span><span class="p">},</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;legend&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom&quot;</span><span class="p">},</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Detection Result&quot;</span><span class="p">}},</span>
-            <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;stepped&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="s2">&quot;point&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}},</span>
-            <span class="s2">&quot;interaction&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="s2">&quot;intersect&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-        <span class="p">}</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEFAULT_GRAPH_OPTION</span>
+        <span class="n">labels</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;datasets&quot;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Series&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#36a2eb&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#36a2eb&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;series&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">series</span><span class="p">,</span>
                     <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;series&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="p">{</span>
                     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Signal&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff6384&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff6384&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;signal&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">signal</span><span class="p">,</span>
                     <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;signal&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="p">{</span>
@@ -192,18 +186,29 @@
                     <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#9966ff&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;borderColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#9966ff&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="n">avg_filter</span> <span class="o">+</span> <span class="n">threshold</span> <span class="o">*</span> <span class="n">std_filter</span>
-                        <span class="k">for</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-                            <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;avg_filter&quot;</span><span class="p">],</span>
-                            <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;std_filter&quot;</span><span class="p">],</span>
-                        <span class="p">)</span>
+                        <span class="n">avg_filter</span> <span class="o">+</span> <span class="n">threshold</span> <span class="o">*</span> <span class="n">std_filter</span> <span class="k">for</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span><span class="p">)</span>
                     <span class="p">],</span>
                     <span class="s2">&quot;yAxisID&quot;</span><span class="p">:</span> <span class="s2">&quot;series&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
             <span class="p">],</span>
-            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">project</span><span class="o">.</span><span class="n">detection_result</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">options</span></div></div>
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">options</span></div>
+
+<div class="viewcode-block" id="ProjectAdmin.save_model"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.ProjectAdmin.save_model">[docs]</a>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Project</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="s2">&quot;ModelForm[Project]&quot;</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is responsible to save project in the admin.</span>
+
+<span class="sd">        We hook into it to start a :func:`perform_detect &lt;controller.sentry.tasks.perform_detect&gt;` task</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (HttpRequest): The request</span>
+<span class="sd">            obj (Project): The app to save</span>
+<span class="sd">            form (ModelForm[Project]): form</span>
+<span class="sd">            change (bool): change</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">change</span><span class="p">:</span>
+            <span class="n">perform_detect</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">sentry_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">change</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EventAdmin"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.EventAdmin">[docs]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Event</span><span class="p">)</span>
@@ -259,6 +264,8 @@
         <span class="s2">&quot;wsgi_collect_metrics&quot;</span><span class="p">,</span>
         <span class="s2">&quot;celery_collect_metrics&quot;</span><span class="p">,</span>
     <span class="p">]</span>
+
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="n">IsSpammingListFilter</span><span class="p">]</span>
 
     <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;project__sentry_project_slug&quot;</span><span class="p">,</span> <span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">]</span>
     <span class="n">ordering</span> <span class="o">=</span> <span class="n">search_fields</span>

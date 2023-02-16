@@ -46,6 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul>
@@ -219,7 +220,7 @@
             <span class="s2">&quot;groupBy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;outcome&quot;</span><span class="p">],</span>
             <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="s2">&quot;1h&quot;</span><span class="p">,</span>
             <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="n">sentry_id</span><span class="p">,</span>
-            <span class="s2">&quot;statsPeriod&quot;</span><span class="p">:</span> <span class="s2">&quot;7d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;statsPeriod&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENTRY_STATS_PERIOD</span><span class="p">,</span>
             <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;transaction&quot;</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>

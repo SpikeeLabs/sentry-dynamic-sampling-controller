@@ -46,6 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul>
@@ -150,7 +151,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">project</span><span class="o">.</span><span class="n">detection_param</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpikesDetector.compute_sentry"><a class="viewcode-back" href="../../../references/sentry/detector.html#controller.sentry.detector.SpikesDetector.compute_sentry">[docs]</a>    <span class="k">def</span> <span class="nf">compute_sentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]:</span>
+<div class="viewcode-block" id="SpikesDetector.compute_sentry"><a class="viewcode-back" href="../../../references/sentry/detector.html#controller.sentry.detector.SpikesDetector.compute_sentry">[docs]</a>    <span class="k">def</span> <span class="nf">compute_sentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to compute from a sentry stats dict.</span>
 
 <span class="sd">        Args:</span>
@@ -158,7 +159,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            OrderedDict: Annotated signal</span>
-<span class="sd">            dict[str, list]: Full algorithm results</span>
+<span class="sd">            list[tuple[str, int, int, float, float]]: Full algorithm results</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            SentryNoOutcomeException: When there is no series with accepted outcome</span>
@@ -172,14 +173,11 @@
 
         <span class="n">signal</span><span class="p">,</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
 
-        <span class="n">annotated_result</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">((</span><span class="n">date</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">signal</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;signal&quot;</span><span class="p">:</span> <span class="n">signal</span><span class="p">,</span>
-            <span class="s2">&quot;avg_filter&quot;</span><span class="p">:</span> <span class="n">avg_filter</span><span class="p">,</span>
-            <span class="s2">&quot;std_filter&quot;</span><span class="p">:</span> <span class="n">std_filter</span><span class="p">,</span>
-            <span class="s2">&quot;series&quot;</span><span class="p">:</span> <span class="n">series</span><span class="p">,</span>
-            <span class="s2">&quot;intervals&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span>
-        <span class="p">}</span>
+        <span class="n">annotated_result</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">((</span><span class="n">date</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">sig</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span> <span class="n">signal</span><span class="p">))</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;intervals&quot;</span><span class="p">],</span> <span class="n">series</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">avg_filter</span><span class="p">,</span> <span class="n">std_filter</span><span class="p">):</span>
+            <span class="n">dump</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">annotated_result</span><span class="p">,</span> <span class="n">dump</span></div>
 
 <div class="viewcode-block" id="SpikesDetector.compute"><a class="viewcode-back" href="../../../references/sentry/detector.html#controller.sentry.detector.SpikesDetector.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>

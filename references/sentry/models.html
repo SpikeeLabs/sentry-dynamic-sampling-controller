@@ -49,6 +49,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Sentry Dynamic Sampling Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how_does_it_work.html">How does it work</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_deploy.html">How to Deploy</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References</span></p>
 <ul class="current">
@@ -61,6 +62,7 @@
 <li class="toctree-l3"><a class="reference internal" href="choices.html">Choices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detector.html">Detector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="filters.html">Filters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forms.html">Forms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="inlines.html">Inlines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mixins.html">Mixins</a></li>
@@ -506,6 +508,12 @@ dict: The metric value</p>
 </ul>
 </dd>
 </dl>
+<p>Relationship fields:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>last_event</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a>) – Last event (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">+</span></code>)</p>
+</dd>
+</dl>
 <p>Reverse relationships:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -573,6 +581,24 @@ dict: The metric value</p>
 <dd class="field-odd"><p>Type</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.last_event">
+<span class="sig-name descname"><span class="pre">last_event</span></span><a class="headerlink" href="#controller.sentry.models.Project.last_event" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a></p>
+<p>Last event (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">+</span></code>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.Project.last_event_id">
+<span class="sig-name descname"><span class="pre">last_event_id</span></span><a class="headerlink" href="#controller.sentry.models.Project.last_event_id" title="Permalink to this definition"></a></dt>
+<dd><p>Internal field, use <a class="reference internal" href="#controller.sentry.models.Project.last_event" title="controller.sentry.models.Project.last_event"><code class="xref py py-class docutils literal notranslate"><span class="pre">last_event</span></code></a> instead.</p>
 </dd></dl>
 
 <dl class="py attribute">
