@@ -39,7 +39,7 @@ class Project(models.Model):
 
     def __str__(self) -> str:
         """Return Project string."""
-        return f"Project({self.sentry_id} - {self.sentry_project_slug if self.sentry_project_slug else 'Pending'})"
+        return f"Project({self.sentry_project_slug if self.sentry_project_slug else 'Pending'})"
 
 
 class Event(models.Model):
@@ -78,7 +78,7 @@ class App(models.Model):
         blank=True,
         default=partial(settings_default_value, "DEFAULT_WSGI_IGNORE_PATHS"),
     )
-    wsgi_collect_metrics = models.BooleanField(default=False)
+    wsgi_collect_metrics = models.BooleanField(default=False, verbose_name="wsgi metrics")
     wsgi_metrics = models.JSONField(null=True, blank=True)
 
     # celery
@@ -87,7 +87,7 @@ class App(models.Model):
         blank=True,
         default=partial(settings_default_value, "DEFAULT_CELERY_IGNORE_TASKS"),
     )
-    celery_collect_metrics = models.BooleanField(default=False)
+    celery_collect_metrics = models.BooleanField(default=False, verbose_name="celery metrics")
     celery_metrics = models.JSONField(null=True, blank=True)
 
     def __str__(self) -> str:
