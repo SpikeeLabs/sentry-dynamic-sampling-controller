@@ -1,3 +1,4 @@
+from datetime import timedelta
 from unittest.mock import Mock, patch
 
 import pytest
@@ -318,6 +319,21 @@ def test_app_get_event_status(admin_with_user):
     event.save()
     app = App(reference="abc", project=project)
     assert site.get_event_status(app) == '<b style="color:red;">Yes</b>'
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("user_group", ["Developer"])
+@pytest.mark.admin_site(model_class=App)
+def test_app_get_app_status(admin_with_user):
+    site, request = admin_with_user
+    app = App(reference="abc", last_seen=timezone.now())
+    assert site.get_active_status(app) == True
+
+    app = App(reference="abc", last_seen=None)
+    assert site.get_active_status(app) == False
+
+    app = App(reference="abc", last_seen=timezone.now() - timedelta(minutes=60))
+    assert site.get_active_status(app) == False
 
 
 @pytest.mark.parametrize("user_group", ["Developer"])
