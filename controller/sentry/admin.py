@@ -1,4 +1,5 @@
 """Admin."""
+from datetime import timedelta
 from typing import TYPE_CHECKING, Optional
 
 from admin_action_tools import (
@@ -177,7 +178,7 @@ class AppAdmin(
         "reference",
         "get_event_status",
         "get_project",
-        "last_seen",
+        "get_active_status",
         "default_sample_rate",
         "active_sample_rate",
         "active_window_end",
@@ -257,6 +258,19 @@ class AppAdmin(
                 return format_html(text, "green", "No")
             return format_html(text, "red", "Yes")
         return format_html(text, "gray", "Pending")
+
+    @admin.display(description="Active", boolean=True)
+    def get_active_status(self, obj: App) -> str:
+        """This method return the status of the app based on last_seen.
+
+        Args:
+            obj (App): The app
+
+        Returns:
+            bool: is active
+        """
+        half_hour_mark = timezone.now() - timedelta(minutes=30)
+        return obj.last_seen is not None and obj.last_seen > half_hour_mark
 
     def get_changelist_actions(self, request: "HttpRequest") -> list[str]:
         """This method return allowed changelist actions.
