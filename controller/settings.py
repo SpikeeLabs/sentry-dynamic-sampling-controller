@@ -116,7 +116,6 @@ INSTALLED_APPS = [
     "health_check.db",  # stock Django health checkers
     "health_check.cache",
     "health_check.storage",
-    "django_celery_results",
     "vendor_files",
     "controller.sentry",
 ]
@@ -287,7 +286,6 @@ BROKER_VHOST = quote(os.environ.get("CELERY_BROKER_VHOST", "/"))
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_ACKS_LATE = True
 CELERY_PREFETCH_MULTIPLIER = 1
-CELERY_RESULT_BACKEND = "django-db"
 CELERY_BROKER_URL = f"amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}/{BROKER_VHOST}"
 
 CELERY_BEAT_SCHEDULE = {
