@@ -79,6 +79,7 @@
              
   <h1>Source code for controller.sentry.admin</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Admin.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">admin_action_tools</span> <span class="kn">import</span> <span class="p">(</span>
@@ -257,7 +258,7 @@
         <span class="s2">&quot;reference&quot;</span><span class="p">,</span>
         <span class="s2">&quot;get_event_status&quot;</span><span class="p">,</span>
         <span class="s2">&quot;get_project&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;last_seen&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;get_active_status&quot;</span><span class="p">,</span>
         <span class="s2">&quot;default_sample_rate&quot;</span><span class="p">,</span>
         <span class="s2">&quot;active_sample_rate&quot;</span><span class="p">,</span>
         <span class="s2">&quot;active_window_end&quot;</span><span class="p">,</span>
@@ -337,6 +338,19 @@
                 <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;Yes&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="s2">&quot;Pending&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AppAdmin.get_active_status"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.get_active_status">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Active&quot;</span><span class="p">,</span> <span class="n">boolean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_active_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">App</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return the status of the app based on last_seen.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            obj (App): The app</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: is active</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">half_hour_mark</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_seen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">&gt;</span> <span class="n">half_hour_mark</span></div>
 
 <div class="viewcode-block" id="AppAdmin.get_changelist_actions"><a class="viewcode-back" href="../../../references/sentry/admin.html#controller.sentry.admin.AppAdmin.get_changelist_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_changelist_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="s2">&quot;HttpRequest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method return allowed changelist actions.</span>
