@@ -83,6 +83,7 @@ class ProjectAdmin(
             return None
 
         threshold = project.detection_param["threshold"]
+        floor = project.detection_param.get("floor", 50)
 
         options = settings.DEFAULT_GRAPH_OPTION
         labels, series, signal, avg_filter, std_filter = list(zip(*project.detection_result))
@@ -107,7 +108,8 @@ class ProjectAdmin(
                     "backgroundColor": "#9966ff",
                     "borderColor": "#9966ff",
                     "data": [
-                        avg_filter + threshold * std_filter for avg_filter, std_filter in zip(avg_filter, std_filter)
+                        max(floor, avg_filter + threshold * std_filter)
+                        for avg_filter, std_filter in zip(avg_filter, std_filter)
                     ],
                     "yAxisID": "series",
                 },
@@ -127,9 +129,9 @@ class ProjectAdmin(
             form (ModelForm[Project]): form
             change (bool): change
         """
+        super().save_model(request, obj, form, change)
         if change:
             perform_detect.delay(obj.sentry_id)
-        return super().save_model(request, obj, form, change)
 
 
 @admin.register(Event)

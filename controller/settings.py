@@ -328,6 +328,7 @@ DEFAULT_SPIKE_DETECTION_PARAM = {
     "lag": int(os.getenv("SPIKE_DETECTION_LAG", "48")),
     "threshold": int(os.getenv("SPIKE_DETECTION_THRESHOLD", "5")),
     "influence": float(os.getenv("SPIKE_DETECTION_INFLUENCE", "0.01")),
+    "floor": int(os.getenv("SPIKE_DETECTION_FLOOR", "50")),
 }
 
 
