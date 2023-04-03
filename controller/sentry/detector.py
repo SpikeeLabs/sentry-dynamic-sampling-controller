@@ -47,17 +47,19 @@ class SpikesDetector:
             so the threshold can react to structural breaks quickly.
     """
 
-    def __init__(self, lag: int = 48, threshold: int = 5, influence: float = 0) -> None:
+    def __init__(self, lag: int = 48, threshold: int = 5, influence: float = 0, floor: int = 50) -> None:
         """Init detector.
 
         Args:
             lag (int): The lag
             threshold (int): The threshold
             influence (float): The influence
+            floor (int): The minimum floor
         """
         self.lag = lag
         self.threshold = threshold
         self.influence = influence
+        self.floor = floor
 
     @classmethod
     def from_project(cls, project: Project) -> "SpikesDetector":
@@ -119,7 +121,8 @@ class SpikesDetector:
         std_filter[self.lag - 1] = stdev(data[: self.lag])
 
         for i, item in enumerate(data[self.lag :], start=self.lag):
-            if abs(item - avg_filter[i - 1]) > self.threshold * std_filter[i - 1]:
+            threshold = max(self.floor, avg_filter[i - 1] + self.threshold * std_filter[i - 1])
+            if item > threshold:
                 signals.append(1 if item > avg_filter[i - 1] else 0)
                 filtered_data[i] = self.influence * item + (1 - self.influence) * filtered_data[i - 1]
             else:

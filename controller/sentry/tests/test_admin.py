@@ -418,7 +418,7 @@ def test_project_chart(super_call: Mock, admin_with_user):
     project = Project(sentry_id="123")
     project.detection_result = [
         ("a", 0, 0, 0, 0),
-        ("b", 5, 1, 1, 2),
+        ("b", 55, 1, 1, 2),
     ]
     project.save()
     super_call.return_value = MockResponse(context_data=True)
@@ -433,7 +433,7 @@ def test_project_chart(super_call: Mock, admin_with_user):
                         "label": "Series",
                         "backgroundColor": "#36a2eb",
                         "borderColor": "#36a2eb",
-                        "data": (0, 5),
+                        "data": (0, 55),
                         "yAxisID": "series",
                     },
                     {
@@ -447,7 +447,7 @@ def test_project_chart(super_call: Mock, admin_with_user):
                         "label": "Threshold",
                         "backgroundColor": "#9966ff",
                         "borderColor": "#9966ff",
-                        "data": [0, 11],
+                        "data": [50, 50],
                         "yAxisID": "series",
                     },
                 ],
