@@ -115,7 +115,6 @@ INSTALLED_APPS = [
     "health_check",
     "health_check.db",  # stock Django health checkers
     "health_check.cache",
-    "health_check.storage",
     "vendor_files",
     "controller.sentry",
 ]
