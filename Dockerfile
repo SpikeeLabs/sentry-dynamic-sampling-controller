@@ -9,7 +9,10 @@ ENV PYTHONFAULTHANDLER=1 \
     APP_PATH="/app"
 # prepend venv to path
 ENV PATH="$VENV_PATH/bin:$PATH"
+
 WORKDIR $APP_PATH
+
+RUN adduser -Ds /bin/bash sentry
 
 
 # Build
@@ -23,7 +26,7 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
 
 # get poetry
 RUN apk update \
-    && apk add --update --no-cache curl==7.88.1-r1 gcc=12.2.1_git20220924-r4 linux-headers=5.19.5-r0 build-base=0.5-r3 \
+    && apk add --update --no-cache curl gcc linux-headers build-base \
     && curl -sSL https://install.python-poetry.org | python -
 
 RUN python -m venv "$VENV_PATH"
@@ -47,7 +50,7 @@ FROM builder-base as static-base
 RUN python manage.py download_vendor_files && python manage.py collectstatic
 
 # Static
-FROM nginx:mainline-alpine as static
+FROM nginxinc/nginx-unprivileged:mainline-alpine as static
 COPY --from=static-base /app/assets /usr/share/nginx/html
 
 # Prod
@@ -57,5 +60,7 @@ COPY --from=builder-base $APP_PATH $APP_PATH
 COPY . $APP_PATH
 
 RUN chmod u+rwx "$APP_PATH/manage.py"
+
+USER sentry
 
 CMD ["gunicorn", "controller.wsgi", "-c", "/app/config.py"]
