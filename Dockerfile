@@ -1,5 +1,5 @@
 # base image
-FROM python:3.10.8-alpine as python-base
+FROM python:3.10-slim as python-base
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
@@ -12,22 +12,22 @@ ENV PATH="$VENV_PATH/bin:$PATH"
 
 WORKDIR $APP_PATH
 
-RUN adduser -Ds /bin/bash sentry
+RUN useradd -ms /bin/bash sentry
 
 
 # Build
 FROM python-base as builder-base
 
-SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV PIP_DEFAULT_TIMEOUT=100 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1
 
 # get poetry
-RUN apk update \
-    && apk add --update --no-cache curl gcc linux-headers build-base \
-    && curl -sSL https://install.python-poetry.org | python -
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    curl -sSL https://install.python-poetry.org | python -
 
 RUN python -m venv "$VENV_PATH"
 
@@ -56,8 +56,6 @@ COPY --from=static-base /app/assets /usr/share/nginx/html
 # Prod
 FROM python-base as production
 COPY --from=builder-base $APP_PATH $APP_PATH
-
-COPY . $APP_PATH
 
 RUN chmod u+rwx "$APP_PATH/manage.py"
 
