@@ -2,5 +2,34 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "baseBranches": [
+    "alpha"
+  ],
+  "stabilityDays": 4,
+  "rebaseWhen": "behind-base-branch",
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "python"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "enabled": false
+    },
+    {
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch-patch",
+      "automerge": true,
+      "schedule": "after 7am every weekday",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ]
+    }
   ]
 }
