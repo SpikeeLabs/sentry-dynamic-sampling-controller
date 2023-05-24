@@ -37,3 +37,7 @@ __pycache__/
 dict/
 docker/
 commitlint.config.js
+.hadolint.yaml
+celerybeat-schedule*
+.mypy_cache
+public
