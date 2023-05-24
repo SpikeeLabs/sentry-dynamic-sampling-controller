@@ -25,9 +25,11 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PIP_NO_CACHE_DIR=1
 
 # get poetry
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
-    curl -sSL https://install.python-poetry.org | python -
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && curl -sSL https://install.python-poetry.org | python - \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python -m venv "$VENV_PATH"
 
