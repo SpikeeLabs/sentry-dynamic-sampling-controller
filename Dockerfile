@@ -12,7 +12,11 @@ ENV PATH="$VENV_PATH/bin:$PATH"
 
 WORKDIR $APP_PATH
 
-RUN useradd -ms /bin/bash sentry
+RUN useradd -ms /bin/bash sentry \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends procps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 
 # Build
