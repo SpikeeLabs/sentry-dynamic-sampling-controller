@@ -56,3 +56,10 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+
+def depth(_dict: dict) -> int:
+    """Compute the depth of a dict."""
+    if isinstance(_dict, dict):
+        return 1 + (max(map(depth, _dict.values())) if _dict else 0)
+    return 0

@@ -222,6 +222,7 @@ class AppAdmin(
                 "fields": (
                     "wsgi_collect_metrics",
                     "wsgi_ignore_path",
+                    "wsgi_ignore_user_agent",
                     "wsgi_metrics",
                 ),
             },

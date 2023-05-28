@@ -248,6 +248,8 @@ DEFAULT_SAMPLE_RATE = float(os.getenv("DEFAULT_SAMPLE_RATE", "0.1"))
 
 DEFAULT_WSGI_IGNORE_PATHS = os.getenv("DEFAULT_WSGI_IGNORE_PATHS", "/health,/healthz,/health/,/healthz/").split(",")
 
+DEFAULT_WSGI_IGNORE_USER_AGENT = os.getenv("DEFAULT_WSGI_IGNORE_USER_AGENT", "kube-probe/").split(",")
+
 
 DEFAULT_CELERY_IGNORE_TASKS = []
 
@@ -338,7 +340,7 @@ if SENTRY_DSN:
 
     ENVIRONMENT = os.getenv("ENV", "production")
     sentry_sdk.init(
-        dsn="https://167f729cbcd24c1984d1721b6c3bf53b@o1290673.ingest.sentry.io/4504617124888576",
+        dsn=SENTRY_DSN,
         environment=ENVIRONMENT,
     )
 
