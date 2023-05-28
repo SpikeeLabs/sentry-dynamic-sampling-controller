@@ -13,4 +13,4 @@ def test_app_model_merge():
     app.merge({"type": MetricType.CELERY, "data": {"test": 1}})
     collect, metrics = app.get_metric(MetricType.CELERY)
     assert not collect
-    assert metrics == {"test1": 5, "test": 6}
+    assert metrics == {"task": {"test1": 5, "test": 6}}
