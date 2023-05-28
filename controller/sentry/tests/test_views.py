@@ -1,3 +1,4 @@
+from collections import Counter
 from unittest.mock import Mock, patch
 
 import pytest
@@ -34,8 +35,8 @@ def test_app_view_retrieve_panic(cache: Mock, client):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("metric", MetricType)
-def test_app_view_metrics(client, metric: MetricType):
+@pytest.mark.parametrize("metric,default_name", [(MetricType.WSGI, "path"), (MetricType.CELERY, "task")])
+def test_app_view_metrics(client, metric: MetricType, default_name: str):
     reference = "test"
     data = {"type": metric.value, "data": {"test": 1, "test1": 5}}
     url = reverse("sentry:apps-metrics", kwargs={"pk": reference, "metric_name": metric.value})
@@ -44,7 +45,40 @@ def test_app_view_metrics(client, metric: MetricType):
     assert response.status_code == 200, response.data
     app = App.objects.get(reference=reference)
     _, metric_data = app.get_metric(metric)
+    assert metric_data == {default_name: data["data"]}
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("metric,default_name", [(MetricType.WSGI, "path"), (MetricType.CELERY, "task")])
+def test_app_view_metrics_new(client, metric: MetricType, default_name: str):
+    reference = "test"
+    data = {"type": metric.value, "data": {default_name: {"test": 1, "test1": 5}}}
+    url = reverse("sentry:apps-metrics", kwargs={"pk": reference, "metric_name": metric.value})
+
+    response = client.post(url, data, content_type="application/json")
+    assert response.status_code == 200, response.data
+    app = App.objects.get(reference=reference)
+    _, metric_data = app.get_metric(metric)
     assert metric_data == data["data"]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("metric,default_name", [(MetricType.WSGI, "path"), (MetricType.CELERY, "task")])
+def test_app_view_metrics_with_old_value(client, metric: MetricType, default_name: str):
+    reference = "test"
+    metrics = {"test1": 5, "test": 5}
+    app = App(reference=reference)
+    app.celery_metrics = metrics
+    app.wsgi_metrics = metrics
+    app.save()
+    data = {"type": metric.value, "data": {default_name: metrics}}
+    url = reverse("sentry:apps-metrics", kwargs={"pk": reference, "metric_name": metric.value})
+
+    response = client.post(url, data, content_type="application/json")
+    assert response.status_code == 200, response.data
+    app = App.objects.get(reference=reference)
+    _, metric_data = app.get_metric(metric)
+    assert metric_data == {default_name: Counter(metrics) + Counter(metrics)}
 
 
 @pytest.mark.django_db

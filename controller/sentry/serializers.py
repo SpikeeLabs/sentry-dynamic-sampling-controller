@@ -17,6 +17,7 @@ class AppSerializer(serializers.ModelSerializer):
             "active_sample_rate",
             "active_window_end",
             "wsgi_ignore_path",
+            "wsgi_ignore_user_agent",
             "wsgi_collect_metrics",
             "celery_ignore_task",
             "celery_collect_metrics",

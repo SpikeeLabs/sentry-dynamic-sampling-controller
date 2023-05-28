@@ -77,6 +77,16 @@ class App(models.Model):
         models.CharField(max_length=50, blank=True),
         blank=True,
         default=partial(settings_default_value, "DEFAULT_WSGI_IGNORE_PATHS"),
+        help_text="A list of path to ignore, matched using fill match ==",
+    )
+    wsgi_ignore_user_agent = ArrayField(
+        models.CharField(max_length=50, blank=True),
+        blank=True,
+        default=partial(
+            settings_default_value,
+            "DEFAULT_WSGI_IGNORE_USER_AGENT",
+        ),
+        help_text="A list of user agent to ignore, matched with startswith",
     )
     wsgi_collect_metrics = models.BooleanField(default=False, verbose_name="wsgi metrics")
     wsgi_metrics = models.JSONField(null=True, blank=True)
