@@ -41,14 +41,14 @@ files = [
 
 [[package]]
 name = "asgiref"
-version = "3.7.1"
+version = "3.7.2"
 description = "ASGI specs, helper code, and adapters"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "asgiref-3.7.1-py3-none-any.whl", hash = "sha256:33958cb2e4b3cd8b1b06ef295bd8605cde65b11df51d3beab39e2e149a610ab3"},
-    {file = "asgiref-3.7.1.tar.gz", hash = "sha256:8de379fcc383bcfe4507e229fc31209ea23d4831c850f74063b2c11639474dd2"},
+    {file = "asgiref-3.7.2-py3-none-any.whl", hash = "sha256:89b2ef2247e3b562a16eef663bc0e2e703ec6468e2fa8a5cd61cd449786d4f6e"},
+    {file = "asgiref-3.7.2.tar.gz", hash = "sha256:9e0ce3aa93a819ba5b45120216b23878cf6e8525eb3848653452b4192b92afed"},
 ]
 
 [package.dependencies]
@@ -2653,14 +2653,14 @@ files = [
 
 [[package]]
 name = "sentry-dynamic-sampling-lib"
-version = "1.1.4"
+version = "1.2.0a2"
 description = "This project aims to provide dynamic sampling without relying on Sentry Dynamic Sampling."
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "sentry_dynamic_sampling_lib-1.1.4-py3-none-any.whl", hash = "sha256:f20a5973187340376f1c33df94d9dc716a724b728c3dfbd8e6dd8384371990aa"},
-    {file = "sentry_dynamic_sampling_lib-1.1.4.tar.gz", hash = "sha256:1770e5d0611d6f2c180ad7d811b6be87c4aa9843393fe0420387c897c9e1f57b"},
+    {file = "sentry_dynamic_sampling_lib-1.2.0a2-py3-none-any.whl", hash = "sha256:0b0ebc9d164714116251d1c4a6a0318d57460144644999dd870ac91e373e7c7d"},
+    {file = "sentry_dynamic_sampling_lib-1.2.0a2.tar.gz", hash = "sha256:6b85aa42841710ffcae79b9e10dc445afdff313134b2a4db0419477b9c777f97"},
 ]
 
 [package.dependencies]
@@ -3103,14 +3103,14 @@ files = [
 
 [[package]]
 name = "typing-extensions"
-version = "4.6.1"
+version = "4.6.2"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typing_extensions-4.6.1-py3-none-any.whl", hash = "sha256:6bac751f4789b135c43228e72de18637e9a6c29d12777023a703fd1a6858469f"},
-    {file = "typing_extensions-4.6.1.tar.gz", hash = "sha256:558bc0c4145f01e6405f4a5fdbd82050bd221b119f4bf72a961a1cfd471349d6"},
+    {file = "typing_extensions-4.6.2-py3-none-any.whl", hash = "sha256:3a8b36f13dd5fdc5d1b16fe317f5668545de77fa0b8e02006381fd49d731ab98"},
+    {file = "typing_extensions-4.6.2.tar.gz", hash = "sha256:06006244c70ac8ee83fa8282cb188f697b8db25bc8b4df07be1873c43897060c"},
 ]
 
 [[package]]
@@ -3386,4 +3386,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "e0a5ffc9cf75c170b6190c5133880a9aee46979360dade67cf59e27ead694e13"
+content-hash = "dee34222e8161b8b1f6fafeb16d1e02110e9a044a630ff555639d7d2c11d9b6d"
