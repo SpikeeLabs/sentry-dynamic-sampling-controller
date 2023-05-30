@@ -54,7 +54,7 @@ sphinxcontrib-httpdomain = "^1.8.1"
 sphinxcontrib-mermaid = "^0.8"
 sphinx-rtd-theme = "^1.2.0"
 m2r2 = "0.2.7"
-mistune = "0.8.4"
+mistune = "2.0.5"
 sphinx-nested-apidoc = "^1.2.2"
 mypy = "^0.991"
 django-stubs = { extras = ["compatible-mypy"], version = "^1.14.0" }
