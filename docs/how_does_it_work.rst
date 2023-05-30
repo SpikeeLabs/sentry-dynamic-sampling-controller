@@ -51,3 +51,16 @@ Every hour the controller fetch every project stats on Sentry. Using this stats 
 For each misbehaving we create one :class:`event <controller.sentry.models.Event>` when the surge in transaction starts and one when it's end.
 
 For now, the controller does not act on misbehaving apps.
+
+
+
+Ignore
+------
+You can ignore the following
+- WSGI path
+- WSGI user agent
+- CELERY task
+
+In the administration site under any apps, you can set multiple ignore path/user agent/task.
+
+The path and task are matched using full equality, and the user agent is matched using `startswith`.
