@@ -157,6 +157,16 @@
         <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">settings_default_value</span><span class="p">,</span> <span class="s2">&quot;DEFAULT_WSGI_IGNORE_PATHS&quot;</span><span class="p">),</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;A list of path to ignore, matched using fill match ==&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">wsgi_ignore_user_agent</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span>
+            <span class="n">settings_default_value</span><span class="p">,</span>
+            <span class="s2">&quot;DEFAULT_WSGI_IGNORE_USER_AGENT&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;A list of user agent to ignore, matched with startswith&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">wsgi_collect_metrics</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s2">&quot;wsgi metrics&quot;</span><span class="p">)</span>
     <span class="n">wsgi_metrics</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">JSONField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

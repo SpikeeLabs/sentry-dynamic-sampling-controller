@@ -126,7 +126,8 @@
 <li><p><strong>active_window_end</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Active window end</p></li>
 <li><p><strong>env</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Env</p></li>
 <li><p><strong>command</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.CharField" title="(in Django v5.0)"><em>CharField</em></a>) – Command</p></li>
-<li><p><strong>wsgi_ignore_path</strong> (<em>ArrayField</em>) – Wsgi ignore path</p></li>
+<li><p><strong>wsgi_ignore_path</strong> (<em>ArrayField</em>) – Wsgi ignore path. A list of path to ignore, matched using fill match ==</p></li>
+<li><p><strong>wsgi_ignore_user_agent</strong> (<em>ArrayField</em>) – Wsgi ignore user agent. A list of user agent to ignore, matched with startswith</p></li>
 <li><p><strong>wsgi_collect_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.BooleanField" title="(in Django v5.0)"><em>BooleanField</em></a>) – Wsgi metrics</p></li>
 <li><p><strong>wsgi_metrics</strong> (<a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.JSONField" title="(in Django v5.0)"><em>JSONField</em></a>) – Wsgi metrics</p></li>
 <li><p><strong>celery_ignore_task</strong> (<em>ArrayField</em>) – Celery ignore task</p></li>
@@ -355,7 +356,19 @@ dict: The metric value</p>
 <dt class="sig sig-object py" id="controller.sentry.models.App.wsgi_ignore_path">
 <span class="sig-name descname"><span class="pre">wsgi_ignore_path</span></span><a class="headerlink" href="#controller.sentry.models.App.wsgi_ignore_path" title="Permalink to this definition"></a></dt>
 <dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayField</span></code></p>
-<p>Wsgi ignore path</p>
+<p>Wsgi ignore path. A list of path to ignore, matched using fill match ==</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="controller.sentry.models.App.wsgi_ignore_user_agent">
+<span class="sig-name descname"><span class="pre">wsgi_ignore_user_agent</span></span><a class="headerlink" href="#controller.sentry.models.App.wsgi_ignore_user_agent" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArrayField</span></code></p>
+<p>Wsgi ignore user agent. A list of user agent to ignore, matched with startswith</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Type</p>

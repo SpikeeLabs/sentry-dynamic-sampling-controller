@@ -54,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#bump-sample-rate">Bump Sample Rate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#panic-mode">Panic Mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#smart-features">Smart Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ignore">Ignore</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_deploy.html">How to Deploy</a></li>
@@ -131,6 +132,15 @@ This allow user to set and forget without exploding your sentry quotas.</p>
 <p>Every hour the controller fetch every project stats on Sentry. Using this stats we can detect misbehaving apps.
 For each misbehaving we create one <a class="reference internal" href="references/sentry/models.html#controller.sentry.models.Event" title="controller.sentry.models.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">event</span></code></a> when the surge in transaction starts and one when it’s end.</p>
 <p>For now, the controller does not act on misbehaving apps.</p>
+</section>
+<section id="ignore">
+<h2>Ignore<a class="headerlink" href="#ignore" title="Permalink to this heading"></a></h2>
+<p>You can ignore the following
+- WSGI path
+- WSGI user agent
+- CELERY task</p>
+<p>In the administration site under any apps, you can set multiple ignore path/user agent/task.</p>
+<p>The path and task are matched using full equality, and the user agent is matched using <cite>startswith</cite>.</p>
 </section>
 </section>
 
