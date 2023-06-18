@@ -72,7 +72,7 @@ services:
       - 6379:6379
 
   rabbitmq:
-    image: bitnami/rabbitmq:3.11.16
+    image: bitnami/rabbitmq:3.12.0
     profiles:
       - data
       - all
