@@ -37,9 +37,7 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run tests with coverage
-        run: |
-          poetry run coverage run
-          poetry run coverage xml
+        run: poetry run coverage run
         env:
           POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
@@ -47,8 +45,14 @@ jobs:
           TESTING: "true"
           SECRET_KEY: "very_secret_key"
           OIDC_OP_JWKS_ENDPOINT: "http://nowhere.com"
+
+      - name: Export Coverage
+        if: always()
+        run: poetry run coverage xml
+
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
+        if: always()
         with:
           verbose: true
           files: coverage.xml
