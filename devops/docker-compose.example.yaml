@@ -72,7 +72,7 @@ services:
       - 6379:6379
 
   rabbitmq:
-    image: bitnami/rabbitmq:3.11.16
+    image: bitnami/rabbitmq:3.12.0
     profiles:
       - data
       - all
@@ -158,7 +158,7 @@ services:
 
   # This optional and it's used to monitor the API
   statsd-exporter:
-    image: prom/statsd-exporter:v0.23.1
+    image: prom/statsd-exporter:v0.24.0
     ports:
       - "9125:9125/udp"
       - "9102:9102"
