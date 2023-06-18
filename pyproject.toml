@@ -58,7 +58,7 @@ m2r2 = "^0.3"
 mistune = "0.8.4"
 sphinx-nested-apidoc = "^1.2.2"
 mypy = "^1.0.0"
-django-stubs = { extras = ["compatible-mypy"], version = "^1.14.0" }
+django-stubs = { extras = ["compatible-mypy"], version = "^4.0.0" }
 
 # see https://github.com/klen/pylama/issues/232
 pydocstyle = "6.1.1"
