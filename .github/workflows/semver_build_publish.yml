@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Semantic Release - prepare
         run: |
           cat <<EOF > package.json
@@ -48,7 +48,7 @@ jobs:
     if: needs.semver.outputs.new_release_published == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build app
         run: docker build . -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ needs.semver.outputs.version }}
       - name: Build Static
